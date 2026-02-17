@@ -1,0 +1,118 @@
+
+cim varchar(255)
+tipus int
+ar int
+meret int
+szobak_szama decimal
+emelet int
+lift int
+butorozott int
+leiras text
+hirdetes_datuma date
+aktiv int
+varos_id int
+tulajdonos_id int
+
+----------------------------------------------
+
+-1-
+
+8900 Zalaegerszeg, Arany János út 12.
+1
+150000
+54
+2.0
+4
+1
+1
+"Kiadó Zalagerszegen egy csendes, nagy térrel rendelkező, otthonos albérlet. A környezet kifogásolhatatlan, tiszta és modern."
+2026-03-20
+1
+2
+1
+
+-2-
+
+8900 Zalaegerszeg, Kossuth Lajos utca 45.
+1
+145000
+54
+1.0
+3
+0
+0
+"Kiadó egy világos, jó elrendezésű lakás csendes környezetben, mégis jól megközelíthető helyen.
+Az ingatlan bútorozatlan és gépesített, azonnal költözhető."
+2026-03-26
+1
+2
+1
+
+-3-
+
+8900 Zalaegerszeg, Petőfi Sándor utca 78.
+1
+185000
+67
+2.0
+1
+1
+1
+"Kiadó Zalaegerszegen, a Petőfi Sándor utcában egy 67 m²-es, 2 szobás, bútorozott lakás.
+A lakás 1. emeleti, liftes társasházban található, világos és jó elrendezésű.
+Ideális egyedülállóknak vagy pároknak.
+Azonnal költözhető."
+2026-03-25
+1
+2
+1
+
+-4-
+
+8900 Zalaegerszeg, Ady Endre utca 3/A.
+1
+100000
+43
+2.0
+7
+1
+1
+"Kiadó Zalaegerszegen, az Ady Endre utcában egy 43 m²-es, 2 szobás, bútorozott lakás.
+A lakás 7. emeleti, liftes társasházban található, jó elrendezésű és világos.
+Ideális egyedülállóknak vagy pároknak.
+Azonnal költözhető."
+2026-04-09
+1
+2
+1
+
+-5-
+
+8900 Zalaegerszeg, Széchenyi István út 156.
+1
+130000
+54
+2.0
+3
+1
+0
+"Kiadó Zalaegerszegen, a Széchenyi István úton egy 54 m²-es, 2 szobás lakás.
+A lakás 3. emeleti, liftes társasházban található, jó elrendezésű.
+Nem bútorozott, így saját ízlés szerint berendezhető.
+Ideális egyedülállóknak vagy pároknak, azonnal költözhető."
+2026-04-22
+1
+2
+2
+
+
+
+
+
+
+
+
+
+
+
+
