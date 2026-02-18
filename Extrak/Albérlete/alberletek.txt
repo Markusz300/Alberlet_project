@@ -92,3 +92,78 @@ tulajdonos_id int
 1
 4
 
+-6-
+
+9022 Győr, Baross Gábor út 17.
+1
+170000
+55
+2.0
+1
+0
+1
+"Kiadó egy 55 nm-es, 2 szobás, bútorozott lakás egy 4 emeletes társasház 1. emeletén. Lift nincs, az ingatlan azonnal költözhető és praktikus elosztású."
+2026-04-17
+1
+4
+4
+
+-7-
+
+9024 Győr, Tihanyi Árpád út 63.
+1
+200000
+37
+1.0
+2
+0
+0
+"Kiadó egy 37 nm-es, 1 szobás, nem bútorozott lakás egy 2025-ben épült társasház 2. emeletén. Lift nincs, modern kialakítású, azonnal költözhető ingatlan."
+1
+4
+5
+
+-8-
+
+9023 Győr, Szigethy Attila út 112.
+1
+200000
+56
+2.0
+2
+1
+1
+"Kiadó egy 56 nm-es, 2 szobás, bútorozott lakás liftes társasházban, 200 000 Ft/hó bérleti díjért. Praktikus elosztású, kényelmes otthon pároknak vagy egyedülállóknak."
+1
+4
+5
+
+-9-
+
+9021 Győr, Kazinczy utca 8.
+1
+250000
+70
+3.0
+1
+0
+1
+"Kiadó egy 70 nm-es, 3 szobás, bútorozott lakás egy 4 emeletes társasház 1. emeletén. Lift nincs, tágas és világos otthon, ideális családok vagy több fő részére is."
+1
+4
+5
+
+-10-
+
+9026 Győr, Kálóczy tér 4.
+1
+425000
+118
+4.0
+4
+1
+0
+"Kiadó egy 118 nm-es, 4 szobás, bútorozatlan lakás liftes társasház 4. emeletén. Tágas, világos terekkel rendelkező ingatlan, ideális családok vagy irodai célra is."
+1
+4
+5
