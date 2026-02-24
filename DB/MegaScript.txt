@@ -1,0 +1,149 @@
+-- ==================================================
+-- Adatbázis létrehozása és kiválasztása
+-- ==================================================
+CREATE DATABASE IF NOT EXISTS alberlet 
+    CHARACTER SET utf8mb4 
+    COLLATE utf8mb4_hungarian_ci;
+
+USE alberlet;
+
+-- ==================================================
+-- TÁBLÁK LÉTREHOZÁSA
+-- ==================================================
+
+-- Megye
+CREATE TABLE IF NOT EXISTS megye (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nev VARCHAR(100) NOT NULL
+) ENGINE=InnoDB;
+
+-- Város
+CREATE TABLE IF NOT EXISTS varos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nev VARCHAR(100) NOT NULL,
+    megye_id INT NOT NULL,
+    CONSTRAINT fk_varos_megye 
+        FOREIGN KEY (megye_id) REFERENCES megye(id) 
+        ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- Tulajdonos
+CREATE TABLE IF NOT EXISTS tulajdonos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nev VARCHAR(100) NOT NULL,
+    email VARCHAR(150),
+    telefon VARCHAR(30)
+) ENGINE=InnoDB;
+
+-- Albérlet
+CREATE TABLE IF NOT EXISTS alberlet (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cim VARCHAR(255) NOT NULL,
+    tipus INT NOT NULL,                 -- 1 = egész albérlet, 0 = szoba
+    ar INT NOT NULL,
+    meret INT,
+    szobak_szama DECIMAL(3,1) DEFAULT 1.0,
+    emelet INT,
+    lift INT,                           -- 1 = van, 0 = nincs
+    butorozott INT,                     -- 1 = van, 0 = nincs
+    leiras TEXT,
+    hirdetes_datuma DATE DEFAULT CURRENT_DATE,
+    aktiv INT DEFAULT 1,                -- 1 = aktív, 0 = inaktív
+    varos_id INT NOT NULL,
+    tulajdonos_id INT NOT NULL,
+    CONSTRAINT fk_alberlet_varos 
+        FOREIGN KEY (varos_id) REFERENCES varos(id) 
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_alberlet_tulajdonos 
+        FOREIGN KEY (tulajdonos_id) REFERENCES tulajdonos(id) 
+        ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- Képek
+CREATE TABLE IF NOT EXISTS kep (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    alberlet_id INT NOT NULL,
+    kep_url VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_kep_alberlet 
+        FOREIGN KEY (alberlet_id) REFERENCES alberlet(id) 
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ==================================================
+-- ADATOK BESZÚRÁSA
+-- ==================================================
+
+-- Tulajdonosok
+INSERT INTO tulajdonos (nev, email, telefon) VALUES
+('Molnár Tímea',    'moltimi1995@businessmail.hu',  '+36 70 670 6767'),
+('Kovács Béla',     'belakovacs@businessmail.hu',   '+36 20 234 8632'),
+('Kolompos József', 'bolondosjoe@promail.com',       '+36 30 506 8015'),
+('Tamás András',    'tateandrew@promail.com',        '+36 20 500 3936'),
+('Takács Emese',    'temese93@promail.com',          '+36 70 287 3247'),
+('Dudás Péter',     'hornpeti26@promail.com',        '+36 70 763 2877'),
+('Szőke Barna',     'blondbrown83@promail.com',      '+36 30 187 1562'),
+('Horváth Kinga',   'kingahorvath@businessmail.hu',  '+36 30 692 9375'),
+('Fazekas Kálmán',  'kalman620221@businessmail.hu',  '+36 20 329 8496'),
+('Antal Jázmin',    'thejasmin03@promail.com',       '+36 20 581 3234'),
+('Csonka Csongor',  'csocso85@businessmail.hu',      '+36 30 832 6421'),
+('Illés Márk',      'illesmarkusz20@promail.com',    '+36 70 232 3782'),
+('Mezei Bálint',    'fieldivalentin@promail.com',    '+36 20 942 8642'),
+('Hegedűs Enikő',   'violin74@businessmail.com',     '+36 30 347 9873'),
+('Bognár Vendel',   'vendelbognar@promail.com',      '+36 30 125 5237'),
+('Keretes Erika',   'erikakeretes@promail.com',      '+36 20 921 3424');
+
+-- Megyék
+INSERT INTO megye (nev) VALUES
+('Zala'),                   -- 1
+('Győr-moson-sopron'),      -- 2
+('Baranya'),                -- 3
+('Vas'),                    -- 4
+('Pest'),                   -- 5
+('Csongrád');               -- 6
+
+-- Városok
+INSERT INTO varos (nev, megye_id) VALUES
+('Nagykanizsa',     1),
+('Zalaegerszeg',    1),
+('Keszthely',       1),
+('Győr',            2),
+('Sopron',          2),
+('Pécs',            3),
+('Szombathely',     4),
+('Budapest',        5),
+('Szeged',          6),
+('Hódmezővásárhely',6);
+
+-- Albérletek
+INSERT INTO alberlet 
+(cim, tipus, ar, meret, szobak_szama, emelet, lift, butorozott, leiras, hirdetes_datuma, aktiv, varos_id, tulajdonos_id) VALUES
+('8900 Zalaegerszeg, Arany János út 12.',          1, 150000, 54, 2.0, 4, 1, 1, 'Kiadó Zalagerszegen egy csendes, nagy térrel rendelkező, otthonos albérlet. A környezet kifogásolhatatlan, tiszta és modern.',                    '2026-03-20', 1, 2, 1),
+('8900 Zalaegerszeg, Kossuth Lajos utca 45.',      1, 145000, 54, 1.0, 3, 0, 0, 'Kiadó egy világos, jó elrendezésű lakás csendes környezetben, mégis jól megközelíthető helyen. Az ingatlan bútorozatlan és gépesített, azonnal költözhető.', '2026-03-26', 1, 2, 1),
+('8900 Zalaegerszeg, Petőfi Sándor utca 78.',      1, 185000, 67, 2.0, 1, 1, 1, 'Kiadó Zalaegerszegen, a Petőfi Sándor utcában egy 67 m²-es, 2 szobás, bútorozott lakás. A lakás 1. emeleti, liftes társasházban található, világos és jó elrendezésű. Ideális egyedülállóknak vagy pároknak. Azonnal költözhető.', '2026-03-25', 1, 2, 1),
+('8900 Zalaegerszeg, Ady Endre utca 3/A.',         1, 100000, 43, 2.0, 7, 1, 1, 'Kiadó Zalaegerszegen, az Ady Endre utcában egy 43 m²-es, 2 szobás, bútorozott lakás. A lakás 7. emeleti, liftes társasházban található, jó elrendezésű és világos. Ideális egyedülállóknak vagy pároknak. Azonnal költözhető.',     '2026-04-09', 1, 2, 1),
+('8900 Zalaegerszeg, Széchenyi István út 156.',    1, 130000, 54, 2.0, 3, 1, 0, 'Kiadó Zalaegerszegen, a Széchenyi István úton egy 54 m²-es, 2 szobás lakás. A lakás 3. emeleti, liftes társasházban található, jó elrendezésű. Nem bútorozott, így saját ízlés szerint berendezhető. Ideális egyedülállóknak vagy pároknak, azonnal költözhető.', '2026-04-22', 1, 2, 2),
+('8360 Keszthely, Széchenyi István út 45.',        1, 180000, 58, 3.0, 8, 1, 0, 'Kiadó Keszthelyen, a Széchenyi István úton egy 58 m²-es, 3 szobás lakás. A lakás 8. emeleti, liftes társasházban található, jó elrendezésű. Nem bútorozott, így saját igény szerint berendezhető. Ideális családnak, pároknak vagy egyedülállóknak. Azonnal költözhető.', '2026-03-11', 1, 3, 2),
+('8360 Keszthely, Arany János utca 78.',           1, 120000, 45, 1.0, 6, 1, 1, 'Kiadó Keszthelyen, az Arany János utcában egy 45 m²-es, 1 szobás, bútorozott lakás. A lakás 6. emeleti, liftes társasházban található, jó elrendezésű és világos. Ideális egyedülállóknak, azonnal költözhető.',               '2026-04-11', 1, 3, 2),
+('8360 Keszthely, Fő utca 112.',                   1, 230000, 69, 2.0, 1, 0, 1, 'Kiadó Keszthelyen, a Fő utcában egy 69 m²-es, 2 szobás, bútorozott lakás. A lakás 1. emeleti, lift nélküli társasházban található, tágas és jól elrendezett. Ideális pároknak vagy kisebb családnak. Azonnal költözhető.',     '2026-04-12', 1, 3, 2),
+('8360 Keszthely, Kazinczy Ferenc utca 19.',       1, 160000, 35, 1.0, 3, 0, 1, 'Kiadó Keszthelyen, a Kazinczy Ferenc utcában egy 35 m²-es, 1 szobás, bútorozott lakás. A lakás 3. emeleti, lift nélküli társasházban található, jó elrendezésű. Ideális egyedülállóknak, azonnal költözhető.',                '2026-03-03', 1, 3, 3),
+('8360 Keszthely, Apát utca 34.',                  1, 205000, 54, 2.0, 2, 1, 1, 'Kiadó Keszthelyen, az Apát utcában egy 54 m²-es, 2 szobás, bútorozott lakás. A lakás 2. emeleti, liftes társasházban található, jó elrendezésű és világos. Ideális pároknak vagy kisebb családnak, azonnal költözhető.',      '2026-04-03', 1, 3, 3);
+
+-- Képek (az eddig megadott 10 albérlethez)
+INSERT INTO kep (alberlet_id, kep_url) VALUES
+(1, 'Kepek/zalaegerszeg_01_01.png'), (1, 'Kepek/zalaegerszeg_01_02.png'), (1, 'Kepek/zalaegerszeg_01_03.png'), (1, 'Kepek/zalaegerszeg_01_04.png'),
+(2, 'Kepek/zalaegerszeg_02_01.png'), (2, 'Kepek/zalaegerszeg_02_02.png'), (2, 'Kepek/zalaegerszeg_02_03.png'), (2, 'Kepek/zalaegerszeg_02_04.png'), (2, 'Kepek/zalaegerszeg_02_05.png'),
+(3, 'Kepek/zalaegerszeg_03_01.png'), (3, 'Kepek/zalaegerszeg_03_02.png'), (3, 'Kepek/zalaegerszeg_03_03.png'), (3, 'Kepek/zalaegerszeg_03_04.png'),
+(4, 'Kepek/zalaegerszeg_04_01.png'), (4, 'Kepek/zalaegerszeg_04_02.png'), (4, 'Kepek/zalaegerszeg_04_03.png'), (4, 'Kepek/zalaegerszeg_04_04.png'), (4, 'Kepek/zalaegerszeg_04_05.png'),
+(5, 'Kepek/zalaegerszeg_05_01.png'), (5, 'Kepek/zalaegerszeg_05_02.png'), (5, 'Kepek/zalaegerszeg_05_03.png'), (5, 'Kepek/zalaegerszeg_05_04.png'),
+(6, 'Kepek/keszthely_01_01.png'),   (6, 'Kepek/keszthely_01_02.png'),   (6, 'Kepek/keszthely_01_03.png'),   (6, 'Kepek/keszthely_01_04.png'),   (6, 'Kepek/keszthely_01_05.png'),
+(7, 'Kepek/keszthely_02_01.png'),   (7, 'Kepek/keszthely_02_02.png'),   (7, 'Kepek/keszthely_02_03.png'),   (7, 'Kepek/keszthely_02_04.png'),
+(8, 'Kepek/keszthely_03_01.png'),   (8, 'Kepek/keszthely_03_02.png'),   (8, 'Kepek/keszthely_03_03.png'),   (8, 'Kepek/keszthely_03_04.png'),
+(9, 'Kepek/keszthely_04_01.png'),   (9, 'Kepek/keszthely_04_02.png'),   (9, 'Kepek/keszthely_04_03.png'),   (9, 'Kepek/keszthely_04_04.png'),   (9, 'Kepek/keszthely_04_05.png'),
+(10,'Kepek/keszthely_05_01.png'),   (10,'Kepek/keszthely_05_02.png'),   (10,'Kepek/keszthely_05_03.png'),   (10,'Kepek/keszthely_05_04.png'),   (10,'Kepek/keszthely_05_05.png');
+
+-- Opcionális: AUTO_INCREMENT értékek visszaállítása (általában nem szükséges, de ha nagyon tiszta reset kell)
+ALTER TABLE megye      AUTO_INCREMENT = 1;
+ALTER TABLE varos      AUTO_INCREMENT = 1;
+ALTER TABLE tulajdonos AUTO_INCREMENT = 1;
+ALTER TABLE alberlet   AUTO_INCREMENT = 1;
+ALTER TABLE kep        AUTO_INCREMENT = 1;
