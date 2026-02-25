@@ -126,7 +126,19 @@ INSERT INTO alberlet
 ('8360 Keszthely, Arany János utca 78.',           1, 120000, 45, 1.0, 6, 1, 1, 'Kiadó Keszthelyen, az Arany János utcában egy 45 m²-es, 1 szobás, bútorozott lakás. A lakás 6. emeleti, liftes társasházban található, jó elrendezésű és világos. Ideális egyedülállóknak, azonnal költözhető.',               '2026-04-11', 1, 3, 2),
 ('8360 Keszthely, Fő utca 112.',                   1, 230000, 69, 2.0, 1, 0, 1, 'Kiadó Keszthelyen, a Fő utcában egy 69 m²-es, 2 szobás, bútorozott lakás. A lakás 1. emeleti, lift nélküli társasházban található, tágas és jól elrendezett. Ideális pároknak vagy kisebb családnak. Azonnal költözhető.',     '2026-04-12', 1, 3, 2),
 ('8360 Keszthely, Kazinczy Ferenc utca 19.',       1, 160000, 35, 1.0, 3, 0, 1, 'Kiadó Keszthelyen, a Kazinczy Ferenc utcában egy 35 m²-es, 1 szobás, bútorozott lakás. A lakás 3. emeleti, lift nélküli társasházban található, jó elrendezésű. Ideális egyedülállóknak, azonnal költözhető.',                '2026-03-03', 1, 3, 3),
-('8360 Keszthely, Apát utca 34.',                  1, 205000, 54, 2.0, 2, 1, 1, 'Kiadó Keszthelyen, az Apát utcában egy 54 m²-es, 2 szobás, bútorozott lakás. A lakás 2. emeleti, liftes társasházban található, jó elrendezésű és világos. Ideális pároknak vagy kisebb családnak, azonnal költözhető.',      '2026-04-03', 1, 3, 3);
+('8360 Keszthely, Apát utca 34.',                  1, 205000, 54, 2.0, 2, 1, 1, 'Kiadó Keszthelyen, az Apát utcában egy 54 m²-es, 2 szobás, bútorozott lakás. A lakás 2. emeleti, liftes társasházban található, jó elrendezésű és világos. Ideális pároknak vagy kisebb családnak, azonnal költözhető.',      '2026-04-03', 1, 3, 3),
+('8800 Nagykanizsa, Ady Endre utca 14.', 1, 110000, 54, 2.0, 9, 1, 1, '54 m²-es, 9. emeleti, 2 szobás, bútorozott lakás, azonnal költözhető állapotban. Világos nappali, külön hálószoba és felszerelt konyha biztosítja a kényelmet, a magas emelet pedig szép kilátást nyújt.', '2026-03-14', 1, 1, 3),
+('8800 Nagykanizsa, Zrínyi Miklós utca 9.', 1, 100000, 47, 2.0, 3, 0, 0, '47 m²-es, 2. emeleti, 2 szobás, bútor nélküli lakás egy 4 emeletes házban. Praktikus elrendezésű, világos terek jellemzik, saját igény szerint berendezhető, kényelmes otthon alakítható ki benne.', '2026-04-15', 1, 1, 3),
+('8800 Nagykanizsa, Király utca 37.', 1, 110000, 57, 2.0, 1, 0, 0, '57 m²-es, első emeleti, 2 szobás, bútorozatlan lakás. Tágas, jól kihasználható helyiségekkel rendelkezik, világos tereinek köszönhetően otthonos hangulatú, és saját igény szerint rendezhető be.', '2026-03-07', 1, 1, 4),
+('8800 Nagykanizsa, Hevesi Sándor utca 22.', 1, 100000, 56, 2.0, 4, 0, 0, '56 m²-es, 2 szobás lakás a 4. emeleten. Jó elrendezésű, világos helyiségekkel rendelkezik, kényelmes életteret biztosít, és ideális választás lehet pároknak vagy kisebb családnak.', '2026-03-30', 1, 1, 4),
+('8800 Nagykanizsa, Csengery út 18.', 1, 85000, 53, 2.0, 2, 0, 0, '53 m²-es, 2 szobás lakás a 2. emeleten. Átgondolt elrendezésű, világos helyiségei kellemes, otthonos hangulatot biztosítanak, ideális választás pároknak vagy kisebb családnak.', '2026-03-20', 1, 1, 4),
+('9022 Győr, Baross Gábor út 17.', 1, 170000, 55, 2.0, 1, 0, 1, 'Kiadó egy 55 nm-es, 2 szobás, bútorozott lakás egy 4 emeletes társasház 1. emeletén. Lift nincs, az ingatlan azonnal költözhető és praktikus elosztású.', '2026-04-17', 1, 4, 4),
+('9024 Győr, Tihanyi Árpád út 63.', 1, 200000, 37, 1.0, 2, 0, 0, 'Kiadó egy 37 nm-es, 1 szobás, nem bútorozott lakás egy 2025-ben épült társasház 2. emeletén. Lift nincs, modern kialakítású, azonnal költözhető ingatlan.', '2026-04-10', 1, 4, 5),
+('9023 Győr, Szigethy Attila út 112.', 1, 200000, 56, 2.0, 2, 1, 1, 'Kiadó egy 56 nm-es, 2 szobás, bútorozott lakás liftes társasházban, 200 000 Ft/hó bérleti díjért. Praktikus elosztású, kényelmes otthon pároknak vagy egyedülállóknak.', '2026-04-05', 1, 4, 5),
+('9021 Győr, Kazinczy utca 8.', 1, 250000, 70, 3.0, 1, 0, 1, 'Kiadó egy 70 nm-es, 3 szobás, bútorozott lakás egy 4 emeletes társasház 1. emeletén. Lift nincs, tágas és világos otthon, ideális családok vagy több fő részére is.', '2026-03-25', 1, 4, 5),
+('9026 Győr, Kálóczy tér 4.', 1, 425000, 118, 4.0, 4, 1, 0, 'Kiadó egy 118 nm-es, 4 szobás, bútorozatlan lakás liftes társasház 4. emeletén. Tágas, világos terekkel rendelkező ingatlan, ideális családok vagy irodai célra is.', '2026-04-01', 1, 4, 5);
+
+
 
 -- Képek (az eddig megadott 10 albérlethez)
 INSERT INTO kep (alberlet_id, kep_url) VALUES
@@ -139,7 +151,19 @@ INSERT INTO kep (alberlet_id, kep_url) VALUES
 (7, 'Kepek/keszthely_02_01.png'),   (7, 'Kepek/keszthely_02_02.png'),   (7, 'Kepek/keszthely_02_03.png'),   (7, 'Kepek/keszthely_02_04.png'),
 (8, 'Kepek/keszthely_03_01.png'),   (8, 'Kepek/keszthely_03_02.png'),   (8, 'Kepek/keszthely_03_03.png'),   (8, 'Kepek/keszthely_03_04.png'),
 (9, 'Kepek/keszthely_04_01.png'),   (9, 'Kepek/keszthely_04_02.png'),   (9, 'Kepek/keszthely_04_03.png'),   (9, 'Kepek/keszthely_04_04.png'),   (9, 'Kepek/keszthely_04_05.png'),
-(10,'Kepek/keszthely_05_01.png'),   (10,'Kepek/keszthely_05_02.png'),   (10,'Kepek/keszthely_05_03.png'),   (10,'Kepek/keszthely_05_04.png'),   (10,'Kepek/keszthely_05_05.png');
+(10,'Kepek/keszthely_05_01.png'),   (10,'Kepek/keszthely_05_02.png'),   (10,'Kepek/keszthely_05_03.png'),   (10,'Kepek/keszthely_05_04.png'),   (10,'Kepek/keszthely_05_05.png'),
+(11, 'Kepek/nagykanizsa_01_01.png'), (11, 'Kepek/nagykanizsa_01_02.png'), (11, 'Kepek/nagykanizsa_01_03.png'), (11, 'Kepek/nagykanizsa_01_04.png'), (11, 'Kepek/nagykanizsa_01_05.png'), (11, 'Kepek/nagykanizsa_01_06.png'),
+(12, 'Kepek/nagykanizsa_02_01.png'), (12, 'Kepek/nagykanizsa_02_02.png'), (12, 'Kepek/nagykanizsa_02_03.png'), (12, 'Kepek/nagykanizsa_02_04.png'), (12, 'Kepek/nagykanizsa_02_05.png'),
+(13, 'Kepek/nagykanizsa_03_01.png'), (13, 'Kepek/nagykanizsa_03_02.png'), (13, 'Kepek/nagykanizsa_03_03.png'), (13, 'Kepek/nagykanizsa_03_04.png'), (13, 'Kepek/nagykanizsa_03_05.png'), (13, 'Kepek/nagykanizsa_03_06.png'),
+(14, 'Kepek/nagykanizsa_04_01.png'), (14, 'Kepek/nagykanizsa_04_02.png'), (14, 'Kepek/nagykanizsa_04_03.png'), (14, 'Kepek/nagykanizsa_04_04.png'),
+(15, 'Kepek/nagykanizsa_05_01.png'), (15, 'Kepek/nagykanizsa_05_02.png'), (15, 'Kepek/nagykanizsa_05_03.png'), (15, 'Kepek/nagykanizsa_05_04.png'), (15, 'Kepek/nagykanizsa_05_05.png'), (15, 'Kepek/nagykanizsa_05_06.png'),
+(16, 'Kepek/gyor_01_01.png'), (16, 'Kepek/gyor_01_02.png'), (16, 'Kepek/gyor_01_03.png'), (16, 'Kepek/gyor_01_04.png'), (16, 'Kepek/gyor_01_05.png'), (16, 'Kepek/gyor_01_06.png'),
+(17, 'Kepek/gyor_02_01.png'), (17, 'Kepek/gyor_02_02.png'), (17, 'Kepek/gyor_02_03.png'), (17, 'Kepek/gyor_02_04.png'),
+(18, 'Kepek/gyor_03_01.png'), (18, 'Kepek/gyor_03_02.png'), (18, 'Kepek/gyor_03_03.png'), (18, 'Kepek/gyor_03_04.png'), (18, 'Kepek/gyor_03_05.png'), (18, 'Kepek/gyor_03_06.png'),
+(19, 'Kepek/gyor_04_01.png'), (19, 'Kepek/gyor_04_02.png'), (19, 'Kepek/gyor_04_03.png'), (19, 'Kepek/gyor_04_04.png'), (19, 'Kepek/gyor_04_05.png'), (19, 'Kepek/gyor_04_06.png'),
+(20, 'Kepek/gyor_05_01.png'), (20, 'Kepek/gyor_05_02.png'), (20, 'Kepek/gyor_05_03.png'), (20, 'Kepek/gyor_05_04.png'), (20, 'Kepek/gyor_05_05.png'), (20, 'Kepek/gyor_05_06.png'), (20, 'Kepek/gyor_05_07.png');
+
+
 
 -- Opcionális: AUTO_INCREMENT értékek visszaállítása (általában nem szükséges, de ha nagyon tiszta reset kell)
 ALTER TABLE megye      AUTO_INCREMENT = 1;
