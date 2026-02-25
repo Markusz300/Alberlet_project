@@ -136,7 +136,20 @@ INSERT INTO alberlet
 ('9024 Győr, Tihanyi Árpád út 63.', 1, 200000, 37, 1.0, 2, 0, 0, 'Kiadó egy 37 nm-es, 1 szobás, nem bútorozott lakás egy 2025-ben épült társasház 2. emeletén. Lift nincs, modern kialakítású, azonnal költözhető ingatlan.', '2026-04-10', 1, 4, 5),
 ('9023 Győr, Szigethy Attila út 112.', 1, 200000, 56, 2.0, 2, 1, 1, 'Kiadó egy 56 nm-es, 2 szobás, bútorozott lakás liftes társasházban, 200 000 Ft/hó bérleti díjért. Praktikus elosztású, kényelmes otthon pároknak vagy egyedülállóknak.', '2026-04-05', 1, 4, 5),
 ('9021 Győr, Kazinczy utca 8.', 1, 250000, 70, 3.0, 1, 0, 1, 'Kiadó egy 70 nm-es, 3 szobás, bútorozott lakás egy 4 emeletes társasház 1. emeletén. Lift nincs, tágas és világos otthon, ideális családok vagy több fő részére is.', '2026-03-25', 1, 4, 5),
-('9026 Győr, Kálóczy tér 4.', 1, 425000, 118, 4.0, 4, 1, 0, 'Kiadó egy 118 nm-es, 4 szobás, bútorozatlan lakás liftes társasház 4. emeletén. Tágas, világos terekkel rendelkező ingatlan, ideális családok vagy irodai célra is.', '2026-04-01', 1, 4, 5);
+('9026 Győr, Kálóczy tér 4.', 1, 425000, 118, 4.0, 4, 1, 0, 'Kiadó egy 118 nm-es, 4 szobás, bútorozatlan lakás liftes társasház 4. emeletén. Tágas, világos terekkel rendelkező ingatlan, ideális családok vagy irodai célra is.', '2026-04-01', 1, 4, 5),
+('9400 Sopron, Várkerület 12.', 1, 170000, 53, 2.0, 3, 0, 0, 'Kiadó egy 53 nm-es, 2 szobás, nem berendezett lakás a 3. emeleten, 170 000 Ft/hó bérleti díjért. Lift nincs, praktikus elosztású, saját igény szerint berendezhető otthon.', '2026-04-02', 1, 5, 6),
+('9400 Sopron, Deák tér 5.', 1, 220000, 55, 2.0, 2, 0, 0, 'Kiadó egy 55 nm-es, 2 szobás, bútorozatlan lakás a 2. emeleten, 220 000 Ft/hó bérleti díjért. Lift nincs, világos, jól alakítható terek jellemzik.', '2026-03-18', 1, 5, 6),
+('9400 Sopron, Erzsébet utca 18.', 1, 190000, 42, 2.5, 2, 0, 1, 'Kiadó egy 42 nm-es, 2,5 szobás, bútorozott lakás a 2. emeleten, 190 000 Ft/hó bérleti díjért. Lift nincs, praktikus elosztású, azonnal költözhető otthon.', '2026-04-23', 1, 5, 6),
+('9400 Sopron, Győri út 44.', 0, 380000, 75, 2.0, 1, 0, 0, 'Kiadó Sopron mellett, de közigazgatásilag Sopronban található, 75 nm-es, 2 szobás ház 380 000 Ft/hó bérleti díjért. Az ingatlanhoz betonozott udvar tartozik, ideális azoknak, akik nyugodt, kertkapcsolatos otthont keresnek.', '2026-03-04', 1, 5, 6),
+('9400 Sopron, Lackner Kristóf utca 27.', 1, 219000, 58, 2.5, 1, 0, 1, 'Kiadó egy 58 nm-es, 2,5 szobás, bútorozott lakás az 1. emeleten, 219 000 Ft/hó bérleti díjért. Lift nincs, praktikus elosztású, kényelmes otthon pároknak vagy kisebb családnak is.', '2026-04-30', 1, 5, 7),
+('7621 Pécs, Király utca 14.', 1, 155000, 60, 2.0, 2, 0, 0, 'Kiadó egy 2 szobás lakás a 2. emeleten, 155 000 Ft/hó bérleti díjért. Lift nincs, bútorozatlan, így saját igény szerint alakítható.', '2026-03-17', 1, 6, 7),
+('7623 Pécs, Rákóczi út 56.', 1, 160000, 65, 3.0, 1, 1, 1, 'Kiadó egy 65 nm-es, 3 szobás, bútorozott lakás liftes társasház 1. emeletén, 160 000 Ft/hó bérleti díjért. Tágas, kényelmes otthon családok vagy több fő részére is.', '2026-03-31', 1, 6, 7),
+('7632 Pécs, Aidinger János út 22.', 1, 135000, 54, 2.0, 1, 0, 0, 'Kiadó egy 54 nm-es, 2 szobás, bútorozatlan lakás az 1. emeleten, 135 000 Ft/hó bérleti díjért. Lift nincs, világos és praktikus elosztású otthon.', '2026-03-11', 1, 6, 7),
+('7624 Pécs, Hungária utca 9.', 1, 381000, 80, 3.0, 1, 0, 1, 'Kiadó egy 80 nm-es, 3 szobás, bútorozott lakás az 1. emeleten, 381 000 Ft/hó bérleti díjért. Lift nincs, tágas és világos, kényelmes családi otthon.', '2026-04-22', 1, 6, 8),
+('7633 Pécs, Megyeri út 41.', 1, 230000, 64, 3.0, 4, 1, 1, 'Kiadó egy 64 nm-es, 3 szobás, bútorozott lakás liftes társasház 4. emeletén, 230 000 Ft/hó bérleti díjért. Tágas, világos otthon, ideális családok vagy több fő részére.', '2026-03-07', 1, 6, 8);
+
+
+
 
 
 
@@ -161,7 +174,20 @@ INSERT INTO kep (alberlet_id, kep_url) VALUES
 (17, 'Kepek/gyor_02_01.png'), (17, 'Kepek/gyor_02_02.png'), (17, 'Kepek/gyor_02_03.png'), (17, 'Kepek/gyor_02_04.png'),
 (18, 'Kepek/gyor_03_01.png'), (18, 'Kepek/gyor_03_02.png'), (18, 'Kepek/gyor_03_03.png'), (18, 'Kepek/gyor_03_04.png'), (18, 'Kepek/gyor_03_05.png'), (18, 'Kepek/gyor_03_06.png'),
 (19, 'Kepek/gyor_04_01.png'), (19, 'Kepek/gyor_04_02.png'), (19, 'Kepek/gyor_04_03.png'), (19, 'Kepek/gyor_04_04.png'), (19, 'Kepek/gyor_04_05.png'), (19, 'Kepek/gyor_04_06.png'),
-(20, 'Kepek/gyor_05_01.png'), (20, 'Kepek/gyor_05_02.png'), (20, 'Kepek/gyor_05_03.png'), (20, 'Kepek/gyor_05_04.png'), (20, 'Kepek/gyor_05_05.png'), (20, 'Kepek/gyor_05_06.png'), (20, 'Kepek/gyor_05_07.png');
+(20, 'Kepek/gyor_05_01.png'), (20, 'Kepek/gyor_05_02.png'), (20, 'Kepek/gyor_05_03.png'), (20, 'Kepek/gyor_05_04.png'), (20, 'Kepek/gyor_05_05.png'), (20, 'Kepek/gyor_05_06.png'), (20, 'Kepek/gyor_05_07.png'),
+(21, 'Kepek/sopron_01_01.png'), (21, 'Kepek/sopron_01_02.png'), (21, 'Kepek/sopron_01_03.png'), (21, 'Kepek/sopron_01_04.png'),
+(22, 'Kepek/sopron_02_01.png'), (22, 'Kepek/sopron_02_02.png'), (22, 'Kepek/sopron_02_03.png'), (22, 'Kepek/sopron_02_04.png'), (22, 'Kepek/sopron_02_05.png'), (22, 'Kepek/sopron_02_06.png'),
+(23, 'Kepek/sopron_03_01.png'), (23, 'Kepek/sopron_03_02.png'), (23, 'Kepek/sopron_03_03.png'), (23, 'Kepek/sopron_03_04.png'), (23, 'Kepek/sopron_03_05.png'),
+(24, 'Kepek/sopron_04_01.png'), (24, 'Kepek/sopron_04_02.png'), (24, 'Kepek/sopron_04_03.png'), (24, 'Kepek/sopron_04_04.png'), (24, 'Kepek/sopron_04_05.png'), (24, 'Kepek/sopron_04_06.png'),
+(25, 'Kepek/sopron_05_01.png'), (25, 'Kepek/sopron_05_02.png'), (25, 'Kepek/sopron_05_03.png'), (25, 'Kepek/sopron_05_04.png'),
+(26, 'Kepek/pecs_01_01.png'), (26, 'Kepek/pecs_01_02.png'), (26, 'Kepek/pecs_01_03.png'), (26, 'Kepek/pecs_01_04.png'),
+(27, 'Kepek/pecs_02_01.png'), (27, 'Kepek/pecs_02_02.png'), (27, 'Kepek/pecs_02_03.png'), (27, 'Kepek/pecs_02_04.png'), (27, 'Kepek/pecs_02_05.png'),
+(28, 'Kepek/pecs_03_01.png'), (28, 'Kepek/pecs_03_02.png'), (28, 'Kepek/pecs_03_03.png'), (28, 'Kepek/pecs_03_04.png'), (28, 'Kepek/pecs_03_05.png'),
+(29, 'Kepek/pecs_04_01.png'), (29, 'Kepek/pecs_04_02.png'), (29, 'Kepek/pecs_04_03.png'), (29, 'Kepek/pecs_04_04.png'), (29, 'Kepek/pecs_04_05.png'),
+(30, 'Kepek/pecs_05_01.png'), (30, 'Kepek/pecs_05_02.png'), (30, 'Kepek/pecs_05_03.png'), (30, 'Kepek/pecs_05_04.png'), (30, 'Kepek/pecs_05_05.png'), (30, 'Kepek/pecs_05_06.png');
+
+
+
 
 
 
