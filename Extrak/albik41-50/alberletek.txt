@@ -1,0 +1,190 @@
+cím
+tipus int
+ar int
+meret int
+szobák száma decimal
+emelet int
+lift int
+butorozott int
+leiras text
+hirdetes_datuma date
+aktiv int
+varos_id int
+tulajdonos_id int
+-----------------------------------
+
+-1-
+
+6720 Szeged, Kárász utca 12.
+1
+200000
+40
+1.0
+2
+0
+1
+"Kiadó egy 40 nm-es, 1 szobás, bútorozott lakás a 2. emeleten, 200 000 Ft/hó bérleti díjért.
+A társasházban nincs lift, az ingatlan kompakt és világos, ideális egyedülállóknak vagy pároknak."
+2026-04-26
+1
+9
+11
+
+-2-
+
+6723 Szeged, Fő fasor 34.
+1
+140000
+44
+2.5
+1
+0
+1
+"Kiadó egy 44 nm-es, 2,5 szobás, bútorozott lakás az 1. emeleten, 140 000 Ft/hó bérleti díjért.
+A társasházban nincs lift, az ingatlan praktikus elrendezésű, ideális egyedülállóknak vagy pároknak."
+2026-03-01
+1
+9
+11
+
+-3-
+
+6724 Szeged, Tisza Lajos körút 56.
+1
+150000
+45
+2.0
+2
+0
+0
+"Kiadó egy 45 nm-es, 2 szobás, bútorozatlan lakás a 2. emeleten, 150 000 Ft/hó bérleti díjért.
+A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, ideális egyedülállóknak vagy pároknak."
+2026-04-01
+1
+10
+11
+
+-4-
+
+6722 Szeged, Klauzál tér 7.
+1
+180000
+62
+2.5
+1
+0
+1
+"Kiadó egy 62 nm-es, 2,5 szobás, bútorozott lakás az 1. emeleten, 180 000 Ft/hó bérleti díjért.
+A társasházban nincs lift, az ingatlan tágas és világos, ideális pároknak vagy kisebb családoknak."
+2026-04-04
+1
+10
+11
+
+-5-
+
+6721 Szeged, Rókusi körút 89.
+1
+235000
+50
+2.0
+2
+0
+1
+"Kiadó egy 50 nm-es, 2 szobás, bútorozott lakás a 2. emeleten, 235 000 Ft/hó bérleti díjért.
+A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, ideális egyedülállóknak vagy pároknak."
+2026-04-29
+1
+11
+11
+
+-6-
+
+6800 Hódmezővásárhely, Kossuth tér 10.
+1
+120000
+53
+3
+2
+0
+0
+"Kiadó egy 53 nm-es, 3 szobás lakás a 2. emeleten, 120 000 Ft/hó bérleti díjért.
+Az ingatlan nem bútorozott, a társasházban nincs lift, világos és praktikus elrendezése ideális családoknak vagy több együtt költöző bérlőnek."
+2026-04-02
+1
+12
+12
+
+-7-
+
+6800 Hódmezővásárhely, Dózsa György utca 25.
+1
+115000
+47
+2.0
+3
+0
+0
+"Kiadó egy 47 nm-es, 2 szobás lakás a 3. emeleten, 115 000 Ft/hó bérleti díjért.
+Az ingatlan nem bútorozott, a társasházban nincs lift, praktikus elrendezése ideális egyedülállóknak vagy pároknak."
+2026-03-02
+13
+12
+
+-8-
+
+6800 Hódmezővásárhely, Ady Endre utca 44.
+1
+140000
+55
+2.0
+4
+0
+0
+"Kiadó egy 55 nm-es, 2 szobás lakás a 4. emeleten, 140 000 Ft/hó bérleti díjért.
+Az ingatlan nem bútorozott, a társasházban nincs lift, világos és praktikus elrendezése ideális egyedülállóknak vagy pároknak."
+2026-03-05
+1
+14
+12
+
+-9-
+
+6800 Hódmezővásárhely, Bethlen Gábor utca 8.
+1
+130000
+57
+2.0
+1
+0
+1
+"Kiadó egy 57 nm-es, 2 szobás, bútorozott lakás az 1. emeleten, 130 000 Ft/hó bérleti díjért.
+A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, ideális egyedülállóknak vagy pároknak."
+2026-03-10
+1
+15
+12
+
+-10-
+
+6800 Hódmezővásárhely, Széchenyi tér 19.
+1
+110000
+43
+1.5
+0
+0
+0
+"Kiadó egy 43 nm-es, 1,5 szobás lakás a földszinten, 110 000 Ft/hó bérleti díjért.
+Az ingatlan nem bútorozott, a társasházban nincs lift, kompakt és világos elrendezése ideális egyedülállóknak vagy pároknak."
+2026-04-09
+1
+16
+12
+
+
+
+
+
+
+

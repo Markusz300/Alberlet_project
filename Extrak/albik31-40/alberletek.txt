@@ -1,0 +1,190 @@
+cím
+tipus int
+ar int
+meret int
+szobák száma decimal
+emelet int
+lift int
+butorozott int
+leiras text
+hirdetes_datuma date
+aktiv int
+varos_id int
+tulajdonos_id int
+-------------------------
+
+-1-
+
+9700 Szombathely, Kossuth Lajos utca 12.
+0
+380000
+150
+3.5
+2
+0
+0
+"Kiadó egy 2 emeletes, 3,5 szobás családi ház 380 000 Ft/hó bérleti díjért.
+A ház nem bútorozott, lift nincs, tágas elrendezésének köszönhetően kényelmes életteret biztosít. Ideális választás családoknak vagy nagyobb létszámú bérlőknek, akik hosszú távra keresnek otthont."
+2026-03-17
+1
+7
+8
+
+-2-
+
+9700 Szombathely, Szent Márton utca 45.
+1
+150000
+55
+2.0
+1
+0
+1
+"Kiadó egy 55 nm-es, 2 szobás, bútorozott lakás az 1. emeleten, 150 000 Ft/hó bérleti díjért.
+A társasházban nincs lift, az ingatlan praktikus elrendezésű, ideális egyedülállóknak vagy pároknak."
+2026-03-30
+1
+7
+8
+
+-3-
+
+9700 Szombathely, Paragvári utca 7.
+1
+160000
+43
+2.0
+2
+0
+1
+"Kiadó egy 43 nm-es, 2 szobás, bútorozott lakás a 2. emeleten.
+A társasházban nincs lift, az ingatlan világos, praktikus elrendezésű, ideális egyedülállóknak vagy pároknak."
+2026-04-23
+1
+7
+9
+
+-4-
+
+9700 Szombathely, Rohonci út 103.
+1
+99000
+13
+1.5
+1
+0
+1
+"Kiadó egy 13 nm-es, 1,5 szobás, bútorozott lakás 99 000 Ft/hó bérleti díjért.
+A társasházban nincs lift, az ingatlan kompakt kialakítású, ideális egy fő részére."
+2026-04-10
+1
+7
+9
+
+-5-
+
+9700 Szombathely, Hefele Menyhért utca 28.
+1
+150000
+54
+2.0
+2
+0
+0
+"Kiadó egy 54 nm-es, 2 szobás lakás a 2. emeleten, 150 000 Ft/hó bérleti díjért.
+Az ingatlan nem bútorozott, a társasházban nincs lift, praktikus elrendezése miatt ideális pároknak vagy kisebb családoknak."
+2026-04-21
+1
+8
+9
+
+-6-
+
+1073 Budapest, Erzsébet körút 24.
+0
+590000
+135
+5.5
+2
+0
+0
+"Kiadó egy 135 nm-es, 5,5 szobás ház 590 000 Ft/hó bérleti díjért.
+Az ingatlan nem bútorozott, lift nincs, tágas kialakításának köszönhetően ideális nagyobb családok vagy több együtt költöző bérlő számára."
+2026-03-14
+1
+8
+10
+
+-7-
+
+1136 Budapest, Pannónia utca 15.
+0
+1400000
+303
+5.5
+2
+0
+1
+"Kiadó egy 303 nm-es, 5,5 szobás, 2 szintes ház 1 400 000 Ft/hó bérleti díjért.
+Az ingatlan bútorozott, lift nincs, tágas és exkluzív kialakításának köszönhetően ideális nagyobb családok vagy reprezentatív célra egyaránt."
+2026-03-21
+1
+8
+10
+
+-8-
+
+1117 Budapest, Fehérvári út 89.
+2
+140000
+17
+1
+1
+0
+1
+"Kiadó egy 17 nm-es, bútorozott szoba 140 000 Ft/hó bérleti díjért.
+A lakásban nincs lift, a szobát 2 lakótárs használja, ideális egyedülállóknak vagy diákoknak, akik megosztott élettérben keresnek otthont."
+2026-03-12
+1
+8
+10
+
+-9-
+
+1092 Budapest, Ráday utca 41.
+1
+772000
+101
+5.0
+1
+0
+0
+"Kiadó egy 101 nm-es, 5 szobás lakás az 1. emeleten, 772 000 Ft/hó bérleti díjért.
+Az ingatlan nem bútorozott, a társasházban nincs lift, tágas elrendezése ideális nagyobb családok vagy több együtt költöző bérlő számára."
+2026-03-23
+1
+9
+10
+
+-10-
+
+1146 Budapest, Thököly út 76.
+1
+275000
+72
+1.0
+2
+1
+0
+"Kiadó egy 72 nm-es, 1 szobás lakás a 2. emeleten, 275 000 Ft/hó bérleti díjért.
+Az ingatlan nem bútorozott, a társasházban van lift, világos és tágas kialakítása ideális rendelőnek, irodának, kozmetikának."
+2026-04-12
+1
+9
+10
+
+
+
+
+
+
