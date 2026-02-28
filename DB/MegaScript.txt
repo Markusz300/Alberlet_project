@@ -146,6 +146,7 @@ INSERT INTO varos (nev, megye_id) VALUES
 ('Hódmezővásárhely',6);
 
 -- Albérletek
+
 INSERT INTO alberlet 
 (cim, tipus, ar, meret, szobak_szama, emelet, lift, butorozott, leiras, hirdetes_datuma, aktiv, varos_id, tulajdonos_id) VALUES
 ('8900 Zalaegerszeg, Arany János út 12.',          1, 150000, 54, 2.0, 4, 1, 1, 'Kiadó Zalagerszegen egy csendes, nagy térrel rendelkező, otthonos albérlet. A környezet kifogásolhatatlan, tiszta és modern.',                    '2026-03-20', 1, 2, 1),
@@ -177,14 +178,30 @@ INSERT INTO alberlet
 ('7623 Pécs, Rákóczi út 56.', 1, 160000, 65, 3.0, 1, 1, 1, 'Kiadó egy 65 nm-es, 3 szobás, bútorozott lakás liftes társasház 1. emeletén, 160 000 Ft/hó bérleti díjért. Tágas, kényelmes otthon családok vagy több fő részére is.', '2026-03-31', 1, 6, 7),
 ('7632 Pécs, Aidinger János út 22.', 1, 135000, 54, 2.0, 1, 0, 0, 'Kiadó egy 54 nm-es, 2 szobás, bútorozatlan lakás az 1. emeleten, 135 000 Ft/hó bérleti díjért. Lift nincs, világos és praktikus elosztású otthon.', '2026-03-11', 1, 6, 7),
 ('7624 Pécs, Hungária utca 9.', 1, 381000, 80, 3.0, 1, 0, 1, 'Kiadó egy 80 nm-es, 3 szobás, bútorozott lakás az 1. emeleten, 381 000 Ft/hó bérleti díjért. Lift nincs, tágas és világos, kényelmes családi otthon.', '2026-04-22', 1, 6, 8),
-('7633 Pécs, Megyeri út 41.', 1, 230000, 64, 3.0, 4, 1, 1, 'Kiadó egy 64 nm-es, 3 szobás, bútorozott lakás liftes társasház 4. emeletén, 230 000 Ft/hó bérleti díjért. Tágas, világos otthon, ideális családok vagy több fő részére.', '2026-03-07', 1, 6, 8);
+('7633 Pécs, Megyeri út 41.', 1, 230000, 64, 3.0, 4, 1, 1, 'Kiadó egy 64 nm-es, 3 szobás, bútorozott lakás liftes társasház 4. emeletén, 230 000 Ft/hó bérleti díjért. Tágas, világos otthon, ideális családok vagy több fő részére.', '2026-03-07', 1, 6, 8),
+('9700 Szombathely, Kossuth Lajos utca 12.', 0, 380000, 150, 3.5, 2, 0, 0, 'Kiadó egy 2 emeletes, 3,5 szobás családi ház 380 000 Ft/hó bérleti díjért. A ház nem bútorozott, lift nincs, tágas elrendezésének köszönhetően kényelmes életteret biztosít. Ideális választás családoknak vagy nagyobb létszámú bérlőknek, akik hosszú távra keresnek otthont.', '2026-03-17', 1, 7, 8),
+('9700 Szombathely, Szent Márton utca 45.', 1, 150000, 55, 2.0, 1, 0, 1, 'Kiadó egy 55 nm-es, 2 szobás, bútorozott lakás az 1. emeleten, 150 000 Ft/hó bérleti díjért. A társasházban nincs lift, az ingatlan praktikus elrendezésű, ideális egyedülállóknak vagy pároknak.', '2026-03-30', 1, 7, 8),
+('9700 Szombathely, Paragvári utca 7.', 1, 160000, 43, 2.0, 2, 0, 1, 'Kiadó egy 43 nm-es, 2 szobás, bútorozott lakás a 2. emeleten. A társasházban nincs lift, az ingatlan világos, praktikus elrendezésű, ideális egyedülállóknak vagy pároknak.', '2026-04-23', 1, 7, 9),
+('9700 Szombathely, Rohonci út 103.', 1, 99000, 50, 1.5, 1, 0, 1, 'Kiadó egy 50 nm-es, 1,5 szobás, bútorozott lakás 99 000 Ft/hó bérleti díjért. A társasházban nincs lift, az ingatlan kompakt kialakítású, ideális egy fő részére.', '2026-04-10', 1, 7, 9),
+('9700 Szombathely, Hefele Menyhért utca 28.', 1, 150000, 54, 2.0, 2, 0, 0, 'Kiadó egy 54 nm-es, 2 szobás lakás a 2. emeleten, 150 000 Ft/hó bérleti díjért. Az ingatlan nem bútorozott, a társasházban nincs lift, praktikus elrendezése miatt ideális pároknak vagy kisebb családoknak.', '2026-04-21', 1, 7, 9),
+('1073 Budapest, Erzsébet körút 24.', 0, 590000, 135, 5.5, 2, 0, 0, 'Kiadó egy 135 nm-es, 5,5 szobás ház 590 000 Ft/hó bérleti díjért. Az ingatlan nem bútorozott, lift nincs, tágas kialakításának köszönhetően ideális nagyobb családok vagy több együtt költöző bérlő számára.', '2026-03-14', 1, 8, 10),
+('1136 Budapest, Pannónia utca 15.', 0, 1400000, 303, 5.5, 2, 0, 1, 'Kiadó egy 303 nm-es, 5,5 szobás, 2 szintes ház 1 400 000 Ft/hó bérleti díjért. Az ingatlan bútorozott, lift nincs, tágas és exkluzív kialakításának köszönhetően ideális nagyobb családok vagy reprezentatív célra egyaránt.', '2026-03-21', 1, 8, 10),
+('1117 Budapest, Fehérvári út 89.', 2, 140000, 17, 1.0, 1, 0, 1, 'Kiadó egy 17 nm-es, bútorozott szoba 140 000 Ft/hó bérleti díjért. A lakásban nincs lift, a szobát 2 lakótárs használja, ideális egyedülállóknak vagy diákoknak, akik megosztott élettérben keresnek otthont.', '2026-03-12', 1, 8, 10),
+('1092 Budapest, Ráday utca 41.', 1, 772000, 101, 5.0, 1, 0, 0, 'Kiadó egy 101 nm-es, 5 szobás lakás az 1. emeleten, 772 000 Ft/hó bérleti díjért. Az ingatlan nem bútorozott, a társasházban nincs lift, tágas elrendezése ideális nagyobb családok vagy több együtt költöző bérlő számára.', '2026-03-23', 1, 8, 10),
+('1146 Budapest, Thököly út 76.', 1, 275000, 72, 1.0, 2, 1, 0, 'Kiadó egy 72 nm-es, 1 szobás lakás a 2. emeleten, 275 000 Ft/hó bérleti díjért. Az ingatlan nem bútorozott, a társasházban van lift, világos és tágas kialakítása ideális rendelőnek, irodának, kozmetikának.', '2026-04-12', 1, 8, 10),
+('6720 Szeged, Kárász utca 12.', 1, 200000, 40, 1.0, 2, 0, 1, 'Kiadó egy 40 nm-es, 1 szobás, bútorozott lakás a 2. emeleten, 200 000 Ft/hó bérleti díjért. A társasházban nincs lift, az ingatlan kompakt és világos, ideális egyedülállóknak vagy pároknak.', '2026-04-26', 1, 9, 11),
+('6723 Szeged, Fő fasor 34.', 1, 140000, 44, 2.5, 1, 0, 1, 'Kiadó egy 44 nm-es, 2,5 szobás, bútorozott lakás az 1. emeleten, 140 000 Ft/hó bérleti díjért. A társasházban nincs lift, az ingatlan praktikus elrendezésű, ideális egyedülállóknak vagy pároknak.', '2026-03-01', 1, 9, 11),
+('6724 Szeged, Tisza Lajos körút 56.', 1, 150000, 45, 2.0, 2, 0, 0, 'Kiadó egy 45 nm-es, 2 szobás, bútorozatlan lakás a 2. emeleten, 150 000 Ft/hó bérleti díjért. A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, ideális egyedülállóknak vagy pároknak.', '2026-04-01', 1, 9, 11),
+('6722 Szeged, Klauzál tér 7.', 1, 180000, 62, 2.5, 1, 0, 1, 'Kiadó egy 62 nm-es, 2,5 szobás, bútorozott lakás az 1. emeleten, 180 000 Ft/hó bérleti díjért. A társasházban nincs lift, az ingatlan tágas és világos, ideális pároknak vagy kisebb családoknak.', '2026-04-04', 1, 9, 11),
+('6721 Szeged, Rókusi körút 89.', 1, 235000, 50, 2.0, 2, 0, 1, 'Kiadó egy 50 nm-es, 2 szobás, bútorozott lakás a 2. emeleten, 235 000 Ft/hó bérleti díjért. A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, ideális egyedülállóknak vagy pároknak.', '2026-04-29', 1, 9, 12),
+('6800 Hódmezővásárhely, Kossuth tér 10.', 1, 120000, 53, 3.0, 2, 0, 0, 'Kiadó egy 53 nm-es, 3 szobás lakás a 2. emeleten, 120 000 Ft/hó bérleti díjért. Az ingatlan nem bútorozott, a társasházban nincs lift, világos és praktikus elrendezése ideális családoknak vagy több együtt költöző bérlőnek.', '2026-04-02', 1, 10, 12),
+('6800 Hódmezővásárhely, Dózsa György utca 25.', 1, 115000, 47, 2.0, 3, 0, 0, 'Kiadó egy 47 nm-es, 2 szobás lakás a 3. emeleten, 115 000 Ft/hó bérleti díjért. Az ingatlan nem bútorozott, a társasházban nincs lift, praktikus elrendezése ideális egyedülállóknak vagy pároknak.', '2026-03-02', 1, 10, 13),
+('6800 Hódmezővásárhely, Ady Endre utca 44.', 1, 140000, 55, 2.0, 4, 0, 0, 'Kiadó egy 55 nm-es, 2 szobás lakás a 4. emeleten, 140 000 Ft/hó bérleti díjért. Az ingatlan nem bútorozott, a társasházban nincs lift, világos és praktikus elrendezése ideális egyedülállóknak vagy pároknak.', '2026-03-05', 1, 10, 14),
+('6800 Hódmezővásárhely, Bethlen Gábor utca 8.', 1, 130000, 57, 2.0, 1, 0, 1, 'Kiadó egy 57 nm-es, 2 szobás, bútorozott lakás az 1. emeleten, 130 000 Ft/hó bérleti díjért. A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, ideális egyedülállóknak vagy pároknak.', '2026-03-10', 1, 10, 15),
+('6800 Hódmezővásárhely, Széchenyi tér 19.', 1, 110000, 43, 1.5, 0, 0, 0, 'Kiadó egy 43 nm-es, 1,5 szobás lakás a földszinten, 110 000 Ft/hó bérleti díjért. Az ingatlan nem bútorozott, a társasházban nincs lift, kompakt és világos elrendezése ideális egyedülállóknak vagy pároknak.', '2026-04-09', 1, 10, 16);
 
+-- kepek
 
-
-
-
-
--- Képek (az eddig megadott 10 albérlethez)
 INSERT INTO kep (alberlet_id, kep_url) VALUES
 (1, 'Kepek/zalaegerszeg_01_01.png'), (1, 'Kepek/zalaegerszeg_01_02.png'), (1, 'Kepek/zalaegerszeg_01_03.png'), (1, 'Kepek/zalaegerszeg_01_04.png'),
 (2, 'Kepek/zalaegerszeg_02_01.png'), (2, 'Kepek/zalaegerszeg_02_02.png'), (2, 'Kepek/zalaegerszeg_02_03.png'), (2, 'Kepek/zalaegerszeg_02_04.png'), (2, 'Kepek/zalaegerszeg_02_05.png'),
@@ -215,14 +232,41 @@ INSERT INTO kep (alberlet_id, kep_url) VALUES
 (27, 'Kepek/pecs_02_01.png'), (27, 'Kepek/pecs_02_02.png'), (27, 'Kepek/pecs_02_03.png'), (27, 'Kepek/pecs_02_04.png'), (27, 'Kepek/pecs_02_05.png'),
 (28, 'Kepek/pecs_03_01.png'), (28, 'Kepek/pecs_03_02.png'), (28, 'Kepek/pecs_03_03.png'), (28, 'Kepek/pecs_03_04.png'), (28, 'Kepek/pecs_03_05.png'),
 (29, 'Kepek/pecs_04_01.png'), (29, 'Kepek/pecs_04_02.png'), (29, 'Kepek/pecs_04_03.png'), (29, 'Kepek/pecs_04_04.png'), (29, 'Kepek/pecs_04_05.png'),
-(30, 'Kepek/pecs_05_01.png'), (30, 'Kepek/pecs_05_02.png'), (30, 'Kepek/pecs_05_03.png'), (30, 'Kepek/pecs_05_04.png'), (30, 'Kepek/pecs_05_05.png'), (30, 'Kepek/pecs_05_06.png');
+(30, 'Kepek/pecs_05_01.png'), (30, 'Kepek/pecs_05_02.png'), (30, 'Kepek/pecs_05_03.png'), (30, 'Kepek/pecs_05_04.png'), (30, 'Kepek/pecs_05_05.png'), (30, 'Kepek/pecs_05_06.png'),
+(31, 'Kepek/szombathely_01_01.png'), (31, 'Kepek/szombathely_01_02.png'), (31, 'Kepek/szombathely_01_03.png'), (31, 'Kepek/szombathely_01_04.png'), (31, 'Kepek/szombathely_01_05.png'),
+(31, 'Kepek/szombathely_01_06.png'), (31, 'Kepek/szombathely_01_07.png'), (31, 'Kepek/szombathely_01_08.png'), (31, 'Kepek/szombathely_01_09.png'), (31, 'Kepek/szombathely_01_10.png'),
+(32, 'Kepek/szombathely_02_01.png'), (32, 'Kepek/szombathely_02_02.png'), (32, 'Kepek/szombathely_02_03.png'), (32, 'Kepek/szombathely_02_04.png'), (32, 'Kepek/szombathely_02_05.png'), (32, 'Kepek/szombathely_02_06.png'),
+(33, 'Kepek/szombathely_03_01.png'), (33, 'Kepek/szombathely_03_02.png'), (33, 'Kepek/szombathely_03_03.png'), (33, 'Kepek/szombathely_03_04.png'), (33, 'Kepek/szombathely_03_05.png'),
+(33, 'Kepek/szombathely_03_06.png'), (33, 'Kepek/szombathely_03_07.png'), (33, 'Kepek/szombathely_03_08.png'),
+(34, 'Kepek/szombathely_04_01.png'), (34, 'Kepek/szombathely_04_02.png'), (34, 'Kepek/szombathely_04_03.png'), (34, 'Kepek/szombathely_04_04.png'), (34, 'Kepek/szombathely_04_05.png'),
+(35, 'Kepek/szombathely_05_01.png'), (35, 'Kepek/szombathely_05_02.png'), (35, 'Kepek/szombathely_05_03.png'), (35, 'Kepek/szombathely_05_04.png'), (35, 'Kepek/szombathely_05_05.png'), (35, 'Kepek/szombathely_05_06.png'),
+(36, 'Kepek/budapest_01_01.png'), (36, 'Kepek/budapest_01_02.png'), (36, 'Kepek/budapest_01_03.png'), (36, 'Kepek/budapest_01_04.png'), (36, 'Kepek/budapest_01_05.png'),
+(36, 'Kepek/budapest_01_06.png'), (36, 'Kepek/budapest_01_07.png'), (36, 'Kepek/budapest_01_08.png'), (36, 'Kepek/budapest_01_09.png'), (36, 'Kepek/budapest_01_10.png'),
+(37, 'Kepek/budapest_02_01.png'), (37, 'Kepek/budapest_02_02.png'), (37, 'Kepek/budapest_02_03.png'), (37, 'Kepek/budapest_02_04.png'), (37, 'Kepek/budapest_02_05.png'),
+(37, 'Kepek/budapest_02_06.png'), (37, 'Kepek/budapest_02_07.png'), (37, 'Kepek/budapest_02_08.png'), (37, 'Kepek/budapest_02_09.png'), (37, 'Kepek/budapest_02_10.png'),
+(37, 'Kepek/budapest_02_11.png'), (37, 'Kepek/budapest_02_12.png'), (37, 'Kepek/budapest_02_13.png'), (37, 'Kepek/budapest_02_14.png'),
+(38, 'Kepek/budapest_03_01.png'), (38, 'Kepek/budapest_03_02.png'), (38, 'Kepek/budapest_03_03.png'), (38, 'Kepek/budapest_03_04.png'), (38, 'Kepek/budapest_03_05.png'),
+(38, 'Kepek/budapest_03_06.png'), (38, 'Kepek/budapest_03_07.png'),
+(39, 'Kepek/budapest_04_01.png'), (39, 'Kepek/budapest_04_02.png'), (39, 'Kepek/budapest_04_03.png'), (39, 'Kepek/budapest_04_04.png'), (39, 'Kepek/budapest_04_05.png'),
+(39, 'Kepek/budapest_04_06.png'), (39, 'Kepek/budapest_04_07.png'),
+(40, 'Kepek/budapest_05_01.png'), (40, 'Kepek/budapest_05_02.png'), (40, 'Kepek/budapest_05_03.png'), (40, 'Kepek/budapest_05_04.png'), (40, 'Kepek/budapest_05_05.png'),
+(40, 'Kepek/budapest_05_06.png'), (40, 'Kepek/budapest_05_07.png'),
+(41, 'Kepek/szeged_01_01.png'), (41, 'Kepek/szeged_01_02.png'), (41, 'Kepek/szeged_01_03.png'), (41, 'Kepek/szeged_01_04.png'), (41, 'Kepek/szeged_01_05.png'),
+(42, 'Kepek/szeged_02_01.png'), (42, 'Kepek/szeged_02_02.png'), (42, 'Kepek/szeged_02_03.png'), (42, 'Kepek/szeged_02_04.png'), (42, 'Kepek/szeged_02_05.png'), (42, 'Kepek/szeged_02_06.png'),
+(43, 'Kepek/szeged_03_01.png'), (43, 'Kepek/szeged_03_02.png'), (43, 'Kepek/szeged_03_03.png'), (43, 'Kepek/szeged_03_04.png'), (43, 'Kepek/szeged_03_05.png'), (43, 'Kepek/szeged_03_06.png'), (43, 'Kepek/szeged_03_07.png'), (43, 'Kepek/szeged_03_08.png'),
+(44, 'Kepek/szeged_04_01.png'), (44, 'Kepek/szeged_04_02.png'), (44, 'Kepek/szeged_04_03.png'), (44, 'Kepek/szeged_04_04.png'), (44, 'Kepek/szeged_04_05.png'),
+(45, 'Kepek/szeged_05_01.png'), (45, 'Kepek/szeged_05_02.png'), (45, 'Kepek/szeged_05_03.png'), (45, 'Kepek/szeged_05_04.png'), (45, 'Kepek/szeged_05_05.png'), (45, 'Kepek/szeged_05_06.png'), (45, 'Kepek/szeged_05_07.png'), (45, 'Kepek/szeged_05_08.png'),
+(46, 'Kepek/hodmezovasarhely_01_01.png'), (46, 'Kepek/hodmezovasarhely_01_02.png'), (46, 'Kepek/hodmezovasarhely_01_03.png'), (46, 'Kepek/hodmezovasarhely_01_04.png'), (46, 'Kepek/hodmezovasarhely_01_05.png'), (46, 'Kepek/hodmezovasarhely_01_06.png'),
+(47, 'Kepek/hodmezovasarhely_02_01.png'), (47, 'Kepek/hodmezovasarhely_02_02.png'), (47, 'Kepek/hodmezovasarhely_02_03.png'), (47, 'Kepek/hodmezovasarhely_02_04.png'), (47, 'Kepek/hodmezovasarhely_02_05.png'),
+(48, 'Kepek/hodmezovasarhely_03_01.png'), (48, 'Kepek/hodmezovasarhely_03_02.png'), (48, 'Kepek/hodmezovasarhely_03_03.png'), (48, 'Kepek/hodmezovasarhely_03_04.png'), (48, 'Kepek/hodmezovasarhely_03_05.png'), (48, 'Kepek/hodmezovasarhely_03_06.png'),
+(49, 'Kepek/hodmezovasarhely_04_01.png'), (49, 'Kepek/hodmezovasarhely_04_02.png'), (49, 'Kepek/hodmezovasarhely_04_03.png'), (49, 'Kepek/hodmezovasarhely_04_04.png'), (49, 'Kepek/hodmezovasarhely_04_05.png'), (49, 'Kepek/hodmezovasarhely_04_06.png'),
+(50, 'Kepek/hodmezovasarhely_05_01.png'), (50, 'Kepek/hodmezovasarhely_05_02.png'), (50, 'Kepek/hodmezovasarhely_05_03.png'), (50, 'Kepek/hodmezovasarhely_05_04.png'), (50, 'Kepek/hodmezovasarhely_05_05.png');
 
 
 
 
 
-
--- Opcionális: AUTO_INCREMENT értékek visszaállítása (általában nem szükséges, de ha nagyon tiszta reset kell)
+-- Minden 1 tol kezdodik
 ALTER TABLE megye      AUTO_INCREMENT = 1;
 ALTER TABLE varos      AUTO_INCREMENT = 1;
 ALTER TABLE tulajdonos AUTO_INCREMENT = 1;

@@ -61,7 +61,7 @@ A társasházban nincs lift, az ingatlan praktikus elrendezésű, ideális egyed
 A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, ideális egyedülállóknak vagy pároknak."
 2026-04-01
 1
-10
+9
 11
 
 -4-
@@ -78,7 +78,7 @@ A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, i
 A társasházban nincs lift, az ingatlan tágas és világos, ideális pároknak vagy kisebb családoknak."
 2026-04-04
 1
-10
+9
 11
 
 -5-
@@ -95,8 +95,8 @@ A társasházban nincs lift, az ingatlan tágas és világos, ideális pároknak
 A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, ideális egyedülállóknak vagy pároknak."
 2026-04-29
 1
-11
-11
+9
+12
 
 -6-
 
@@ -112,7 +112,7 @@ A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, i
 Az ingatlan nem bútorozott, a társasházban nincs lift, világos és praktikus elrendezése ideális családoknak vagy több együtt költöző bérlőnek."
 2026-04-02
 1
-12
+10
 12
 
 -7-
@@ -128,8 +128,8 @@ Az ingatlan nem bútorozott, a társasházban nincs lift, világos és praktikus
 "Kiadó egy 47 nm-es, 2 szobás lakás a 3. emeleten, 115 000 Ft/hó bérleti díjért.
 Az ingatlan nem bútorozott, a társasházban nincs lift, praktikus elrendezése ideális egyedülállóknak vagy pároknak."
 2026-03-02
+10
 13
-12
 
 -8-
 
@@ -145,8 +145,8 @@ Az ingatlan nem bútorozott, a társasházban nincs lift, praktikus elrendezése
 Az ingatlan nem bútorozott, a társasházban nincs lift, világos és praktikus elrendezése ideális egyedülállóknak vagy pároknak."
 2026-03-05
 1
+10
 14
-12
 
 -9-
 
@@ -162,8 +162,8 @@ Az ingatlan nem bútorozott, a társasházban nincs lift, világos és praktikus
 A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, ideális egyedülállóknak vagy pároknak."
 2026-03-10
 1
+10
 15
-12
 
 -10-
 
@@ -179,8 +179,8 @@ A társasházban nincs lift, az ingatlan világos és praktikus elrendezésű, i
 Az ingatlan nem bútorozott, a társasházban nincs lift, kompakt és világos elrendezése ideális egyedülállóknak vagy pároknak."
 2026-04-09
 1
+10
 16
-12
 
 
 
