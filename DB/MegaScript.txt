@@ -258,7 +258,7 @@ INSERT INTO kep (alberlet_id, kep_url) VALUES
 (45, 'Kepek/szeged_05_01.png'), (45, 'Kepek/szeged_05_02.png'), (45, 'Kepek/szeged_05_03.png'), (45, 'Kepek/szeged_05_04.png'), (45, 'Kepek/szeged_05_05.png'), (45, 'Kepek/szeged_05_06.png'), (45, 'Kepek/szeged_05_07.png'), (45, 'Kepek/szeged_05_08.png'),
 (46, 'Kepek/hodmezovasarhely_01_01.png'), (46, 'Kepek/hodmezovasarhely_01_02.png'), (46, 'Kepek/hodmezovasarhely_01_03.png'), (46, 'Kepek/hodmezovasarhely_01_04.png'), (46, 'Kepek/hodmezovasarhely_01_05.png'), (46, 'Kepek/hodmezovasarhely_01_06.png'),
 (47, 'Kepek/hodmezovasarhely_02_01.png'), (47, 'Kepek/hodmezovasarhely_02_02.png'), (47, 'Kepek/hodmezovasarhely_02_03.png'), (47, 'Kepek/hodmezovasarhely_02_04.png'), (47, 'Kepek/hodmezovasarhely_02_05.png'),
-(48, 'Kepek/hodmezovasarhely_03_01.png'), (48, 'Kepek/hodmezovasarhely_03_02.png'), (48, 'Kepek/hodmezovasarhely_03_03.png'), (48, 'Kepek/hodmezovasarhely_03_04.png'), (48, 'Kepek/hodmezovasarhely_03_05.png'), (48, 'Kepek/hodmezovasarhely_03_06.png'),
+(48, 'Kepek/hodmezovasarhely_03_01.png'), (48, 'Kepek/hodmezovasarhely_03_02.png'), (48, 'Kepek/hodmezovasarhely_03_03.png'), (48, 'Kepek/hodmezovasarhely_03_04.png'),
 (49, 'Kepek/hodmezovasarhely_04_01.png'), (49, 'Kepek/hodmezovasarhely_04_02.png'), (49, 'Kepek/hodmezovasarhely_04_03.png'), (49, 'Kepek/hodmezovasarhely_04_04.png'), (49, 'Kepek/hodmezovasarhely_04_05.png'), (49, 'Kepek/hodmezovasarhely_04_06.png'),
 (50, 'Kepek/hodmezovasarhely_05_01.png'), (50, 'Kepek/hodmezovasarhely_05_02.png'), (50, 'Kepek/hodmezovasarhely_05_03.png'), (50, 'Kepek/hodmezovasarhely_05_04.png'), (50, 'Kepek/hodmezovasarhely_05_05.png');
 
