@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\AlberletController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/alberletek', [AlberletController::class, 'index']);
+Route::get('/alberletek/{alberlet}', [AlberletController::class, 'show']);

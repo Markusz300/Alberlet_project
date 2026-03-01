@@ -1,15 +1,9 @@
--- ==================================================
--- Adatbázis létrehozása és kiválasztása
--- ==================================================
+
 CREATE DATABASE IF NOT EXISTS alberlet 
     CHARACTER SET utf8mb4 
     COLLATE utf8mb4_hungarian_ci;
 
 USE alberlet;
-
--- ==================================================
--- TÁBLÁK LÉTREHOZÁSA
--- ==================================================
 
 -- Megye
 CREATE TABLE IF NOT EXISTS megye (
@@ -39,7 +33,7 @@ CREATE TABLE IF NOT EXISTS tulajdonos (
 CREATE TABLE IF NOT EXISTS alberlet (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cim VARCHAR(255) NOT NULL,
-    tipus INT NOT NULL,                 -- 1 = egész albérlet, 0 = szoba
+    tipus INT NOT NULL,                 -- 1 = egész albérlet, 0 = ház, 2 = szoba
     ar INT NOT NULL,
     meret INT,
     szobak_szama DECIMAL(3,1) DEFAULT 1.0,
@@ -75,7 +69,6 @@ CREATE TABLE IF NOT EXISTS kep (
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-
 ALTER TABLE alberlet
 ADD CONSTRAINT fk_alberlet_tipus
 FOREIGN KEY (tipus) REFERENCES alberlet_tipus(id)
@@ -94,11 +87,10 @@ ALTER TABLE alberlet
 ADD CONSTRAINT chk_alberlet_aktiv
 CHECK (aktiv IN (0,1));
 
--- ==================================================
 -- ADATOK BESZÚRÁSA
--- ==================================================
 
 -- Tulajdonosok
+
 INSERT INTO tulajdonos (nev, email, telefon) VALUES
 ('Molnár Tímea',    'moltimi1995@businessmail.hu',  '+36 70 670 6767'),
 ('Kovács Béla',     'belakovacs@businessmail.hu',   '+36 20 234 8632'),
@@ -118,6 +110,7 @@ INSERT INTO tulajdonos (nev, email, telefon) VALUES
 ('Keretes Erika',   'erikakeretes@promail.com',      '+36 20 921 3424');
 
 -- Megyék
+
 INSERT INTO megye (nev) VALUES
 ('Zala'),                   -- 1
 ('Győr-moson-sopron'),      -- 2
@@ -126,6 +119,7 @@ INSERT INTO megye (nev) VALUES
 ('Pest'),                   -- 5
 ('Csongrád');               -- 6
 
+--Albi tipus
 
 INSERT INTO alberlet_tipus (id, nev) VALUES
 (0, 'ház'),
@@ -133,6 +127,7 @@ INSERT INTO alberlet_tipus (id, nev) VALUES
 (2, 'szoba');
 
 -- Városok
+
 INSERT INTO varos (nev, megye_id) VALUES
 ('Nagykanizsa',     1),
 ('Zalaegerszeg',    1),
@@ -262,11 +257,8 @@ INSERT INTO kep (alberlet_id, kep_url) VALUES
 (49, 'Kepek/hodmezovasarhely_04_01.png'), (49, 'Kepek/hodmezovasarhely_04_02.png'), (49, 'Kepek/hodmezovasarhely_04_03.png'), (49, 'Kepek/hodmezovasarhely_04_04.png'), (49, 'Kepek/hodmezovasarhely_04_05.png'), (49, 'Kepek/hodmezovasarhely_04_06.png'),
 (50, 'Kepek/hodmezovasarhely_05_01.png'), (50, 'Kepek/hodmezovasarhely_05_02.png'), (50, 'Kepek/hodmezovasarhely_05_03.png'), (50, 'Kepek/hodmezovasarhely_05_04.png'), (50, 'Kepek/hodmezovasarhely_05_05.png');
 
-
-
-
-
 -- Minden 1 tol kezdodik
+
 ALTER TABLE megye      AUTO_INCREMENT = 1;
 ALTER TABLE varos      AUTO_INCREMENT = 1;
 ALTER TABLE tulajdonos AUTO_INCREMENT = 1;
