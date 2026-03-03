@@ -11,6 +11,7 @@ class Alberlet extends Model
 
     protected $table = 'alberlet';        
 
+    public $timestamps=false;
     protected $fillable = [
         'cim',
         'tipus',           // 0=haz, 1=lakás, 2=szoba

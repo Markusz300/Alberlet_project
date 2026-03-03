@@ -10,6 +10,8 @@ class Tulajdonos extends Model
 
     protected $fillable = ['nev', 'email', 'telefon'];
 
+    public $timestamps=false;
+
     public function alberletek()
     {
         return $this->hasMany(Alberlet::class, 'tulajdonos_id');
