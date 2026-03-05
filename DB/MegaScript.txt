@@ -155,7 +155,7 @@ INSERT INTO alberlet
 ('8360 Keszthely, Kazinczy Ferenc utca 19.',       1, 160000, 35, 1.0, 3, 0, 1, 'Kiadó Keszthelyen, a Kazinczy Ferenc utcában egy 35 m²-es, 1 szobás, bútorozott lakás. A lakás 3. emeleti, lift nélküli társasházban található, jó elrendezésű. Ideális egyedülállóknak, azonnal költözhető.',                '2026-03-03', 1, 3, 3),
 ('8360 Keszthely, Apát utca 34.',                  1, 205000, 54, 2.0, 2, 1, 1, 'Kiadó Keszthelyen, az Apát utcában egy 54 m²-es, 2 szobás, bútorozott lakás. A lakás 2. emeleti, liftes társasházban található, jó elrendezésű és világos. Ideális pároknak vagy kisebb családnak, azonnal költözhető.',      '2026-04-03', 1, 3, 3),
 ('8800 Nagykanizsa, Ady Endre utca 14.', 1, 110000, 54, 2.0, 9, 1, 1, '54 m²-es, 9. emeleti, 2 szobás, bútorozott lakás, azonnal költözhető állapotban. Világos nappali, külön hálószoba és felszerelt konyha biztosítja a kényelmet, a magas emelet pedig szép kilátást nyújt.', '2026-03-14', 1, 1, 3),
-('8800 Nagykanizsa, Zrínyi Miklós utca 9.', 1, 100000, 47, 2.0, 3, 0, 0, '47 m²-es, 2. emeleti, 2 szobás, bútor nélküli lakás egy 4 emeletes házban. Praktikus elrendezésű, világos terek jellemzik, saját igény szerint berendezhető, kényelmes otthon alakítható ki benne.', '2026-04-15', 1, 1, 3),
+('8800 Nagykanizsa, Zrínyi Miklós utca 9.', 1, 100000, 47, 2.0, 2, 0, 0, '47 m²-es, 2. emeleti, 2 szobás, bútor nélküli lakás egy 4 emeletes házban. Praktikus elrendezésű, világos terek jellemzik, saját igény szerint berendezhető, kényelmes otthon alakítható ki benne.', '2026-04-15', 1, 1, 3),
 ('8800 Nagykanizsa, Király utca 37.', 1, 110000, 57, 2.0, 1, 0, 0, '57 m²-es, első emeleti, 2 szobás, bútorozatlan lakás. Tágas, jól kihasználható helyiségekkel rendelkezik, világos tereinek köszönhetően otthonos hangulatú, és saját igény szerint rendezhető be.', '2026-03-07', 1, 1, 4),
 ('8800 Nagykanizsa, Hevesi Sándor utca 22.', 1, 100000, 56, 2.0, 4, 0, 0, '56 m²-es, 2 szobás lakás a 4. emeleten. Jó elrendezésű, világos helyiségekkel rendelkezik, kényelmes életteret biztosít, és ideális választás lehet pároknak vagy kisebb családnak.', '2026-03-30', 1, 1, 4),
 ('8800 Nagykanizsa, Csengery út 18.', 1, 85000, 53, 2.0, 2, 0, 0, '53 m²-es, 2 szobás lakás a 2. emeleten. Átgondolt elrendezésű, világos helyiségei kellemes, otthonos hangulatot biztosítanak, ideális választás pároknak vagy kisebb családnak.', '2026-03-20', 1, 1, 4),
@@ -256,6 +256,12 @@ INSERT INTO kep (alberlet_id, kep_url) VALUES
 (48, 'Kepek/hodmezovasarhely_03_01.png'), (48, 'Kepek/hodmezovasarhely_03_02.png'), (48, 'Kepek/hodmezovasarhely_03_03.png'), (48, 'Kepek/hodmezovasarhely_03_04.png'),
 (49, 'Kepek/hodmezovasarhely_04_01.png'), (49, 'Kepek/hodmezovasarhely_04_02.png'), (49, 'Kepek/hodmezovasarhely_04_03.png'), (49, 'Kepek/hodmezovasarhely_04_04.png'), (49, 'Kepek/hodmezovasarhely_04_05.png'), (49, 'Kepek/hodmezovasarhely_04_06.png'),
 (50, 'Kepek/hodmezovasarhely_05_01.png'), (50, 'Kepek/hodmezovasarhely_05_02.png'), (50, 'Kepek/hodmezovasarhely_05_03.png'), (50, 'Kepek/hodmezovasarhely_05_04.png'), (50, 'Kepek/hodmezovasarhely_05_05.png');
+
+-- Kepekbe kell a storage sajnos
+
+UPDATE kep
+SET kep_url = CONCAT('/storage/', kep_url)
+WHERE kep_url LIKE 'Kepek/%';
 
 -- Minden 1 tol kezdodik
 
