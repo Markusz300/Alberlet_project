@@ -1,17 +1,18 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),  // ← csak itt van a layout
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') }
+      { path: '', component: () => import('pages/IndexPage.vue') },  // főoldal / lista
+      { path: 'alberlet/:id', component: () => import('pages/AlberletReszletek.vue') },  // részletek oldal
+      // ide jöhetnek később más oldalak is, pl. feltöltés
     ]
   },
 
-  // Always leave this as last one,
-  // but you can also remove it
+  // 404 catch all
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
+    component: () => import('pages/ErrorNotFound.vue'),
   }
 ]
 

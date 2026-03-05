@@ -1,6 +1,6 @@
 # Alberlet (alberletfrontend)
 
-Vizsgaremek Bálint and Márk
+A Quasar Project
 
 ## Install the dependencies
 ```bash
@@ -12,6 +12,14 @@ npm install
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 ```bash
 quasar dev
+```
+
+
+### Lint the files
+```bash
+yarn lint
+# or
+npm run lint
 ```
 
 
