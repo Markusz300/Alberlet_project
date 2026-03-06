@@ -104,7 +104,7 @@ onMounted(() => fetchAlberletek())
 <template>
   <q-page padding class="bg-grey-2">
     
-    <q-banner class="bg-primary text-white q-mb-md shadow-2 rounded-borders">
+    <q-banner class="bg-teal text-white q-mb-md shadow-2 rounded-borders">
       <div class="row items-center justify-between">
         <div class="text-h5">Kiadó albérletek</div>
         <q-btn 
@@ -164,7 +164,7 @@ onMounted(() => fetchAlberletek())
           </div>
 
           <div class="col-12 col-md-3 flex items-end q-gutter-sm">
-            <q-btn color="primary" label="Keresés" icon="search" class="col" @click="fetchAlberletek(1)" />
+            <q-btn color="teal" label="Keresés" icon="search" class="col" @click="fetchAlberletek(1)" />
             <q-btn color="grey-7" flat label="Alaphelyzet" icon="refresh" @click="resetFilters" />
           </div>
         </q-card-section>
@@ -174,14 +174,14 @@ onMounted(() => fetchAlberletek())
     <div v-if="!loading && alberletek.length === 0" class="text-center q-mt-xl bg-white q-pa-xl rounded-borders shadow-1">
       <q-icon name="sentiment_dissatisfied" size="4rem" color="grey-5" />
       <div class="text-h6 text-grey-7">Sajnos nincs ilyen hirdetésünk.</div>
-      <q-btn flat color="primary" label="Összes hirdetés mutatása" @click="resetFilters" class="q-mt-md" />
+      <q-btn flat color="teal" label="Összes hirdetés mutatása" @click="resetFilters" class="q-mt-md" />
     </div>
 
     <div class="row q-col-gutter-lg">
       <div v-for="alb in alberletek" :key="alb.id" class="col-12 col-sm-6 col-md-4 col-lg-3">
         <q-card flat bordered class="my-card cursor-pointer" @click="$router.push(`/alberlet/${alb.id}`)">
           <q-img :src="getImageUrl(alb.kepek) || 'https://placehold.co/400x300?text=Nincs+Kep'" :ratio="4/3">
-            <div class="absolute-bottom-right bg-primary text-white q-pa-xs q-px-md text-weight-bold" style="border-top-left-radius: 8px;">
+            <div class="absolute-bottom-right bg-teal text-white q-pa-xs q-px-md text-weight-bold" style="border-top-left-radius: 8px;">
               {{ alb.ar?.toLocaleString() }} Ft
             </div>
           </q-img>
@@ -203,7 +203,7 @@ onMounted(() => fetchAlberletek())
     </div>
 
     <q-inner-loading :showing="loading">
-      <q-spinner-dots color="primary" size="3em" />
+      <q-spinner-dots color="teal" size="3em" />
     </q-inner-loading>
 
     <div class="flex flex-center q-mt-xl q-mb-xl">
@@ -213,7 +213,7 @@ onMounted(() => fetchAlberletek())
         :max-pages="6"
         boundary-numbers
         direction-links
-        color="primary"
+        color="teal"
         @update:model-value="fetchAlberletek"
       />
     </div>
