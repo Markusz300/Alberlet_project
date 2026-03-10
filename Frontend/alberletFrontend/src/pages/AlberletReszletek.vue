@@ -1,7 +1,7 @@
 <template>
   <q-page padding class="bg-grey-1">
     <div class="max-width-container q-mx-auto">
-      
+
       <div class="row items-center q-gutter-sm q-mb-md">
         <q-btn flat round color="teal" icon="arrow_back" @click="goBack" class="shadow-1 bg-white" />
         <div class="text-h4 text-weight-bold text-grey-9">
@@ -15,28 +15,15 @@
       </div>
 
       <div v-else-if="store.selectedAlberlet" class="row q-col-gutter-lg">
-        
+
         <div class="col-12 col-md-8">
-          
+
           <q-card flat bordered class="rounded-borders overflow-hidden q-mb-lg shadow-2">
-            <q-carousel
-              v-model="currentSlide"
-              v-if="store.selectedAlberlet.kepek && store.selectedAlberlet.kepek.length > 0"
-              animated
-              infinite
-              arrows
-              navigation
-              thumbnails
-              control-color="teal"
-              height="500px"
-              class="bg-black"
-            >
-              <q-carousel-slide
-                v-for="(kep, index) in store.selectedAlberlet.kepek"
-                :key="index"
-                :name="index"
-                :img-src="formatImageUrl(kep)"
-              />
+            <q-carousel v-model="currentSlide"
+              v-if="store.selectedAlberlet.kepek && store.selectedAlberlet.kepek.length > 0" animated infinite arrows
+              navigation thumbnails control-color="teal" height="500px" class="bg-black">
+              <q-carousel-slide v-for="(kep, index) in store.selectedAlberlet.kepek" :key="index" :name="index"
+                :img-src="formatImageUrl(kep)" />
             </q-carousel>
             <div v-else class="flex flex-center bg-grey-3 text-grey-6" style="height: 400px">
               <div class="text-center">
@@ -61,7 +48,7 @@
 
         <div class="col-12 col-md-4">
           <div class="sticky-column q-gutter-y-lg">
-            
+
             <q-card flat class="bg-teal text-white shadow-3 rounded-borders">
               <q-card-section class="text-center">
                 <div class="text-h6 opacity-80 text-uppercase">Havi bérleti díj</div>
@@ -84,7 +71,8 @@
                   <q-item-section avatar><q-icon name="bed" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Szobák száma</q-item-label>
-                    <q-item-label class="text-weight-medium">{{ store.selectedAlberlet.szobak_szama }} szoba</q-item-label>
+                    <q-item-label class="text-weight-medium">{{ store.selectedAlberlet.szobak_szama }}
+                      szoba</q-item-label>
                   </q-item-section>
                 </q-item>
                 <q-item>
@@ -99,7 +87,7 @@
                   <q-item-section>
                     <q-item-label caption>Lift / Emelet</q-item-label>
                     <q-item-label class="text-weight-medium">
-                      {{ store.selectedAlberlet.lift ? 'Van lift' : 'Nincs lift' }} • {{ store.selectedAlberlet.emelet != null ? store.selectedAlberlet.emelet + '. emelet' : 'Földszint' }}
+                      {{ store.selectedAlberlet.lift === 'van' ? 'Van lift' : 'Nincs lift' }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -107,7 +95,9 @@
                   <q-item-section avatar><q-icon name="chair" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Bútorozottság</q-item-label>
-                    <q-item-label class="text-weight-medium">{{ store.selectedAlberlet.butorozott ? 'Bútorozott' : 'Üres' }}</q-item-label>
+                    <q-item-label class="text-weight-medium">
+                      {{ store.selectedAlberlet.butorozott === 'igen' ? 'Bútorozott' : 'Üres' }}
+                    </q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -117,37 +107,27 @@
               <q-card-section class="bg-grey-2">
                 <div class="text-subtitle1 text-weight-bold text-center text-grey-9">Kapcsolatfelvétel</div>
               </q-card-section>
-              
+
               <q-card-section class="text-center q-pa-lg">
-                <q-avatar size="80px" font-size="50px" color="teal-1" text-color="teal" icon="account_circle" class="q-mb-md shadow-1" />
-                
+                <q-avatar size="80px" font-size="50px" color="teal-1" text-color="teal" icon="account_circle"
+                  class="q-mb-md shadow-1" />
+
                 <div class="text-h6 text-weight-bold text-grey-9 q-mb-none">
                   {{ store.selectedAlberlet.tulajdonos?.nev || 'Hirdető' }}
                 </div>
                 <div class="text-caption text-grey-6 q-mb-md">Magánszemély</div>
-                
-                <div class="q-gutter-y-sm">
-                  <q-btn 
-                    unelevated 
-                    rounded 
-                    color="teal" 
-                    icon="phone" 
-                    :label="store.selectedAlberlet.tulajdonos?.telefon || 'Nincs telefonszám'" 
-                    class="full-width q-py-sm text-weight-bold" 
-                    :type="store.selectedAlberlet.tulajdonos?.telefon ? 'a' : 'button'"
-                    :href="store.selectedAlberlet.tulajdonos?.telefon ? `tel:${store.selectedAlberlet.tulajdonos.telefon}` : undefined"
-                  />
 
-                  <q-btn 
-                    outline 
-                    rounded 
-                    color="teal" 
-                    icon="email" 
-                    :label="store.selectedAlberlet.tulajdonos?.email || 'Nincs e-mail'" 
-                    class="full-width q-py-sm" 
+                <div class="q-gutter-y-sm">
+                  <q-btn unelevated rounded color="teal" icon="phone"
+                    :label="store.selectedAlberlet.tulajdonos?.telefon || 'Nincs telefonszám'"
+                    class="full-width q-py-sm text-weight-bold"
+                    :type="store.selectedAlberlet.tulajdonos?.telefon ? 'a' : 'button'"
+                    :href="store.selectedAlberlet.tulajdonos?.telefon ? `tel:${store.selectedAlberlet.tulajdonos.telefon}` : undefined" />
+
+                  <q-btn outline rounded color="teal" icon="email"
+                    :label="store.selectedAlberlet.tulajdonos?.email || 'Nincs e-mail'" class="full-width q-py-sm"
                     :type="store.selectedAlberlet.tulajdonos?.email ? 'a' : 'button'"
-                    :href="store.selectedAlberlet.tulajdonos?.email ? `mailto:${store.selectedAlberlet.tulajdonos.email}` : undefined"
-                  />
+                    :href="store.selectedAlberlet.tulajdonos?.email ? `mailto:${store.selectedAlberlet.tulajdonos.email}` : undefined" />
                 </div>
               </q-card-section>
 
@@ -224,20 +204,25 @@ watch(() => route.params.id, (newId) => {
 .max-width-container {
   max-width: 1200px;
 }
+
 .sticky-column {
   position: sticky;
   top: 24px;
 }
+
 .line-height-relaxed {
   line-height: 1.8;
   white-space: pre-wrap;
 }
+
 .rounded-borders {
   border-radius: 16px;
 }
+
 .shadow-2 {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
 }
+
 .shadow-3 {
   box-shadow: 0 8px 25px rgba(0, 128, 128, 0.2) !important;
 }
