@@ -1,236 +1,209 @@
-<script setup>
-import { ref, onMounted } from 'vue'
-import { api } from 'boot/axios'
-import { useQuasar } from 'quasar'
-
-const BASE_URL = 'http://127.0.0.1:8000'
-const $q = useQuasar()
-
-// Reaktív adatok
-const alberletek = ref([])
-const loading = ref(true)
-const totalPages = ref(1)
-const currentPage = ref(1)
-const showFilters = ref(false) // Szűrőpanel lenyitása/becsukása
-
-// Szűrő objektum (pontosan a Laravel által várt kulcsokkal)
-const filters = ref({
-  varos_id: null,
-  min_szoba: null,
-  max_szoba: null,
-  min_ar: null,
-  max_ar: null,
-  min_meret: null,
-  max_meret: null,
-  butorozott: null,
-  lift: null,
-  tipus: null,
-  sort: 'legujabb'
-})
-
-// Fix opciók a select-ekhez
-const tipusOpciok = [
-  { label: 'Összes típus', value: null },
-  { label: 'Ház', value: 0 },    // 0 = Ház
-  { label: 'Lakás', value: 1 },  // 1 = Lakás (ez maradt középen)
-  { label: 'Szoba', value: 2 }   // 2 = Szoba
-]
-
-const igenNemOpciok = [
-  { label: 'Mindegy', value: null },
-  { label: 'Igen', value: 1 },
-  { label: 'Nem', value: 0 }
-]
-
-const rendezesOpciok = [
-  { label: 'Legújabb elöl', value: 'legujabb' },
-  { label: 'Legolcsóbb elöl', value: 'ar_asc' },
-  { label: 'Legdrágább elöl', value: 'ar_desc' }
-]
-
-// Kép URL segéd
-const getImageUrl = (kepek) => {
-  if (!kepek || !Array.isArray(kepek) || kepek.length === 0) return null
-  const utvonal = kepek[0]
-  const tisztaUtvonal = utvonal.startsWith('/') ? utvonal : `/${utvonal}`
-  return `${BASE_URL}${tisztaUtvonal}`
-}
-
-// Lekérdezés
-const fetchAlberletek = async (page = 1) => {
-  loading.value = true
-  try {
-    // Csak azokat küldjük el, amik nem null értékűek
-    const params = { page }
-    Object.keys(filters.value).forEach(key => {
-      if (filters.value[key] !== null && filters.value[key] !== '') {
-        params[key] = filters.value[key]
-      }
-    })
-
-    const response = await api.get('/alberletek', { params })
-    alberletek.value = response.data.data
-    totalPages.value = response.data.meta.last_page
-    currentPage.value = response.data.meta.current_page
-  } catch (err) {
-    console.error('Hiba:', err)
-    $q.notify({ type: 'negative', message: 'Hiba a betöltéskor!' })
-  } finally {
-    loading.value = false
-  }
-}
-
-// Szűrők törlése
-const resetFilters = () => {
-  filters.value = {
-    varos_id: null,
-    min_szoba: null,
-    max_szoba: null,
-    min_ar: null,
-    max_ar: null,
-    min_meret: null,
-    max_meret: null,
-    butorozott: null,
-    lift: null,
-    tipus: null,
-    sort: 'legujabb'
-  }
-  fetchAlberletek(1)
-}
-
-onMounted(() => fetchAlberletek())
-</script>
-
 <template>
-  <q-page padding class="bg-grey-2">
-    
-    <q-banner class="bg-teal text-white q-mb-md shadow-2 rounded-borders">
-      <div class="row items-center justify-between">
-        <div class="text-h5">Kiadó albérletek</div>
-        <q-btn 
-          flat 
-          icon="tune" 
-          :label="showFilters ? 'Szűrők elrejtése' : 'Szűrés és Rendezés'" 
-          @click="showFilters = !showFilters" 
-        />
+  <q-page padding class="bg-grey-1">
+    <div class="row items-center justify-between q-mb-lg">
+      <div>
+        <h4 class="text-weight-bolder q-ma-none text-teal-10">Albérlet Kereső</h4>
+        <div class="text-subtitle2 text-grey-7">Találd meg álmaid otthonát</div>
       </div>
-    </q-banner>
-
-    <q-expansion-item
-      v-model="showFilters"
-      class="bg-white shadow-1 rounded-borders q-mb-lg"
-      header-class="hidden"
-    >
-      <q-card>
-        <q-card-section class="row q-col-gutter-md">
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="text-caption text-weight-bold">Ár (Ft/hó)</div>
-            <div class="row q-col-gutter-xs">
-              <q-input dense outlined v-model.number="filters.min_ar" placeholder="Min" class="col-6" type="number" />
-              <q-input dense outlined v-model.number="filters.max_ar" placeholder="Max" class="col-6" type="number" />
-            </div>
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="text-caption text-weight-bold">Szobák száma</div>
-            <div class="row q-col-gutter-xs">
-              <q-input dense outlined v-model.number="filters.min_szoba" placeholder="Min" class="col-6" type="number" step="0.5" />
-              <q-input dense outlined v-model.number="filters.max_szoba" placeholder="Max" class="col-6" type="number" step="0.5" />
-            </div>
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="text-caption text-weight-bold">Méret (m²)</div>
-            <div class="row q-col-gutter-xs">
-              <q-input dense outlined v-model.number="filters.min_meret" placeholder="Min" class="col-6" type="number" />
-              <q-input dense outlined v-model.number="filters.max_meret" placeholder="Max" class="col-6" type="number" />
-            </div>
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
-            <div class="text-caption text-weight-bold">Ingatlan típusa</div>
-            <q-select dense outlined v-model="filters.tipus" :options="tipusOpciok" emit-value map-options />
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-select dense outlined v-model="filters.butorozott" :options="igenNemOpciok" label="Bútorozott?" emit-value map-options />
-          </div>
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-select dense outlined v-model="filters.lift" :options="igenNemOpciok" label="Lift?" emit-value map-options />
-          </div>
-
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-select dense outlined v-model="filters.sort" :options="rendezesOpciok" label="Rendezés" emit-value map-options />
-          </div>
-
-          <div class="col-12 col-md-3 flex items-end q-gutter-sm">
-            <q-btn color="teal" label="Keresés" icon="search" class="col" @click="fetchAlberletek(1)" />
-            <q-btn color="grey-7" flat label="Alaphelyzet" icon="refresh" @click="resetFilters" />
-          </div>
-        </q-card-section>
-      </q-card>
-    </q-expansion-item>
-
-    <div v-if="!loading && alberletek.length === 0" class="text-center q-mt-xl bg-white q-pa-xl rounded-borders shadow-1">
-      <q-icon name="sentiment_dissatisfied" size="4rem" color="grey-5" />
-      <div class="text-h6 text-grey-7">Sajnos nincs ilyen hirdetésünk.</div>
-      <q-btn flat color="teal" label="Összes hirdetés mutatása" @click="resetFilters" class="q-mt-md" />
+      <q-btn 
+        :color="showFilters ? 'negative' : 'teal'" 
+        :icon="showFilters ? 'close' : 'tune'" 
+        :label="showFilters ? 'Bezárás' : 'Összes szűrő'" 
+        @click="showFilters = !showFilters"
+        unelevated
+        rounded
+      />
     </div>
 
-    <div class="row q-col-gutter-lg">
-      <div v-for="alb in alberletek" :key="alb.id" class="col-12 col-sm-6 col-md-4 col-lg-3">
-        <q-card flat bordered class="my-card cursor-pointer" @click="$router.push(`/alberlet/${alb.id}`)">
-          <q-img :src="getImageUrl(alb.kepek) || 'https://placehold.co/400x300?text=Nincs+Kep'" :ratio="4/3">
-            <div class="absolute-bottom-right bg-teal text-white q-pa-xs q-px-md text-weight-bold" style="border-top-left-radius: 8px;">
+    <q-slide-transition>
+      <div v-show="showFilters" class="q-mb-xl">
+        <q-card flat bordered class="rounded-borders shadow-sm bg-white">
+          <q-card-section>
+            <div class="row q-col-gutter-md">
+              
+              <div class="col-12 col-sm-6 col-md-3">
+                <div class="text-weight-bold q-mb-xs"><q-icon name="payments" /> Ár (Ft/hó)</div>
+                <div class="row q-col-gutter-sm">
+                  <q-input dense outlined v-model.number="store.filters.min_ar" label="Min" class="col-6" type="number" color="teal" />
+                  <q-input dense outlined v-model.number="store.filters.max_ar" label="Max" class="col-6" type="number" color="teal" />
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-3">
+                <div class="text-weight-bold q-mb-xs"><q-icon name="bed" /> Szobák száma</div>
+                <div class="row q-col-gutter-sm">
+                  <q-input dense outlined v-model.number="store.filters.min_szoba" label="Min" class="col-6" type="number" step="0.5" color="teal" />
+                  <q-input dense outlined v-model.number="store.filters.max_szoba" label="Max" class="col-6" type="number" step="0.5" color="teal" />
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-3">
+                <div class="text-weight-bold q-mb-xs"><q-icon name="straighten" /> Méret (m²)</div>
+                <div class="row q-col-gutter-sm">
+                  <q-input dense outlined v-model.number="store.filters.min_meret" label="Min" class="col-6" type="number" color="teal" />
+                  <q-input dense outlined v-model.number="store.filters.max_meret" label="Max" class="col-6" type="number" color="teal" />
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-3">
+                <div class="text-weight-bold q-mb-xs"><q-icon name="category" /> Ingatlan típusa</div>
+                <q-select dense outlined v-model="store.filters.tipus" :options="tipusOpciok" emit-value map-options color="teal" />
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-3">
+                <div class="text-weight-bold q-mb-xs">Kényelem</div>
+                <div class="row q-col-gutter-sm">
+                  <q-select dense outlined v-model="store.filters.butorozott" :options="igenNemOpciok" label="Bútorozott?" class="col-6" emit-value map-options color="teal" />
+                  <q-select dense outlined v-model="store.filters.lift" :options="igenNemOpciok" label="Lift?" class="col-6" emit-value map-options color="teal" />
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-3">
+                <div class="text-weight-bold q-mb-xs">Rendezés</div>
+                <q-select dense outlined v-model="store.filters.sort" :options="rendezesOpciok" emit-value map-options color="teal" />
+              </div>
+
+              <div class="col-12 col-md-6 flex items-end justify-end q-gutter-sm">
+                <q-btn flat color="grey-7" label="Szűrők törlése" icon="restart_alt" @click="store.resetFilters" />
+                <q-btn unelevated color="teal" label="Keresés indítása" icon="search" class="q-px-lg" @click="store.fetchAlberletek(1)" />
+              </div>
+
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+    </q-slide-transition>
+
+    <div v-if="store.alberletek.length > 0" class="row q-col-gutter-xl">
+      <div v-for="alb in store.alberletek" :key="alb.id" class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <q-card flat class="property-card overflow-hidden shadow-1">
+          <q-img :src="getImageUrl(alb.kepek) || 'https://placehold.co/600x400?text=Nincs+kép'" :ratio="4/3">
+            <div class="absolute-top-left q-ma-sm">
+              <q-badge color="teal" class="q-pa-sm text-weight-bold shadow-2">
+                {{ alb.tipusKapcsolat?.nev || 'Ingatlan' }}
+              </q-badge>
+            </div>
+            <div class="absolute-bottom-right bg-black text-white q-pa-sm q-px-md text-weight-bolder" style="border-top-left-radius: 12px">
               {{ alb.ar?.toLocaleString() }} Ft
             </div>
           </q-img>
 
           <q-card-section>
-            <div class="text-subtitle1 text-weight-bold ellipsis">{{ alb.cim }}</div>
-            <div class="text-caption text-grey-7">
-              <q-icon name="location_on" color="red" /> {{ alb.varos }}
+            <div class="text-subtitle1 text-weight-bolder text-teal-10 ellipsis">{{ alb.cim }}</div>
+            <div class="text-caption text-grey-8 flex items-center">
+              <q-icon name="location_on" color="red" class="q-mr-xs" /> {{ alb.varos }}
             </div>
-            <q-separator class="q-my-sm" />
-            <div class="row justify-between text-grey-9 text-caption text-weight-medium">
-              <span><q-icon name="bed" /> {{ alb.szobak_szama }} szob.</span>
-              <span><q-icon name="straighten" /> {{ alb.meret }} m²</span>
-              <span><q-icon name="apartment" /> {{ alb.emelet || 'F' }}. em</span>
+            
+            <q-separator class="q-my-md" />
+            
+            <div class="row justify-between text-grey-9">
+              <div class="col-4 text-center">
+                <q-icon name="meeting_room" size="18px" color="teal" />
+                <div class="text-caption text-weight-bold">{{ alb.szobak_szama }} szoba</div>
+              </div>
+              <div class="col-4 text-center">
+                <q-icon name="aspect_ratio" size="18px" color="teal" />
+                <div class="text-caption text-weight-bold">{{ alb.meret }} m²</div>
+              </div>
+              <div class="col-4 text-center">
+                <q-icon name="layers" size="18px" color="teal" />
+                <div class="text-caption text-weight-bold">{{ alb.emelet != null ? alb.emelet + '. em' : 'Földszint' }}</div>
+              </div>
             </div>
           </q-card-section>
+          
+          <q-card-actions align="right" class="q-pb-md q-px-md">
+            <q-btn flat color="teal" label="Részletek" icon-right="chevron_right" :to="`/alberlet/${alb.id}`" />
+          </q-card-actions>
         </q-card>
       </div>
     </div>
 
-    <q-inner-loading :showing="loading">
-      <q-spinner-dots color="teal" size="3em" />
-    </q-inner-loading>
+    <div v-else-if="!store.loading" class="text-center q-pa-xl bg-white rounded-borders shadow-1 q-mt-xl">
+      <q-icon name="search_off" size="100px" color="grey-4" />
+      <div class="text-h5 text-grey-6 q-mt-md">Nincs a szűrésnek megfelelő találat</div>
+      <q-btn outline color="teal" label="Összes hirdetés mutatása" class="q-mt-lg" @click="store.resetFilters" />
+    </div>
 
-    <div class="flex flex-center q-mt-xl q-mb-xl">
+    <div class="flex flex-center q-py-xl">
       <q-pagination
-        v-model="currentPage"
-        :max="totalPages"
+        v-model="store.currentPage"
+        :max="store.totalPages"
         :max-pages="6"
         boundary-numbers
         direction-links
         color="teal"
-        @update:model-value="fetchAlberletek"
+        active-color="teal-10"
+        size="md"
+        @update:model-value="(val) => store.fetchAlberletek(val)"
       />
     </div>
+
+    <q-inner-loading :showing="store.loading">
+      <q-spinner-cube color="teal" size="5em" />
+      <div class="text-teal q-mt-md text-weight-bold">Adatok betöltése...</div>
+    </q-inner-loading>
+
   </q-page>
 </template>
 
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useAlberletStore } from 'stores/alberletStore';
+
+const BASE_URL = 'http://127.0.0.1:8000';
+const store = useAlberletStore();
+const showFilters = ref(false);
+
+const tipusOpciok = [
+  { label: 'Összes típus', value: null },
+  { label: 'Szoba', value: 2 },
+  { label: 'Lakás', value: 1 },
+  { label: 'Ház', value: 0 }
+];
+
+const igenNemOpciok = [
+  { label: 'Mindegy', value: null },
+  { label: 'Igen', value: 1 },
+  { label: 'Nem', value: 0 }
+];
+
+const rendezesOpciok = [
+  { label: 'Legújabb elöl', value: 'legujabb' },
+  { label: 'Legolcsóbb elöl', value: 'ar_asc' },
+  { label: 'Legdrágább elöl', value: 'ar_desc' }
+];
+
+const getImageUrl = (kepek) => {
+  if (!kepek || kepek.length === 0) return null;
+  const utvonal = kepek[0].kep_url || kepek[0];
+  const tisztaUtvonal = utvonal.startsWith('/') ? utvonal : `/${utvonal}`;
+  return `${BASE_URL}${tisztaUtvonal}`;
+};
+
+onMounted(() => {
+  store.fetchAlberletek();
+});
+</script>
+
 <style scoped>
-.my-card {
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+.property-card {
+  border-radius: 16px;
+  background: white;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid rgba(0,0,0,0.05);
 }
-.my-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 20px rgba(0,0,0,0.15) !important;
+
+.property-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.12) !important;
 }
+
 .rounded-borders {
-  border-radius: 12px;
+  border-radius: 16px;
+}
+
+.shadow-sm {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 </style>

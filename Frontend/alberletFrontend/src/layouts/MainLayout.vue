@@ -3,7 +3,7 @@
     <q-header elevated class="bg-teal">
       <q-toolbar>
 
-          <img src="/public/icons/M&B logo.png" alt="M&B logo" title="M&B logo" style="40px">
+          <img src="/public/icons/M&B logo.png" alt="M&B logo" title="M&B logo" style="width: 200px">
 
         <q-toolbar-title class="text-bold">
           M&B lakhatás

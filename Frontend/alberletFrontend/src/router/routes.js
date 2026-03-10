@@ -1,18 +1,25 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),  // ← csak itt van a layout
+    component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') },  // főoldal / lista
-      { path: 'alberlet/:id', component: () => import('pages/AlberletReszletek.vue') },  // részletek oldal
-      // ide jöhetnek később más oldalak is, pl. feltöltés
+      { 
+        path: '', 
+        name: 'home',
+        component: () => import('pages/IndexPage.vue') 
+      },
+      { 
+        path: 'alberlet/:id', 
+        name: 'reszletek',
+        component: () => import('pages/AlberletReszletek.vue') 
+      }
     ]
   },
 
-  // 404 catch all
+  // Mindig ez legyen az utolsó
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: () => import('pages/ErrorNotFound.vue')
   }
 ]
 
