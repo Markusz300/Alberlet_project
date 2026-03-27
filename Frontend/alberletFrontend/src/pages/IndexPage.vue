@@ -14,26 +14,23 @@
         <q-card flat bordered class="rounded-borders shadow-sm bg-white">
           <q-card-section>
             <div class="row q-col-gutter-md">
-
               <div class="col-12 col-sm-6 col-md-3">
                 <div class="text-weight-bold q-mb-xs"><q-icon name="payments" /> Ár (Ft/hó)</div>
                 <div class="row q-col-gutter-sm">
                   <q-input dense outlined v-model.number="store.filters.min_ar" label="Min" class="col-6" type="number"
-                    min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space color="teal" />
+                    min="0" hide-bottom-space color="teal" />
                   <q-input dense outlined v-model.number="store.filters.max_ar" label="Max" class="col-6" type="number"
-                    min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space color="teal" />
+                    min="0" hide-bottom-space color="teal" />
                 </div>
               </div>
 
               <div class="col-12 col-sm-6 col-md-3">
-                <div class="text-weight-bold q-mb-xs"><q-icon name="bed" /> Szobák száma</div>
+                <div class="text-weight-bold q-mb-xs"><q-icon name="bed" /> Szobák</div>
                 <div class="row q-col-gutter-sm">
                   <q-input dense outlined v-model.number="store.filters.min_szoba" label="Min" class="col-6"
-                    type="number" step="0.5" min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space
-                    color="teal" />
+                    type="number" step="0.5" min="0" hide-bottom-space color="teal" />
                   <q-input dense outlined v-model.number="store.filters.max_szoba" label="Max" class="col-6"
-                    type="number" step="0.5" min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space
-                    color="teal" />
+                    type="number" step="0.5" min="0" hide-bottom-space color="teal" />
                 </div>
               </div>
 
@@ -41,11 +38,9 @@
                 <div class="text-weight-bold q-mb-xs"><q-icon name="straighten" /> Méret (m²)</div>
                 <div class="row q-col-gutter-sm">
                   <q-input dense outlined v-model.number="store.filters.min_meret" label="Min" class="col-6"
-                    type="number" min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space
-                    color="teal" />
+                    type="number" min="0" hide-bottom-space color="teal" />
                   <q-input dense outlined v-model.number="store.filters.max_meret" label="Max" class="col-6"
-                    type="number" min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space
-                    color="teal" />
+                    type="number" min="0" hide-bottom-space color="teal" />
                 </div>
               </div>
 
@@ -56,10 +51,27 @@
               </div>
 
               <div class="col-12 col-sm-6 col-md-3">
+                <div class="text-weight-bold q-mb-xs"><q-icon name="location_on" /> Város</div>
+                <q-select dense outlined v-model="store.filters.varos_id" :options="filteredVarosok" use-input
+                  fill-input hide-selected input-debounce="0" label="Város választása" color="teal" emit-value
+                  map-options clearable @filter="filterFn"
+                  @input-value="val => { if (val === '') store.filters.varos_id = null }"
+                  @clear="store.filters.varos_id = null">
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey italic text-caption">
+                        Sajnos még nincs itt albérletünk :(...
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-3">
                 <div class="text-weight-bold q-mb-xs">Kényelem</div>
                 <div class="row q-col-gutter-sm">
-                  <q-select dense outlined v-model="store.filters.butorozott" :options="igenNemOpciok"
-                    label="Bútorozott?" class="col-6" emit-value map-options color="teal" />
+                  <q-select dense outlined v-model="store.filters.butorozott" :options="igenNemOpciok" label="Bútor?"
+                    class="col-6" emit-value map-options color="teal" />
                   <q-select dense outlined v-model="store.filters.lift" :options="igenNemOpciok" label="Lift?"
                     class="col-6" emit-value map-options color="teal" />
                 </div>
@@ -71,10 +83,11 @@
                   color="teal" />
               </div>
 
-              <div class="col-12 col-md-6 flex items-end justify-end q-gutter-sm">
-                <q-btn flat color="grey-7" label="Szűrők törlése" icon="restart_alt" @click="store.resetFilters" />
-                <q-btn unelevated color="teal" label="Keresés indítása" icon="search" class="q-px-lg"
+              <div class="col-12 flex justify-end q-gutter-sm q-pt-md">
+                <q-btn unelevated color="teal" label="Keresés indítása" icon="search" class="q-px-xl"
                   @click="store.fetchAlberletek(1)" />
+                <q-btn flat color="grey-7" label="Szűrők törlése" icon="restart_alt" @click="store.resetFilters" />
+
               </div>
 
             </div>
@@ -146,6 +159,9 @@
       <div class="text-teal q-mt-md text-weight-bold">Adatok betöltése...</div>
     </q-inner-loading>
 
+
+
+
   </q-page>
 </template>
 
@@ -155,6 +171,27 @@ import { useAlberletStore } from 'stores/alberletStore';
 
 const store = useAlberletStore();
 const showFilters = ref(false);
+
+// Ez tárolja a legördülő menü aktuális (szűrt) tartalmát
+const filteredVarosok = ref([]);
+
+// A gépelés közbeni szűrés logikája
+const filterFn = (val, update) => {
+  update(() => {
+    // Ha nincs beírt szöveg, az összes várost mutatjuk
+    if (!val) {
+      filteredVarosok.value = store.varosok;
+    } else {
+      const needle = val.toLowerCase();
+      filteredVarosok.value = store.varosok.filter(
+        v => v.label.toLowerCase().indexOf(needle) > -1
+      );
+    }
+  });
+};
+
+
+
 
 // Opciók a választómezőkhöz (Backendhez igazítva)
 const tipusOpciok = [
@@ -176,9 +213,12 @@ const rendezesOpciok = [
   { label: 'Legdrágább elöl', value: 'ar_desc' }
 ];
 
-onMounted(() => {
+onMounted(async () => {
+  await store.fetchVarosok();
+  filteredVarosok.value = store.varosok;
   store.fetchAlberletek();
 });
+
 </script>
 
 <style scoped>

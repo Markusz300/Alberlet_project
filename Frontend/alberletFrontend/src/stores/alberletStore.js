@@ -6,6 +6,7 @@ const BASE_URL = "http://127.0.0.1:8000";
 
 export const useAlberletStore = defineStore("alberlet", {
   state: () => ({
+    varosok: [],
     alberletek: [],
     selectedAlberlet: null,
     loading: false,
@@ -103,6 +104,16 @@ export const useAlberletStore = defineStore("alberlet", {
       };
       this.fetchAlberletek(1);
     },
+
+    async fetchVarosok() {
+      try {
+        const { data } = await api.get('/varosok');
+        this.varosok = data;
+      } catch {
+        console.error("Nem sikerült betölteni a városokat");
+      }
+    },
+
 
     handleError(msg) {
       Notify.create({ type: "negative", message: msg, position: "top" });
