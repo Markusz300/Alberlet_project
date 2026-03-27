@@ -18,9 +18,9 @@
                 <div class="text-weight-bold q-mb-xs"><q-icon name="payments" /> Ár (Ft/hó)</div>
                 <div class="row q-col-gutter-sm">
                   <q-input dense outlined v-model.number="store.filters.min_ar" label="Min" class="col-6" type="number"
-                    min="0" hide-bottom-space color="teal" />
+                    min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']"  hide-bottom-space color="teal" />
                   <q-input dense outlined v-model.number="store.filters.max_ar" label="Max" class="col-6" type="number"
-                    min="0" hide-bottom-space color="teal" />
+                    min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']"  hide-bottom-space color="teal" />
                 </div>
               </div>
 
@@ -28,9 +28,11 @@
                 <div class="text-weight-bold q-mb-xs"><q-icon name="bed" /> Szobák</div>
                 <div class="row q-col-gutter-sm">
                   <q-input dense outlined v-model.number="store.filters.min_szoba" label="Min" class="col-6"
-                    type="number" step="0.5" min="0" hide-bottom-space color="teal" />
+                    type="number" step="0.5" min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space
+                    color="teal" />
                   <q-input dense outlined v-model.number="store.filters.max_szoba" label="Max" class="col-6"
-                    type="number" step="0.5" min="0" hide-bottom-space color="teal" />
+                    type="number" step="0.5" min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space
+                    color="teal" />
                 </div>
               </div>
 
@@ -38,7 +40,8 @@
                 <div class="text-weight-bold q-mb-xs"><q-icon name="straighten" /> Méret (m²)</div>
                 <div class="row q-col-gutter-sm">
                   <q-input dense outlined v-model.number="store.filters.min_meret" label="Min" class="col-6"
-                    type="number" min="0" hide-bottom-space color="teal" />
+                    type="number" min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space
+                    color="teal" />
                   <q-input dense outlined v-model.number="store.filters.max_meret" label="Max" class="col-6"
                     type="number" min="0" hide-bottom-space color="teal" />
                 </div>
