@@ -42,9 +42,12 @@
                   <q-input dense outlined v-model.number="store.filters.min_meret" label="Min" class="col-6"
                     type="number" min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space
                     color="teal" />
+
                   <q-input dense outlined v-model.number="store.filters.max_meret" label="Max" class="col-6"
-                    type="number" min="0" hide-bottom-space color="teal" />
+                    type="number" min="0" :rules="[val => val >= 0 || 'Nem lehet negatív']" hide-bottom-space
+                    color="teal" />
                 </div>
+
               </div>
 
               <div class="col-12 col-sm-6 col-md-3">
