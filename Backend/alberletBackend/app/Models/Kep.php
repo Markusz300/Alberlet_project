@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Kep extends Model
 {
     protected $table = 'kep';
+    public $timestamps = false;
 
     protected $fillable = [
         'alberlet_id',

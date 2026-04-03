@@ -87,7 +87,14 @@
                   <q-item-section>
                     <q-item-label caption>Lift / Emelet</q-item-label>
                     <q-item-label class="text-weight-medium">
-                      {{ store.selectedAlberlet.lift === 'van' ? 'Van lift' : 'Nincs lift' }}
+                      {{ (store.selectedAlberlet.lift === 'van' || store.selectedAlberlet.lift == 1) ? 'Van lift' :
+                        'Nincs lift' }}
+
+                      <span class="q-ml-sm text-grey-6">|</span>
+                      <span class="q-ml-sm">
+                        {{ store.selectedAlberlet.emelet > 0 ? store.selectedAlberlet.emelet + '. emelet' : 'Földszint'
+                        }}
+                      </span>
                     </q-item-label>
                   </q-item-section>
                 </q-item>

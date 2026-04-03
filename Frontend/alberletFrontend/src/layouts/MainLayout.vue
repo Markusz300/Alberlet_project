@@ -2,10 +2,12 @@
   <q-layout view="lHh Lpr lHh">
     <q-header elevated class="bg-teal">
       <q-toolbar>
-        <img src="icons/M&B logo.png" alt="M&B logo" title="M&B logo" style="width: 150px">
-        <q-toolbar-title class="text-bold">
-          M&B lakhatás
-        </q-toolbar-title>
+        <div class="flex items-center cursor-pointer" @click="$router.push('/')">
+          <img src="icons/M&B logo.png" alt="M&B logo" style="width: 150px">
+          <q-toolbar-title class="text-bold q-ml-sm">
+            M&B lakhatás
+          </q-toolbar-title>
+        </div>
       </q-toolbar>
     </q-header>
 
