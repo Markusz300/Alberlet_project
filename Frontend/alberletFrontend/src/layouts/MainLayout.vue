@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lHh">
-    <q-header elevated class="bg-teal">
+    <q-header elevated class="bg-teal-10">
       <q-toolbar>
         <div class="flex items-center cursor-pointer" @click="$router.push('/')">
           <img src="icons/M&B logo.png" alt="M&B logo" style="width: 150px">

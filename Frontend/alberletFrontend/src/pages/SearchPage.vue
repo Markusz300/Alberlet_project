@@ -107,7 +107,7 @@
         <q-card flat class="property-card overflow-hidden shadow-1">
           <q-img :src="store.formatImageUrl(alb.kepek)" :ratio="4 / 3">
             <div class="absolute-top-left q-ma-sm bg-transparent">
-              <q-badge color="teal" class="q-pa-sm text-weight-bold shadow-2">
+              <q-badge color="teal-10" class="q-pa-sm text-weight-bold shadow-2">
                 {{ alb.tipus }}
               </q-badge>
             </div>

@@ -1,65 +1,109 @@
 <template>
-    <q-page class="bg-teal-9 flex flex-center column">
+  <q-page class="bg-grey-1 flex flex-center q-pa-lg">
+    <div class="full-width text-center" style="max-width: 1100px;">
 
-        <div class="q-mb-xl text-center">
-            <img src="icons/M&B logo.png" style="width: 250px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">
+      <header class="q-mb-xl">
+        <img src="icons/M&B logo.png" class="app-logo" alt="M&B Logo">
+        <div class="text-subtitle1 text-grey-7 q-mt-sm font-premium">Prémium Ingatlankezelés</div>
+      </header>
+
+      <div class="row q-col-gutter-xl justify-center">
+
+        <div class="col-12 col-sm-6">
+          <div class="karty-alap vilagos-kartya" @click="$router.push('/search')">
+            <q-icon name="search" size="56px" class="q-mb-md ikon-zold" />
+            <div class="text-h5 text-weight-bold">Bérlés</div>
+            <p>Böngésszen prémium lakáskínálatunkban egyszerűen.</p>
+            <div class="gomb-szoveg-zold">Keresés indítása →</div>
+          </div>
         </div>
 
-        <div class="row q-col-gutter-xl justify-center items-stretch container-width">
-
-            <div class="col-12 col-sm-5">
-                <q-card class="choice-card cursor-pointer full-height flex flex-center q-pa-xl shadow-10"
-                    @click="$router.push('/search')">
-                    <q-card-section class="text-center">
-                        <q-icon name="home" size="120px" color="teal-9" />
-                        <div class="text-h4 text-weight-bolder text-teal-10 q-mt-md">Albérlet Kereső</div>
-                        <div class="text-subtitle1 text-grey-7">Találd meg álmaid otthonát</div>
-                    </q-card-section>
-                </q-card>
-            </div>
-
-            <div class="col-12 col-sm-5">
-                <q-card class="choice-card cursor-pointer full-height flex flex-center q-pa-xl shadow-10"
-                    @click="$router.push('/create')">
-                    <q-card-section class="text-center">
-                        <q-icon name="add_business" size="120px" color="teal-9" />
-                        <div class="text-h4 text-weight-bolder text-teal-10 q-mt-md">Hirdetés Feltöltése</div>
-                        <div class="text-subtitle1 text-grey-7">Add bérbe ingatlanod nálunk</div>
-                    </q-card-section>
-                </q-card>
-            </div>
-
+        <div class="col-12 col-sm-6">
+          <div class="karty-alap zold-kartya" @click="$router.push('/create')">
+            <q-icon name="add_business" size="56px" class="q-mb-md ikon-feher" />
+            <div class="text-h5 text-weight-bold">Hirdetés</div>
+            <p>Adja bérbe ingatlanát gyorsan és megbízhatóan.</p>
+            <div class="gomb-szoveg-feher">Új hirdetés feladása →</div>
+          </div>
         </div>
 
+      </div>
 
-    </q-page>
+      <footer class="q-mt-xl">
+        <div class="text-caption text-grey-5 uppercase spacing-2">
+          Established 2026 • M&B Management
+        </div>
+      </footer>
+
+    </div>
+  </q-page>
 </template>
 
 <style scoped>
-.container-width {
-    max-width: 1000px;
-    width: 100%;
+/* LOGÓ SZÍNE ÉS MÉRETE */
+.app-logo {
+  width: 220px;
+  filter: brightness(0) opacity(0.8); /* Feketévé teszi a fehér logót */
 }
 
-.choice-card {
-    border-radius: 24px;
-    background: white;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 4px solid transparent;
+/* ALAP KÁRTYA BEÁLLÍTÁSOK (Minden kártyára vonatkozik) */
+.karty-alap {
+  border-radius: 20px;
+  padding: 50px 30px;
+  height: 350px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Hover effekt: emelkedés és keret */
-.choice-card:hover {
-    transform: translateY(-15px) scale(1.02);
-    border-color: #004d40;
-    /* teal-10 */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+/* LEBEGÉS (HOVER) EFFEKT */
+.karty-alap:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
 }
 
-/* Mobilos finomítás */
+/* VILÁGOS KÁRTYA STÍLUSA */
+.vilagos-kartya {
+  background: linear-gradient(135deg, #e7ffe5, #e6ffe3); /* Elegáns zöld átmenet */
+  color: black;
+}
+.ikon-zold { color: #000000; }
+.gomb-szoveg-zold { 
+  color: #000000; 
+  margin-top: 20px; 
+  font-weight: bold; 
+}
+
+/* ZÖLD KÁRTYA STÍLUSA (A sötét helyett) */
+.zold-kartya {
+  background: linear-gradient(135deg, #96ab96, #0e3d11); /* Elegáns zöld átmenet */
+  color: white;
+}
+.zold-kartya p { color: #e8f5e9; } /* Világosabb szöveg a zöldön */
+.ikon-feher { color: white; }
+.gomb-szoveg-feher { 
+  color: white; 
+  margin-top: 20px; 
+  font-weight: bold;
+  text-decoration: underline; 
+}
+
+/* SZÖVEG FORMÁZÁS */
+p {
+  font-size: 1.1rem;
+  margin-top: 10px;
+  max-width: 250px;
+  line-height: 1.4;
+}
+
+.spacing-2 { letter-spacing: 2px; }
+
+/* MOBIL NÉZET */
 @media (max-width: 600px) {
-    .choice-card {
-        padding: 20px !important;
-    }
+  .karty-alap { height: 300px; }
+  .app-logo { width: 180px; }
 }
 </style>
