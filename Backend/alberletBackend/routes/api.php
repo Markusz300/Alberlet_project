@@ -8,3 +8,4 @@ Route::get('/alberletek', [AlberletController::class, 'index']);
 Route::get('/alberletek/{alberlet}', [AlberletController::class, 'show']);
 Route::post('/alberletek', [AlberletController::class, 'store']);
 Route::get('/varosok', [VarosController::class, 'index']);
+Route::get('/megyek', function() {return \App\Models\Megye::all();});

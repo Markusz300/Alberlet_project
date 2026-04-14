@@ -19,6 +19,14 @@ class AlberletController extends Controller
     $query = Alberlet::with(['kepek', 'varos', 'tipusKapcsolat'])
                      ->where('aktiv', 1);
 
+                     
+    // --- ÚJ: Megye szűrő ---
+    if ($request->filled('megye_id')) {
+        $query->whereHas('varos', function($q) use ($request) {
+            $q->where('megye_id', $request->megye_id);
+        });
+    }
+
     // Szűrő: város (varos_id)
     if ($request->filled('varos_id')) {
         $query->where('varos_id', $request->varos_id);

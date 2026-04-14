@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 
 class VarosController extends Controller
 {
-     public function index() {
-        // Csak azokat a városokat adjuk vissza, ahol van aktív albérlet
-        return Varos::has('alberletek')
-            ->select('id as value', 'nev as label')
-            ->orderBy('nev', 'asc')
-            ->get();
-    }
+    public function index() {
+    // Hozzáadjuk a megye_id-t a válogatáshoz
+    return Varos::has('alberletek')
+        ->select('id as value', 'nev as label', 'megye_id') // <-- Itt a megye_id!
+        ->orderBy('nev', 'asc')
+        ->get();
+}
 }

@@ -73,6 +73,26 @@
                 </q-select>
               </div>
 
+
+
+
+              <div class="col-12 col-sm-6 col-md-3">
+  <div class="text-weight-bold q-mb-xs"><q-icon name="map" /> Megye</div>
+  <q-select 
+    dense 
+    outlined 
+    v-model="store.filters.megye_id" 
+    :options="store.megyek" 
+    label="Megye választása" 
+    color="teal" 
+    emit-value 
+    map-options 
+    clearable
+    @update:model-value="() => { store.filters.varos_id = null; store.fetchAlberletek(1); }"
+    @clear="() => { store.filters.megye_id = null; store.fetchAlberletek(1); }"
+  />
+</div>
+
               <div class="col-12 col-sm-6 col-md-3">
                 <div class="text-weight-bold q-mb-xs">Kényelem</div>
                 <div class="row q-col-gutter-sm">
@@ -182,17 +202,25 @@ const showFilters = ref(false);
 // Ez tárolja a legördülő menü aktuális (szűrt) tartalmát
 const filteredVarosok = ref([]);
 
-// A gépelés közbeni szűrés logikája
 const filterFn = (val, update) => {
   update(() => {
-    // Ha nincs beírt szöveg, az összes várost mutatjuk
-    if (!val) {
-      filteredVarosok.value = store.varosok;
-    } else {
-      const needle = val.toLowerCase();
-      filteredVarosok.value = store.varosok.filter(
+    const needle = val.toLowerCase();
+    
+    // 1. Alap lista: az összes város a store-ból
+    let list = store.varosok;
+
+    // 2. Ha van kiválasztott megye, csak azokat tartsuk meg, amik oda tartoznak
+    if (store.filters.megye_id) {
+      list = list.filter(v => v.megye_id === store.filters.megye_id);
+    }
+
+    // 3. Ha a felhasználó gépel is a keresőbe, szűrjünk névre is
+    if (val !== '') {
+      filteredVarosok.value = list.filter(
         v => v.label.toLowerCase().indexOf(needle) > -1
       );
+    } else {
+      filteredVarosok.value = list;
     }
   });
 };
@@ -221,6 +249,7 @@ const rendezesOpciok = [
 ];
 
 onMounted(async () => {
+await store.fetchMegyek(); // Töltsük be a megyéket is!
   await store.fetchVarosok();
   filteredVarosok.value = store.varosok;
   store.fetchAlberletek();

@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="bg-grey-1 flex flex-center">
-    <q-card flat bordered class="form-card shadow-2">
+    <q-card flat bordered class="form-card shadow-2 q-mb-xl">
       <q-card-section class="bg-teal text-white">
         <div class="text-h5 text-weight-bold text-center">Új hirdetés feladása</div>
       </q-card-section>
@@ -8,27 +8,48 @@
       <q-form @submit="onSubmit" class="q-gutter-md q-pa-lg">
         <div class="row q-col-gutter-md">
           
-          <div class="col-12 text-teal-10 text-weight-bold h6 border-bottom">1. Ingatlan adatai</div>
+          <div class="col-12 text-teal-10 text-weight-bold h6 border-bottom">1. Ingatlan helye</div>
+          
+          <div class="col-12 col-md-6">
+            <q-select outlined v-model="selectedMegyeId" :options="store.megyek" label="Megye" 
+              emit-value map-options dense color="teal" @update:model-value="formData.varos_id = null" />
+          </div>
+
+          <div class="col-12 col-md-6">
+            <q-select outlined v-model="formData.varos_id" :options="filteredVarosok" label="Város" 
+              emit-value map-options dense color="teal" :disable="!selectedMegyeId"
+              :rules="[val => !!val || 'Város választása kötelező']" />
+          </div>
+
           <div class="col-12">
-            <q-input outlined v-model="formData.cim" label="Pontos cím" dense color="teal" :rules="[val => !!val || 'A cím kötelező']" />
+            <q-input outlined v-model="formData.cim" label="Utca, házszám" dense color="teal" :rules="[val => !!val || 'A cím kötelező']" />
           </div>
-          <div class="col-12 col-md-6">
-            <q-select outlined v-model="formData.varos_id" :options="store.varosok" label="Város" emit-value map-options dense color="teal" />
-          </div>
-          <div class="col-12 col-md-6">
+
+          <div class="col-12 text-teal-10 text-weight-bold h6 border-bottom q-mt-md">2. Részletek</div>
+          
+          <div class="col-12 col-md-4">
             <q-select outlined v-model="formData.tipus" :options="tipusOpciok" label="Ingatlan típusa" emit-value map-options dense color="teal" />
           </div>
           <div class="col-6 col-md-4">
-            <q-input outlined v-model.number="formData.ar" type="number" label="Ár (Ft)" dense color="teal" suffix="Ft" />
+            <q-input outlined v-model.number="formData.ar" type="number" label="Ár (Ft/hó)" dense color="teal" suffix="Ft" :rules="[val => val >= 50000 || 'Min. 50.000 Ft']" />
           </div>
           <div class="col-6 col-md-4">
             <q-input outlined v-model.number="formData.meret" type="number" label="Méret (m²)" dense color="teal" suffix="m²" />
           </div>
-          <div class="col-12 col-md-4">
+
+          <div class="col-4 col-md-4">
             <q-input outlined v-model.number="formData.szobak_szama" step="0.5" type="number" label="Szobák" dense color="teal" />
           </div>
+          <div class="col-4 col-md-4">
+            <q-input outlined v-model.number="formData.emelet" type="number" label="Emelet" dense color="teal" />
+          </div>
+          
+          <div class="col-12 col-md-4 flex items-center justify-around">
+            <q-checkbox v-model="formData.lift" :true-value="1" :false-value="0" label="Lift van" color="teal" />
+            <q-checkbox v-model="formData.butorozott" :true-value="1" :false-value="0" label="Bútorozott" color="teal" />
+          </div>
 
-          <div class="col-12 text-teal-10 text-weight-bold h6 q-mt-md">2. Kapcsolattartó adatai</div>
+          <div class="col-12 text-teal-10 text-weight-bold h6 q-mt-md border-bottom">3. Kapcsolattartó adatai</div>
           <div class="col-12 col-md-4">
             <q-input outlined v-model="formData.nev" label="Teljes név" dense color="teal" :rules="[val => !!val || 'Név kötelező']" />
           </div>
@@ -39,15 +60,15 @@
             <q-input outlined v-model="formData.telefon" label="Telefonszám" dense color="teal" mask="+36 ## ### ####" unmasked-value />
           </div>
 
-          <div class="col-12 text-teal-10 text-weight-bold h6 q-mt-md">3. Fotók</div>
+          <div class="col-12 text-teal-10 text-weight-bold h6 q-mt-md border-bottom">4. Fotók és Leírás</div>
           <div class="col-12">
-            <q-file outlined v-model="kepek" label="Képek kiválasztása (max 5MB/db)" append use-chips multiple accept=".jpg, .jpeg, .png" color="teal">
+            <q-file outlined v-model="kepek" label="Képek feltöltése (több is lehet)" append use-chips multiple accept=".jpg, .jpeg, .png" color="teal">
               <template v-slot:prepend><q-icon name="cloud_upload" /></template>
             </q-file>
           </div>
 
           <div class="col-12">
-            <q-input outlined v-model="formData.leiras" type="textarea" label="Részletes leírás" color="teal" counter maxlength="1000" />
+            <q-input outlined v-model="formData.leiras" type="textarea" label="Részletes leírás (környék, rezsi, kisállat stb.)" color="teal" counter maxlength="1000" />
           </div>
 
           <div class="col-12 flex justify-between q-mt-lg">
@@ -61,7 +82,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useAlberletStore } from 'stores/alberletStore';
 import { useRouter } from 'vue-router';
 import { api } from 'boot/axios';
@@ -72,13 +93,14 @@ const router = useRouter();
 const $q = useQuasar();
 const loading = ref(false);
 
-const kepek = ref([]); // Itt tároljuk a fájlokat, amíg el nem küldjük
+const kepek = ref([]); 
+const selectedMegyeId = ref(null);
 
 const formData = ref({
   cim: '',
-  tipus: 1, // Alapértelmezett: Lakás
-  ar: 100000,
-  meret: 40,
+  tipus: 1, 
+  ar: 150000,
+  meret: 50,
   szobak_szama: 1,
   emelet: 0,
   lift: 0,
@@ -90,6 +112,12 @@ const formData = ref({
   telefon: ''  
 });
 
+// Csak azokat a városokat mutatja, amik a kiválasztott megyéhez tartoznak
+const filteredVarosok = computed(() => {
+  if (!selectedMegyeId.value) return [];
+  return store.varosok.filter(v => v.megye_id === selectedMegyeId.value);
+});
+
 const tipusOpciok = [
   { label: 'Szoba', value: 0 },
   { label: 'Lakás', value: 1 },
@@ -98,16 +126,15 @@ const tipusOpciok = [
 
 const onSubmit = async () => {
   loading.value = true;
-  
-  // LOGIKA: Létrehozunk egy "dobozt" (FormData), amibe mindent belepakolunk
   const data = new FormData();
   
-  // 1. Szöveges adatok hozzáadása
+  // Minden adatot átrakunk a FormData-ba
   Object.keys(formData.value).forEach(key => {
-    data.append(key, formData.value[key]);
+    // A null értékeket ne küldjük el, vagy alakítsuk üres stringgé, hogy a Laravel ne dobjon hibát
+    const val = formData.value[key] === null ? '' : formData.value[key];
+    data.append(key, val);
   });
 
-  // 2. Képek hozzáadása (tömbként, ahogy a Laravel 'kepek.*' várja)
   if (kepek.value && kepek.value.length > 0) {
     kepek.value.forEach(file => {
       data.append('kepek[]', file);
@@ -115,29 +142,28 @@ const onSubmit = async () => {
   }
 
   try {
-    // 3. Küldés multipart/form-data fejléccel
     await api.post('/alberletek', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
 
-    $q.notify({ color: 'positive', message: 'Hirdetés sikeresen feladva!', icon: 'check', position: 'top' });
-    
-    // Frissítjük a listát a store-ban, hogy az új hirdetés is ott legyen
-    await store.fetchAlberletek();
+    $q.notify({ color: 'positive', message: 'Sikeres feltöltés!', icon: 'done' });
+    store.fetchAlberletek();
     router.push('/search');
   } catch (error) {
-    console.error("Hiba történt:", error.response?.data);
-    $q.notify({ 
-      color: 'negative', 
-      message: error.response?.data?.message || 'Szerver hiba történt a mentéskor!' 
-    });
+    // Itt kiírjuk a konkrét validációs hibákat, ha vannak (pl. túl nagy kép)
+    const errorMsg = error.response?.data?.errors 
+      ? Object.values(error.response.data.errors).flat().join(', ')
+      : 'Hiba a mentés során!';
+      
+    $q.notify({ color: 'negative', message: errorMsg });
   } finally {
     loading.value = false;
   }
 };
 
-onMounted(() => {
-  if (store.varosok.length === 0) store.fetchVarosok();
+onMounted(async () => {
+  if (store.megyek.length === 0) await store.fetchMegyek();
+  if (store.varosok.length === 0) await store.fetchVarosok();
 });
 </script>
 
