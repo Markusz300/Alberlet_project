@@ -10,6 +10,8 @@ class Megye extends Model
 
     protected $fillable = ['nev'];
 
+    public $timestamps = false;
+
     public function varosok()
     {
         return $this->hasMany(Varos::class, 'megye_id');

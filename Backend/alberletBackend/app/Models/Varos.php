@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Varos extends Model
 {
     protected $table = 'varos';
+    public $timestamps = false;
 
     protected $fillable = ['nev', 'megye_id'];
 
