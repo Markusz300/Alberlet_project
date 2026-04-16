@@ -7,9 +7,9 @@
 
       <q-form @submit="onSubmit" class="q-gutter-md q-pa-lg">
         <div class="row q-col-gutter-md">
-          
+
           <div class="col-12 text-teal-10 text-weight-bold h6 border-bottom">1. Ingatlan helye</div>
-          
+
           <div class="col-12 col-md-6">
             <q-select
               outlined
@@ -44,51 +44,51 @@
           </div>
 
           <div class="col-12">
-            <q-input 
-              outlined 
-              v-model="formData.cim" 
-              label="Utca, házszám" 
-              dense 
-              color="teal" 
-              :rules="[val => !!val || 'A cím kötelező']" 
+            <q-input
+              outlined
+              v-model="formData.cim"
+              label="Utca, házszám"
+              dense
+              color="teal"
+              :rules="[val => !!val || 'A cím kötelező']"
             />
           </div>
 
           <div class="col-12 text-teal-10 text-weight-bold h6 border-bottom q-mt-md">2. Részletek</div>
-          
+
           <div class="col-12 col-md-4">
-            <q-select 
-              outlined 
-              v-model="formData.tipus" 
-              :options="tipusOpciok" 
-              label="Ingatlan típusa" 
-              emit-value 
-              map-options 
-              dense 
-              color="teal" 
+            <q-select
+              outlined
+              v-model="formData.tipus"
+              :options="tipusOpciok"
+              label="Ingatlan típusa"
+              emit-value
+              map-options
+              dense
+              color="teal"
             />
           </div>
           <div class="col-6 col-md-4">
-            <q-input 
-              outlined 
-              v-model.number="formData.ar" 
-              type="number" 
-              label="Ár (Ft/hó)" 
-              dense 
-              color="teal" 
-              suffix="Ft" 
-              :rules="[val => val >= 50000 || 'Min. 50.000 Ft']" 
+            <q-input
+              outlined
+              v-model.number="formData.ar"
+              type="number"
+              label="Ár (Ft/hó)"
+              dense
+              color="teal"
+              suffix="Ft"
+              :rules="[val => val >= 50000 || 'Min. 50.000 Ft']"
             />
           </div>
           <div class="col-6 col-md-4">
-            <q-input 
-              outlined 
-              v-model.number="formData.meret" 
-              type="number" 
-              label="Méret (m²)" 
-              dense 
-              color="teal" 
-              suffix="m²" 
+            <q-input
+              outlined
+              v-model.number="formData.meret"
+              type="number"
+              label="Méret (m²)"
+              dense
+              color="teal"
+              suffix="m²"
             />
           </div>
 
@@ -98,7 +98,7 @@
           <div class="col-4 col-md-4">
             <q-input outlined v-model.number="formData.emelet" type="number" label="Emelet" dense color="teal" />
           </div>
-          
+
           <div class="col-12 col-md-4 flex items-center justify-around">
             <q-checkbox v-model="formData.lift" :true-value="1" :false-value="0" label="Lift van" color="teal" />
             <q-checkbox v-model="formData.butorozott" :true-value="1" :false-value="0" label="Bútorozott" color="teal" />
@@ -148,14 +148,14 @@ const router = useRouter();
 const $q = useQuasar();
 const loading = ref(false);
 
-const kepek = ref([]); 
+const kepek = ref([]);
 const selectedMegye = ref(null);
 const selectedVaros = ref(null);
 const filteredMegyekOptions = ref([]);
 
 const formData = ref({
   cim: '',
-  tipus: 1, 
+  tipus: 1,
   ar: 150000,
   meret: 50,
   szobak_szama: 1,
@@ -164,15 +164,15 @@ const formData = ref({
   butorozott: 0,
   leiras: '',
   varos_id: null,
-  nev: '',     
-  email: '',   
-  telefon: ''  
+  nev: '',
+  email: '',
+  telefon: ''
 });
 
 const tipusOpciok = [
-  { label: 'Szoba', value: 0 },
+  { label: 'Szoba', value: 2 },
   { label: 'Lakás', value: 1 },
-  { label: 'Ház', value: 2 }
+  { label: 'Ház', value: 0 }
 ];
 
 // --- JAVÍTOTT VÁROS SZŰRÉS ---
@@ -221,7 +221,7 @@ const createValueVaros = (val, done) => {
 const onSubmit = async () => {
   loading.value = true;
   const data = new FormData();
-  
+
   // Alapadatok hozzáadása
   Object.keys(formData.value).forEach(key => {
     data.append(key, formData.value[key]);
@@ -233,7 +233,7 @@ const onSubmit = async () => {
 
   // Város kezelése: ID vagy beírt név
   const varosAdat = selectedVaros.value?.value || selectedVaros.value;
-  data.append('varos_id', varosAdat); 
+  data.append('varos_id', varosAdat);
 
   // Képek hozzáadása
   if (kepek.value && kepek.value.length > 0) {
@@ -244,14 +244,14 @@ const onSubmit = async () => {
     await api.post('/alberletek', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
-    
+
     $q.notify({ color: 'positive', message: 'Sikeres feltöltés!', icon: 'done' });
-    
+
     // --- FONTOS: Frissítjük a store-t, hogy az új város/megye is benne legyen ---
     await store.fetchMegyek();
     await store.fetchVarosok();
     await store.fetchAlberletek();
-    
+
     router.push('/search');
   } catch (error) {
     console.error(error);
@@ -270,13 +270,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.form-card { 
-  width: 100%; 
-  max-width: 800px; 
-  border-radius: 20px; 
+.form-card {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 20px;
 }
-.border-bottom { 
-  border-bottom: 1px solid #e0e0e0; 
-  padding-bottom: 8px; 
+.border-bottom {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
 }
 </style>
