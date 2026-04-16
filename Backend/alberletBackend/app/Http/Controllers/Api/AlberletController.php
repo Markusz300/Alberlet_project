@@ -19,16 +19,16 @@ class AlberletController extends Controller
      */
    public function index(Request $request)
 {
-    $query = Alberlet::with(['kepek', 'varos', 'tipusKapcsolat'])
-                     ->where('aktiv', 1);
+   $query = Alberlet::with(['kepek', 'varos.megye', 'tipusKapcsolat'])
+                         ->where('aktiv', 1);
 
-                     
+
     // --- ÚJ: Megye szűrő ---
-    if ($request->filled('megye_id')) {
-        $query->whereHas('varos', function($q) use ($request) {
-            $q->where('megye_id', $request->megye_id);
-        });
-    }
+   if ($request->filled('megye_id')) {
+            $query->whereHas('varos', function($q) use ($request) {
+                $q->where('megye_id', $request->megye_id);
+            });
+        }
 
     // Szűrő: város (varos_id)
     if ($request->filled('varos_id')) {
@@ -86,7 +86,7 @@ class AlberletController extends Controller
             case 'ar_desc':
                 $query->orderBy('ar', 'desc');
                 break;
-            
+
             default:
                 $query->orderBy('hirdetes_datuma', 'desc');
         }
@@ -118,7 +118,7 @@ class AlberletController extends Controller
             'lift'            => 'nullable',
             'butorozott'      => 'nullable',
             'leiras'          => 'nullable|string',
-            'varos_id'        => 'required', 
+            'varos_id'        => 'required',
             'nev'             => 'required|string|max:100',
             'email'           => 'required|email|max:150',
             'telefon'         => 'nullable|string|max:30',
@@ -131,7 +131,7 @@ class AlberletController extends Controller
             // 2. Város és Megye kezelése
             if (!is_numeric($varosId)) {
                 $megyeInfo = $request->megye_id_vagy_nev;
-                
+
                 if (!is_numeric($megyeInfo)) {
                     $megye = Megye::firstOrCreate(['nev' => $megyeInfo]);
                     $megyeId = $megye->id;
@@ -183,7 +183,7 @@ class AlberletController extends Controller
 
             return response()->json($alberlet, 201);
         });
-        
+
     }catch (\Exception $e) {
         // EZ FONTOS: Visszaküldi a konkrét hibaüzenetet a böngészőnek!
         return response()->json([
@@ -192,7 +192,7 @@ class AlberletController extends Controller
             'error_line' => $e->getLine()
         ], 500);
     }}
-    
+
 
     /**
      * Display the specified resource.
@@ -200,7 +200,7 @@ class AlberletController extends Controller
     public function show(Alberlet $alberlet)
 {
     // Előre betöltjük a cuccokat
-    $alberlet->load(['kepek', 'varos', 'tulajdonos', 'tipusKapcsolat']);
+    $alberlet->load(['kepek', 'varos.megye', 'tulajdonos', 'tipusKapcsolat']);
 
     // Visszaadjuk Resource ba
     return new AlberletResource($alberlet);

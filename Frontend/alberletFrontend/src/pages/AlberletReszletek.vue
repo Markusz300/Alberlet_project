@@ -17,7 +17,6 @@
       <div v-else-if="store.selectedAlberlet" class="row q-col-gutter-lg">
 
         <div class="col-12 col-md-8">
-
           <q-card flat bordered class="rounded-borders overflow-hidden q-mb-lg shadow-2">
             <q-carousel v-model="currentSlide"
               v-if="store.selectedAlberlet.kepek && store.selectedAlberlet.kepek.length > 0" animated infinite arrows
@@ -60,21 +59,30 @@
 
             <q-card flat bordered class="shadow-2 rounded-borders bg-white">
               <q-list separator>
+
                 <q-item>
                   <q-item-section avatar><q-icon name="location_city" color="teal" /></q-item-section>
                   <q-item-section>
-                    <q-item-label caption>Település</q-item-label>
-                    <q-item-label class="text-weight-medium">{{ store.selectedAlberlet.varos }}</q-item-label>
+                    <q-item-label caption>Település / Megye</q-item-label>
+                    <q-item-label class="text-weight-medium">
+                      {{ store.selectedAlberlet.varos }}
+                      <span v-if="store.selectedAlberlet.megye" class="text-grey-7 text-weight-regular">
+                        , {{ store.selectedAlberlet.megye }} megye
+                      </span>
+                    </q-item-label>
                   </q-item-section>
                 </q-item>
+
                 <q-item>
                   <q-item-section avatar><q-icon name="bed" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Szobák száma</q-item-label>
-                    <q-item-label class="text-weight-medium">{{ store.selectedAlberlet.szobak_szama }}
-                      szoba</q-item-label>
+                    <q-item-label class="text-weight-medium">
+                      {{ store.selectedAlberlet.szobak_szama }} szoba
+                    </q-item-label>
                   </q-item-section>
                 </q-item>
+
                 <q-item>
                   <q-item-section avatar><q-icon name="straighten" color="teal" /></q-item-section>
                   <q-item-section>
@@ -82,28 +90,48 @@
                     <q-item-label class="text-weight-medium">{{ store.selectedAlberlet.meret }} m²</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item>
-                  <q-item-section avatar><q-icon name="elevator" color="teal" /></q-item-section>
-                  <q-item-section>
-                    <q-item-label caption>Lift / Emelet</q-item-label>
-                    <q-item-label class="text-weight-medium">
-                      {{ (store.selectedAlberlet.lift === 'van' || store.selectedAlberlet.lift == 1) ? 'Van lift' :
-                        'Nincs lift' }}
 
-                      <span class="q-ml-sm text-grey-6">|</span>
-                      <span class="q-ml-sm">
+                <q-item>
+                  <q-item-section avatar>
+                    <q-icon :name="isHaz ? 'home' : 'elevator'" color="teal" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label caption>
+                      {{ isHaz ? 'Ingatlan szintjei' : 'Emelet / Lift' }}
+                    </q-item-label>
+                    <q-item-label class="text-weight-medium">
+                      <template v-if="isHaz">
+                        {{ store.selectedAlberlet.emelet > 1 ? store.selectedAlberlet.emelet + ' szintes ház' :
+                        'Földszintes ház' }}
+                      </template>
+                      <template v-else>
                         {{ store.selectedAlberlet.emelet > 0 ? store.selectedAlberlet.emelet + '. emelet' : 'Földszint'
                         }}
-                      </span>
+                        <span class="q-ml-sm text-grey-6">|</span>
+                        <span class="q-ml-sm">
+                          {{ isLiftes ? 'Van lift' : 'Nincs lift' }}
+                        </span>
+                      </template>
                     </q-item-label>
                   </q-item-section>
                 </q-item>
+
                 <q-item>
                   <q-item-section avatar><q-icon name="chair" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Bútorozottság</q-item-label>
                     <q-item-label class="text-weight-medium">
                       {{ store.selectedAlberlet.butorozott === 'igen' ? 'Bútorozott' : 'Üres' }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+
+                <q-item>
+                  <q-item-section avatar><q-icon name="event" color="teal" /></q-item-section>
+                  <q-item-section>
+                    <q-item-label caption>Hirdetés feladva</q-item-label>
+                    <q-item-label class="text-weight-medium">
+                      {{ formatDate(store.selectedAlberlet.hirdetes_datuma) }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -114,34 +142,23 @@
               <q-card-section class="bg-grey-2">
                 <div class="text-subtitle1 text-weight-bold text-center text-grey-9">Kapcsolatfelvétel</div>
               </q-card-section>
-
               <q-card-section class="text-center q-pa-lg">
                 <q-avatar size="80px" font-size="50px" color="teal-1" text-color="teal" icon="account_circle"
                   class="q-mb-md shadow-1" />
-
                 <div class="text-h6 text-weight-bold text-grey-9 q-mb-none">
                   {{ store.selectedAlberlet.tulajdonos?.nev || 'Hirdető' }}
                 </div>
                 <div class="text-caption text-grey-6 q-mb-md">Magánszemély</div>
-
                 <div class="q-gutter-y-sm">
                   <q-btn unelevated rounded color="teal" icon="phone"
                     :label="store.selectedAlberlet.tulajdonos?.telefon || 'Nincs telefonszám'"
                     class="full-width q-py-sm text-weight-bold"
                     :type="store.selectedAlberlet.tulajdonos?.telefon ? 'a' : 'button'"
                     :href="store.selectedAlberlet.tulajdonos?.telefon ? `tel:${store.selectedAlberlet.tulajdonos.telefon}` : undefined" />
-
                   <q-btn outline rounded color="teal" icon="email"
                     :label="store.selectedAlberlet.tulajdonos?.email || 'Nincs e-mail'" class="full-width q-py-sm"
                     :type="store.selectedAlberlet.tulajdonos?.email ? 'a' : 'button'"
                     :href="store.selectedAlberlet.tulajdonos?.email ? `mailto:${store.selectedAlberlet.tulajdonos.email}` : undefined" />
-                </div>
-              </q-card-section>
-
-              <q-separator inset />
-              <q-card-section class="text-center q-py-sm">
-                <div class="text-caption text-grey-6 flex flex-center">
-                  <q-icon name="verified_user" color="blue" class="q-mr-xs" /> Megbízható hirdető
                 </div>
               </q-card-section>
             </q-card>
@@ -160,7 +177,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAlberletStore } from 'stores/alberletStore'
 
@@ -171,40 +188,43 @@ const BASE_URL = 'http://127.0.0.1:8000'
 
 const currentSlide = ref(0)
 
-// Navigáció vissza
+// Számított tulajdonságok a tisztább sablonért
+const isHaz = computed(() => store.selectedAlberlet?.tipus?.toLowerCase() === 'ház')
+const isLiftes = computed(() => {
+  const lift = store.selectedAlberlet?.lift
+  return lift === 'van' || lift === 1 || lift === true
+})
+
 const goBack = () => {
-  if (window.history.length > 1) {
-    router.back()
-  } else {
-    router.push('/')
-  }
+  if (window.history.length > 1) router.back()
+  else router.push('/')
 }
 
-// Kép URL formázás (objektum vagy string esetén is)
 const formatImageUrl = (kep) => {
   const path = kep.kep_url || kep
   if (!path) return 'https://placehold.co/600x400?text=Nincs+Kep'
   return `${BASE_URL}${path.startsWith('/') ? path : '/' + path}`
 }
 
-// Adatbetöltés függvény
 const loadData = async () => {
   const id = route.params.id
-  if (id) {
-    try {
-      await store.fetchAlberletById(id)
-    } catch (err) {
-      console.error("Hiba történt az adatok lekérésekor:", err)
-    }
-  }
+  if (id) await store.fetchAlberletById(id)
 }
 
 onMounted(loadData)
 
-// Ha a felhasználó egy másik hirdetésre navigálna (pl. hasonló ingatlanokból)
 watch(() => route.params.id, (newId) => {
   if (newId) loadData()
 })
+
+const formatDate = (dateString) => {
+  if (!dateString) return 'Nincs adat'
+  return new Date(dateString).toLocaleDateString('hu-HU', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
+}
 </script>
 
 <style scoped>

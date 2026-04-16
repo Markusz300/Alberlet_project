@@ -55,14 +55,21 @@ export const useAlberletStore = defineStore("alberlet", {
   },
 
   actions: {
-    async fetchMegyek() {
-      try {
-        const { data } = await api.get('/megyek');
-        this.megyek = data.map(m => ({ label: m.nev, value: m.id }));
-      } catch {
-        console.error("Hiba a megyék betöltésekor");
-      }
-    },
+   async fetchMegyek() {
+  try {
+    // Ellenőrizd az URL-t! Ha a base URL-edben nincs benne az /api, írd ki fixen:
+    const response = await api.get('/megyek');
+
+    // A Backend már így küldi: [{ value: 1, label: 'Zala' }, ...]
+    // Tehát csak simán elmentjük
+    this.megyek = response.data;
+
+    return response.data;
+  } catch (error) {
+    console.error("Hiba a megyék lekérésekor:", error);
+    this.megyek = []; // Hiba esetén legyen üres, ne undefined
+  }
+},
 
     async fetchVarosok() {
       try {
