@@ -7,7 +7,6 @@
 
       <q-form @submit="onSubmit" class="q-gutter-md q-pa-lg">
         <div class="row q-col-gutter-md">
-
           <div class="col-12 text-teal-10 text-weight-bold h6 border-bottom">1. Ingatlan helye</div>
 
           <div class="col-12 col-md-6">
@@ -16,13 +15,14 @@
               v-model="selectedMegye"
               use-input
               input-debounce="0"
-              label="Megye (választható vagy írható)"
+              label="Megye"
               :options="filteredMegyekOptions"
               @filter="filterMegyek"
               @new-value="createValueMegye"
               dense
               color="teal"
               clearable
+              :rules="[val => !!val || 'Megye megadása kötelező']"
             />
           </div>
 
@@ -32,7 +32,7 @@
               v-model="selectedVaros"
               use-input
               input-debounce="0"
-              label="Város (választható vagy írható)"
+              label="Város"
               :options="filteredVarosok"
               @filter="filterVarosok"
               @new-value="createValueVaros"
@@ -40,6 +40,7 @@
               dense
               color="teal"
               clearable
+              :rules="[val => !!val || 'Város megadása kötelező']"
             />
           </div>
 
@@ -77,7 +78,7 @@
               dense
               color="teal"
               suffix="Ft"
-              :rules="[val => val >= 50000 || 'Min. 50.000 Ft']"
+              :rules="[val => val >= 10000 || 'Érvényes ár szükséges']"
             />
           </div>
           <div class="col-6 col-md-4">
@@ -100,7 +101,7 @@
           </div>
 
           <div class="col-12 col-md-4 flex items-center justify-around">
-            <q-checkbox v-model="formData.lift" :true-value="1" :false-value="0" label="Lift van" color="teal" />
+            <q-checkbox v-model="formData.lift" :true-value="1" :false-value="0" label="Lift" color="teal" />
             <q-checkbox v-model="formData.butorozott" :true-value="1" :false-value="0" label="Bútorozott" color="teal" />
           </div>
 
@@ -112,12 +113,12 @@
             <q-input outlined v-model="formData.email" label="E-mail" dense color="teal" :rules="[val => /.+@.+\..+/.test(val) || 'Érvénytelen e-mail']" />
           </div>
           <div class="col-12 col-md-4">
-            <q-input outlined v-model="formData.telefon" label="Telefonszám" dense color="teal" mask="+36 ## ### ####" unmasked-value />
+            <q-input outlined v-model="formData.telefon" label="Telefonszám" dense color="teal" mask="+36 ## ### ####" unmasked-value fill-mask />
           </div>
 
           <div class="col-12 text-teal-10 text-weight-bold h6 q-mt-md border-bottom">4. Fotók és Leírás</div>
           <div class="col-12">
-            <q-file outlined v-model="kepek" label="Képek feltöltése (több is lehet)" append use-chips multiple accept=".jpg, .jpeg, .png" color="teal">
+            <q-file outlined v-model="kepek" label="Képek feltöltése" append use-chips multiple accept=".jpg, .jpeg, .png" color="teal">
               <template v-slot:prepend><q-icon name="cloud_upload" /></template>
             </q-file>
           </div>
@@ -127,7 +128,7 @@
           </div>
 
           <div class="col-12 flex justify-between q-mt-lg">
-            <q-btn flat color="grey-7" label="Mégse" @click="$router.push('/')" />
+            <q-btn flat color="grey-7" label="Mégse" @click="$router.push('/search')" />
             <q-btn unelevated color="teal" label="Hirdetés közzététele" type="submit" :loading="loading" class="q-px-xl" />
           </div>
         </div>
@@ -137,7 +138,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useAlberletStore } from 'stores/alberletStore';
 import { useRouter } from 'vue-router';
 import { api } from 'boot/axios';
@@ -163,50 +164,55 @@ const formData = ref({
   lift: 0,
   butorozott: 0,
   leiras: '',
-  varos_id: null,
+  varos_id: null, // Ezt a watch fogja tölteni
   nev: '',
   email: '',
   telefon: ''
 });
 
 const tipusOpciok = [
-  { label: 'Szoba', value: 2 },
   { label: 'Lakás', value: 1 },
-  { label: 'Ház', value: 0 }
+  { label: 'Ház', value: 0 },
+  { label: 'Szoba', value: 2 }
 ];
 
-// --- JAVÍTOTT VÁROS SZŰRÉS ---
+// Figyeljük a választást és frissítsük a formData-t
+watch(selectedVaros, (newVal) => {
+  if (newVal && typeof newVal === 'object') {
+    formData.value.varos_id = newVal.value;
+  } else {
+    formData.value.varos_id = newVal; // String, ha új várost írtak be
+  }
+});
+
+// Ha megyét vált, nullázzuk a várost
+watch(selectedMegye, () => {
+  selectedVaros.value = null;
+  formData.value.varos_id = null;
+});
+
 const filteredVarosok = computed(() => {
   if (!selectedMegye.value) return [];
 
-  // 1. Ha meglévő megyét választottunk (objektum, aminek van value-ja)
+  // Ha a kiválasztott megye egy objektum (létező)
   if (typeof selectedMegye.value === 'object' && selectedMegye.value?.value) {
     return store.varosok
       .filter(v => v.megye_id === selectedMegye.value.value)
-      .map(v => ({ label: v.nev, value: v.id }));
+      .map(v => ({ label: v.label, value: v.value }));
   }
-
-  // 2. Ha új megyét írtunk be (string)
-  // Ilyenkor üres listát adunk, de a select engedi az új város beírását
   return [];
 });
 
 const filterVarosok = (val, update) => {
-  update(() => {
-    // A computed property automatikusan frissül
-  });
+  update(() => {});
 };
 
 const filterMegyek = (val, update) => {
   update(() => {
     const needle = val.toLowerCase();
-    if (val === '') {
-      filteredMegyekOptions.value = store.megyek;
-    } else {
-      filteredMegyekOptions.value = store.megyek.filter(
-        v => v.label.toLowerCase().indexOf(needle) > -1
-      );
-    }
+    filteredMegyekOptions.value = val === ''
+      ? store.megyek
+      : store.megyek.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
   });
 };
 
@@ -222,22 +228,23 @@ const onSubmit = async () => {
   loading.value = true;
   const data = new FormData();
 
-  // Alapadatok hozzáadása
+  // Megye adat (lehet ID vagy string)
+  const megyeAdat = typeof selectedMegye.value === 'object' ? selectedMegye.value?.value : selectedMegye.value;
+  data.append('megye_adat', megyeAdat);
+
+  // Minden egyéb adat a formData-ból
   Object.keys(formData.value).forEach(key => {
-    data.append(key, formData.value[key]);
+    // A null értékeket ne küldjük el stringként
+    if (formData.value[key] !== null) {
+      data.append(key, formData.value[key]);
+    }
   });
 
-  // Megye kezelése: ID vagy beírt név
-  const megyeAdat = selectedMegye.value?.value || selectedMegye.value;
-  data.append('megye_id_vagy_nev', megyeAdat);
-
-  // Város kezelése: ID vagy beírt név
-  const varosAdat = selectedVaros.value?.value || selectedVaros.value;
-  data.append('varos_id', varosAdat);
-
-  // Képek hozzáadása
+  // Képek
   if (kepek.value && kepek.value.length > 0) {
-    kepek.value.forEach(file => data.append('kepek[]', file));
+    kepek.value.forEach(file => {
+      data.append('kepek[]', file);
+    });
   }
 
   try {
@@ -245,18 +252,15 @@ const onSubmit = async () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
 
-    $q.notify({ color: 'positive', message: 'Sikeres feltöltés!', icon: 'done' });
+    $q.notify({ color: 'positive', message: 'Hirdetés sikeresen beküldve!', icon: 'check' });
 
-    // --- FONTOS: Frissítjük a store-t, hogy az új város/megye is benne legyen ---
-    await store.fetchMegyek();
-    await store.fetchVarosok();
+    // Store frissítés, hogy lássuk az újat
     await store.fetchAlberletek();
-
     router.push('/search');
   } catch (error) {
     console.error(error);
-    const errorMsg = error.response?.data?.error || 'Hiba a mentés során!';
-    $q.notify({ color: 'negative', message: errorMsg });
+    const msg = error.response?.data?.message || 'Hiba történt a mentéskor.';
+    $q.notify({ color: 'negative', message: msg, icon: 'report_problem' });
   } finally {
     loading.value = false;
   }
@@ -273,10 +277,11 @@ onMounted(async () => {
 .form-card {
   width: 100%;
   max-width: 800px;
-  border-radius: 20px;
+  border-radius: 16px;
+  overflow: hidden;
 }
 .border-bottom {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #eee;
   padding-bottom: 8px;
 }
 </style>
