@@ -20,7 +20,7 @@
           <q-card flat bordered class="rounded-borders overflow-hidden q-mb-lg shadow-2">
             <q-carousel v-model="currentSlide"
               v-if="store.selectedAlberlet.kepek && store.selectedAlberlet.kepek.length > 0" animated infinite arrows
-              navigation thumbnails control-color="teal" height="500px" class="bg-black">
+              navigation thumbnails control-color="white" height="500px" class="bg-black">
               <q-carousel-slide v-for="(kep, index) in store.selectedAlberlet.kepek" :key="index" :name="index"
                 :img-src="formatImageUrl(kep)" />
             </q-carousel>
@@ -67,7 +67,7 @@
                     <q-item-label class="text-weight-medium">
                       {{ store.selectedAlberlet.varos }}
                       <span v-if="store.selectedAlberlet.megye" class="text-grey-7 text-weight-regular">
-                        , {{ store.selectedAlberlet.megye }} megye
+                        , {{ store.selectedAlberlet.megye }} 
                       </span>
                     </q-item-label>
                   </q-item-section>
@@ -228,6 +228,11 @@ const formatDate = (dateString) => {
 </script>
 
 <style scoped>
+
+:deep(.q-carousel__control .q-btn) {
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
+}
+
 .max-width-container {
   max-width: 1200px;
 }
