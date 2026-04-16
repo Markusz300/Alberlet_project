@@ -119,6 +119,7 @@ class AlberletController extends Controller
             'butorozott'      => 'nullable',
             'leiras'          => 'nullable|string',
             'varos_id'        => 'required',
+            'aktiv' => 'nullable|integer|in:0,1',
             'nev'             => 'required|string|max:100',
             'email'           => 'required|email|max:150',
             'telefon'         => 'nullable|string|max:30',
@@ -165,7 +166,7 @@ class AlberletController extends Controller
                 'butorozott'      => filter_var($request->butorozott, FILTER_VALIDATE_BOOLEAN) ? 1 : 0,
                 'leiras'          => $request->leiras,
                 'hirdetes_datuma' => now()->format('Y-m-d'), // Biztonságos dátum formátum
-                'aktiv'           => 1,
+                'aktiv'           => $request->has('aktiv') ? (int)$request->aktiv : 1,
                 'varos_id'        => $varosId,
                 'tulajdonos_id'   => $tulajdonos->id,
             ]);

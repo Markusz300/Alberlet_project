@@ -88,6 +88,21 @@
                 <q-input outlined v-model="formData.telefon" label="Telefonszám" dense color="teal" mask="+36 ## ### ####" fill-mask />
               </div>
             </div>
+
+            <div class="col-12 q-mt-md bg-orange-1 q-pa-sm rounded-borders border-orange">
+  <div class="text-weight-bold text-orange-9 q-mb-xs">DEBUG OPCIÓ:</div>
+  <q-toggle
+    v-model="formData.aktiv"
+    :true-value="1"
+    :false-value="0"
+    label="Hirdetés azonnali aktiválása"
+    color="orange-9"
+    icon="bug_report"
+  />
+  <div class="text-caption text-grey-7">
+    Ha kikapcsolod, a hirdetés bekerül az adatbázisba, de nem jelenik meg a listában.
+  </div>
+</div>
           </q-step>
 
           <template v-slot:navigation>
@@ -131,7 +146,7 @@ const filteredMegyekOptions = ref([]);
 const formData = ref({
   cim: '', tipus: 1, ar: 150000, meret: 50, szobak_szama: 1,
   emelet: 0, lift: 0, butorozott: 0, leiras: '',
-  varos_id: null, nev: '', email: '', telefon: ''
+  varos_id: null, nev: '', email: '', telefon: '',aktiv: 1
 });
 
 const tipusOpciok = [
