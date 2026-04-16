@@ -180,7 +180,7 @@ const onSubmit = async () => {
 
   try {
     await api.post('/alberletek', data, { headers: { 'Content-Type': 'multipart/form-data' } });
-    $q.notify({ type: 'positive', message: 'Sikeres feltöltés!' });
+    $q.notify({ type: 'positive', message: 'Munkatársunk megkapta hirdetését és 24-órán belül aktívvá tesszük!!' });
     await store.fetchAlberletek();
     router.push('/search');
   
