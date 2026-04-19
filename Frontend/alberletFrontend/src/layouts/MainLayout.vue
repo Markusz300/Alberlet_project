@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lHh">
     <q-header elevated class="bg-teal-10">
       <q-toolbar>
-        <div class="flex items-center cursor-pointer" @click="$router.push('/')">
+        <div class="flex items-center cursor-pointer" @click="handleLogoClick">
           <img src="icons/M&B logo.png" alt="M&B logo" style="width: 150px">
           <q-toolbar-title class="text-bold q-ml-sm">
             M&B lakhatás
@@ -42,27 +42,46 @@
         </div>
       </div>
     </q-footer>
-
   </q-layout>
 </template>
 
+<script setup>
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/authStore';
+
+const router = useRouter();
+const auth = useAuthStore();
+
+const handleLogoClick = () => {
+  // 1. Töröljük az admin jogot a localStorage-ból
+  localStorage.removeItem('isAdmin');
+  
+  // 2. Szólunk az authStore-nak is, hogy vége a dalnak
+  if (auth.logout) {
+    auth.logout();
+  } else {
+    auth.isLoggedIn = false;
+  }
+
+  // 3. Hazadobjuk a felhasználót
+  router.push('/');
+
+  // 4. (Opcionális) Frissítünk egyet az oldalon, hogy minden 
+  // változó tutira kiürüljön a memóriából
+  // window.location.reload(); 
+};
+</script>
+
 <style scoped>
+/* ... a stílusaid változatlanok ... */
 .container-maxWidth {
   max-width: 1200px;
   width: 100%;
 }
-
-.opacity-70 {
-  opacity: 0.7;
-}
-
+.opacity-70 { opacity: 0.7; }
 .hover-opacity-100:hover {
   opacity: 1;
   transition: opacity 0.3s ease;
 }
-
-a {
-  color: white;
-  text-decoration: none;
-}
+a { color: white; text-decoration: none; }
 </style>

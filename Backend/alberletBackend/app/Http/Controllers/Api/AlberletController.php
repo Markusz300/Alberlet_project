@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AlberletResource;
 use App\Models\Alberlet;
 use App\Models\Kep;
+use App\Models\Megye;   // HIÁNYZOTT!
 use App\Models\Tulajdonos;
 use App\Models\Varos;   // HIÁNYZOTT!
-use App\Models\Megye;   // HIÁNYZOTT!
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AlberletController extends Controller
 {
@@ -19,8 +20,11 @@ class AlberletController extends Controller
      */
    public function index(Request $request)
 {
-   $query = Alberlet::with(['kepek', 'varos.megye', 'tipusKapcsolat'])
-                         ->where('aktiv', 1);
+   $query = Alberlet::with(['kepek', 'varos.megye', 'tipusKapcsolat']);
+
+   if ($request->query('admin_view') !== 'true') {
+        $query->where('aktiv', 1);
+    }
 
 
     // --- ÚJ: Megye szűrő ---
@@ -94,90 +98,115 @@ class AlberletController extends Controller
         $query->orderBy('hirdetes_datuma', 'desc');
     }
 
-    //  12 rekord/oldal
-    $alberletek = $query->paginate(12);
+   if ($request->query('admin_view') === 'true') {
+        $alberletek = $query->get(); // Összes rekord lekérése
+        return AlberletResource::collection($alberletek);
+    }
 
-    // Visszaadás Resource-ként
+    // Alapértelmezett (searchPage): marad a 12 rekord/oldal
+    $alberletek = $query->paginate(12);
     return AlberletResource::collection($alberletek);
 }
 
     /**
      * Store a newly created resource in storage.
      */
-  public function store(Request $request)
-    {
-        try {
+ public function store(Request $request)
+{
+    try {
         // 1. Validáció
         $request->validate([
-            'cim'             => 'required|string|max:255',
-            'tipus'           => 'required|integer|in:0,1,2',
-            'ar'              => 'required|integer|min:50000',
-            'meret'           => 'nullable|integer|min:10',
-            'szobak_szama'    => 'required|numeric|min:0.5|max:10',
-            'emelet'          => 'nullable|integer',
-            'lift'            => 'nullable',
-            'butorozott'      => 'nullable',
-            'leiras'          => 'nullable|string',
-            'varos_id'        => 'required',
-            'aktiv' => 'nullable|integer|in:0,1',
-            'nev'             => 'required|string|max:100',
-            'email'           => 'required|email|max:150',
-            'telefon'         => 'nullable|string|max:30',
-            'kepek.*'         => 'image|mimes:jpeg,png,jpg,gif|max:5120',
+            'cim' => ['required', 'string', 'max:255'],
+            'tipus' => 'required|integer|in:0,1,2',
+            'ar' => 'required|integer|min:10000',
+            'meret' => 'required|integer|min:5',
+            'szobak_szama' => 'required|numeric|min:0.5',
+            'emelet' => 'nullable|integer|min:0',
+            'leiras' => 'required|string|min:20',
+            'varos_id' => 'required',
+            'nev' => 'required|string|min:3|max:100',
+            'email' => 'required|email|max:150',
+            'telefon' => 'required|string|min:10',
+            'kepek' => 'required',
+            'kepek.*' => 'image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
         return DB::transaction(function () use ($request) {
             $varosId = $request->varos_id;
 
-            // 2. Város és Megye kezelése
+            // 2. Város és Megye kezelése (Ha új/kézzel beírt)
             if (!is_numeric($varosId)) {
                 $megyeInfo = $request->megye_id_vagy_nev;
-
                 if (!is_numeric($megyeInfo)) {
-                    $megye = Megye::firstOrCreate(['nev' => $megyeInfo]);
+                    $megye = Megye::firstOrCreate(['nev' => mb_convert_case($megyeInfo, MB_CASE_TITLE, "UTF-8")]);
                     $megyeId = $megye->id;
                 } else {
                     $megyeId = $megyeInfo;
                 }
-
                 $ujVaros = Varos::firstOrCreate([
-                    'nev' => $varosId,
+                    'nev' => mb_convert_case($varosId, MB_CASE_TITLE, "UTF-8"),
                     'megye_id' => $megyeId
                 ]);
                 $varosId = $ujVaros->id;
             }
 
-            // 3. Tulajdonos
-            $tulajdonos = Tulajdonos::firstOrCreate(
-                ['email' => $request->email],
-                ['nev' => $request->nev, 'telefon' => $request->telefon]
-            );
+            // 3. Tulajdonos kezelése
+            $tulajdonos = Tulajdonos::where('email', $request->email)
+                ->orWhere('telefon', $request->telefon)
+                ->first();
 
-            // 4. Albérlet létrehozása
-            // A lift és butorozott értékeket kényszerítjük 0-ra vagy 1-re
+            if (!$tulajdonos) {
+                $tulajdonos = Tulajdonos::create([
+                    'nev' => $request->nev,
+                    'email' => $request->email,
+                    'telefon' => $request->telefon
+                ]);
+            }
+
+            // 4. CÍM FORMÁZÁSA (Fix: 8900 Zalaegerszeg, Arany János Út 12.)
+$nyersCim = $request->input('cim');
+
+// Minden szó nagybetűvel induljon, kivéve ha csak szám (irányítószám/házszám)
+$szavak = explode(' ', $nyersCim);
+$formazottSzavak = array_map(function($szo) {
+    return is_numeric($szo) ? $szo : mb_convert_case($szo, MB_CASE_TITLE, "UTF-8");
+}, $szavak);
+
+$formazottCim = implode(' ', $formazottSzavak);
+
+// Vessző kezelése: Ha az első két elem az irányítószám és a város, tegyünk utána vesszőt
+// Minta: "8900 Zalaegerszeg" -> "8900 Zalaegerszeg,"
+$formazottCim = preg_replace('/^(\d{4}\s[^\s,]+)(?!\s*,)/u', '$1,', $formazottCim);
+
+// Pont a végére, ha nincs
+if (!str_ends_with($formazottCim, '.')) {
+    $formazottCim .= '.';
+}
+
+            // 5. Albérlet létrehozása
             $alberlet = Alberlet::create([
-                'cim'             => $request->cim,
-                'tipus'           => $request->tipus,
-                'ar'              => $request->ar,
-                'meret'           => $request->meret,
-                'szobak_szama'    => $request->szobak_szama,
-                'emelet'          => $request->emelet ?? 0,
-                'lift'            => filter_var($request->lift, FILTER_VALIDATE_BOOLEAN) ? 1 : 0,
-                'butorozott'      => filter_var($request->butorozott, FILTER_VALIDATE_BOOLEAN) ? 1 : 0,
-                'leiras'          => $request->leiras,
-                'hirdetes_datuma' => now()->format('Y-m-d'), // Biztonságos dátum formátum
-                'aktiv'           => $request->has('aktiv') ? (int)$request->aktiv : 1,
-                'varos_id'        => $varosId,
-                'tulajdonos_id'   => $tulajdonos->id,
+                'cim' => $formazottCim,
+                'tipus' => $request->tipus,
+                'ar' => $request->ar,
+                'meret' => $request->meret,
+                'szobak_szama' => ($request->tipus == 2) ? 1 : $request->szobak_szama,
+                'emelet' => $request->emelet ?? 0,
+                'lift' => filter_var($request->lift, FILTER_VALIDATE_BOOLEAN) ? 1 : 0,
+                'butorozott' => filter_var($request->butorozott, FILTER_VALIDATE_BOOLEAN) ? 1 : 0,
+                'leiras' => strip_tags($request->leiras),
+                'hirdetes_datuma' => now(),
+                'aktiv' => $request->aktiv ?? 0,
+                'varos_id' => $varosId,
+                'tulajdonos_id' => $tulajdonos->id,
             ]);
 
-            // 5. Képek
+            // 6. Képek mentése
             if ($request->hasFile('kepek')) {
                 foreach ($request->file('kepek') as $kepFile) {
                     $path = $kepFile->store('Kepek', 'public');
                     Kep::create([
                         'alberlet_id' => $alberlet->id,
-                        'kep_url'     => '/storage/' . $path,
+                        'kep_url' => '/storage/' . $path,
                     ]);
                 }
             }
@@ -185,14 +214,13 @@ class AlberletController extends Controller
             return response()->json($alberlet, 201);
         });
 
-    }catch (\Exception $e) {
-        // EZ FONTOS: Visszaküldi a konkrét hibaüzenetet a böngészőnek!
+    } catch (\Exception $e) {
         return response()->json([
             'error_message' => $e->getMessage(),
-            'error_file' => $e->getFile(),
             'error_line' => $e->getLine()
         ], 500);
-    }}
+    }
+}
 
 
     /**
@@ -210,17 +238,77 @@ class AlberletController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Alberlet $alberlet)
-    {
-        //
+  public function update(Request $request, $id)
+{
+    try {
+        $alberlet = Alberlet::findOrFail($id);
+        
+        // Összeszedjük a mezőket, amiket a Vue-ból küldtünk
+        $adatok = $request->only([
+            'cim', 'ar', 'meret', 'szobak_szama', 
+            'emelet', 'lift', 'butorozott', 'leiras', 
+            'tipus', 'varos', 'megye', 'aktiv'
+        ]);
+
+        // 1. TÍPUS FORDÍTÁSA (Szövegből számmá)
+        if (isset($adatok['tipus'])) {
+            $tipusMap = [
+                'ház'   => 0,
+                'lakás' => 1,
+                'szoba' => 2
+            ];
+            // Ha a kapott érték benne van a táblázatunkban, átváltjuk a számra
+            if (array_key_exists($adatok['tipus'], $tipusMap)) {
+                $adatok['tipus'] = $tipusMap[$adatok['tipus']];
+            }
+        }
+
+        // 2. LIFT FORDÍTÁSA
+        if (isset($adatok['lift'])) {
+            $adatok['lift'] = ($adatok['lift'] === 'van') ? 1 : 0;
+        }
+
+        // 3. BÚTOROZOTT FORDÍTÁSA
+        if (isset($adatok['butorozott'])) {
+            $adatok['butorozott'] = ($adatok['butorozott'] === 'igen') ? 1 : 0;
+        }
+
+        // 4. AKTÍV FORDÍTÁSA (Boolean kezelés)
+        if (isset($adatok['aktiv'])) {
+            $adatok['aktiv'] = filter_var($adatok['aktiv'], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        // Mentés az adatbázisba
+        $alberlet->update($adatok);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Sikeresen módosítva!'
+        ]);
+
+    } catch (\Exception $e) {
+        // Ha valami hiba van, a Quasar konzolban látni fogod
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+public function destroy($id)
+{
+    $alberlet = Alberlet::find($id);
+
+    if (!$alberlet) {
+        return response()->json(['message' => 'Hirdetés nem található'], 404);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Alberlet $alberlet)
-    {
-        //
+    // 1. Opcionális: Képek törlése a Storage-ból (hogy ne szemeteljünk)
+    foreach ($alberlet->kepek as $kep) {
+        Storage::disk('public')->delete($kep->kep_url);
+        $kep->delete(); // A kép rekordot törölheted, az csak ehhez az albérlethez tartozott
     }
+
+    // 2. Csak a hirdetést töröljük
+    $alberlet->delete();
+
+    return response()->json(['message' => 'Sikeres törlés']);
+}
 }
 

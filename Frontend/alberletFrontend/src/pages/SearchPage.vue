@@ -169,7 +169,7 @@
                 <div class="text-caption text-weight-bold">
                   <template v-if="alb.tipus.toLowerCase() === 'ház'">
                     {{
-                      alb.emelet > 0 ? alb.emelet + " emeletes" : "Földszintes"
+                      alb.emelet > 1 ? alb.emelet + " emeletes" : "Földszintes"
                     }}
                   </template>
                   <template v-else>
@@ -268,14 +268,15 @@ const rendezesOpciok = [
 ];
 
 onMounted(async () => {
-  // 1. Megvárjuk, amíg az adatok BEÉRNEK a store-ba
-  await Promise.all([store.fetchMegyek(), store.fetchVarosok()]);
+  // Mindkettőt szűrve kérjük le
+  await Promise.all([
+    store.fetchMegyek(true), 
+    store.fetchVarosok(true)
+  ]);
 
-  // 2. CSAK EZUTÁN töltjük fel a helyi szűrőlistákat
-  filteredVarosok.value = [...store.varosok];
   filteredMegyek.value = [...store.megyek];
+  filteredVarosok.value = [...store.varosok];
 
-  // 3. Mehet a hirdetések lekérése
   store.fetchAlberletek();
 });
 </script>

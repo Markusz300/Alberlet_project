@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 
 class MegyeController extends Controller
 {
-    public function index() {
-    return Megye::select('id as value', 'nev as label')
-        ->orderBy('nev', 'asc')
-        ->get();
+   public function index(Request $request) 
+{
+    $query = Megye::select('id as value', 'nev as label');
+
+    // Ha érkezik 'filtered' paraméter, csak azokat adjuk vissza, amikhez van aktív hirdetés
+    if ($request->query('filtered') === 'true') {
+        $query->whereHas('varosok.alberletek', function($q) {
+            $q->where('aktiv', 1);
+        });
+    }
+
+    return $query->orderBy('nev', 'asc')->get();
 }
 }

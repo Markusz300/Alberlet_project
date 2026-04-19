@@ -92,29 +92,36 @@
                 </q-item>
 
                 <q-item>
-                  <q-item-section avatar>
-                    <q-icon :name="isHaz ? 'home' : 'elevator'" color="teal" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label caption>
-                      {{ isHaz ? 'Ingatlan szintjei' : 'Emelet / Lift' }}
-                    </q-item-label>
-                    <q-item-label class="text-weight-medium">
-                      <template v-if="isHaz">
-                        {{ store.selectedAlberlet.emelet > 1 ? store.selectedAlberlet.emelet + ' szintes ház' :
-                        'Földszintes ház' }}
-                      </template>
-                      <template v-else>
-                        {{ store.selectedAlberlet.emelet > 0 ? store.selectedAlberlet.emelet + '. emelet' : 'Földszint'
-                        }}
-                        <span class="q-ml-sm text-grey-6">|</span>
-                        <span class="q-ml-sm">
-                          {{ isLiftes ? 'Van lift' : 'Nincs lift' }}
-                        </span>
-                      </template>
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
+  <q-item-section avatar>
+    <q-icon :name="isHaz ? 'home' : 'elevator'" color="teal" />
+  </q-item-section>
+
+  <q-item-section>
+    <q-item-label caption>
+      {{ isHaz ? 'Ingatlan szintjei' : 'Emelet / Lift' }}
+    </q-item-label>
+    
+    <q-item-label class="text-weight-medium">
+      <div class="row items-center q-gutter-x-sm">
+        
+        <div>
+          {{ isHaz 
+            ? (store.selectedAlberlet.emelet > 1 ? store.selectedAlberlet.emelet + ' szintes ház' : 'Földszintes') 
+            : (store.selectedAlberlet.emelet > 0 ? store.selectedAlberlet.emelet + '. emelet' : 'Földszint') 
+          }}
+        </div>
+
+        <div class="text-grey-4" v-if="isHaz ? store.selectedAlberlet.emelet > 1 : true">•</div>
+
+        <div class="row items-center" :class="isLiftes ? 'text-teal text-weight-bold' : 'text-grey-7'">
+          <q-icon :name="isLiftes ? 'elevator' : 'block'" size="18px" class="q-mr-xs" />
+          {{ isLiftes ? 'Van lift' : 'Nincs lift' }}
+        </div>
+
+      </div>
+    </q-item-label>
+  </q-item-section>
+</q-item>
 
                 <q-item>
                   <q-item-section avatar><q-icon name="chair" color="teal" /></q-item-section>
