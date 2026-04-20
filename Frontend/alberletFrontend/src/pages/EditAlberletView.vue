@@ -71,7 +71,15 @@
                   <q-item-section avatar><q-icon name="title" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Hirdetés címe</q-item-label>
-                    <q-input v-model="form.cim" borderless dense class="text-weight-medium" @blur="form.cim = elsoBetuNagy(form.cim)" />
+                    <q-input 
+                      v-model="form.cim" 
+                      borderless 
+                      dense 
+                      class="text-weight-medium" 
+                      placeholder="9400 Sopron, Fő utca 1."
+                      hint="Példa: 9400 Sopron, Lackner Kristóf utca 1."
+                      @blur="form.cim = formazottCim(form.cim)" 
+                    />
                   </q-item-section>
                 </q-item>
 
@@ -91,9 +99,10 @@
                       v-model="form.megye" 
                       :options="szurtMegyek" 
                       use-input 
-                      hide-selected 
                       fill-input
+                      hide-selected
                       new-value-mode="add-unique"
+                      @new-value="(val, done) => { onNewValue(val, 'megye'); done(); }"
                       borderless 
                       dense
                       @filter="megyeSzures"
@@ -110,9 +119,10 @@
                       v-model="form.varos" 
                       :options="szurtVarosok" 
                       use-input 
-                      hide-selected
                       fill-input
+                      hide-selected
                       new-value-mode="add-unique"
+                      @new-value="(val, done) => { onNewValue(val, 'varos'); done(); }"
                       :disable="!form.megye"
                       borderless 
                       dense 
@@ -120,11 +130,11 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item>
+                <q-item :class="szobaszamTiltva ? 'bg-grey-2' : ''">
                   <q-item-section avatar><q-icon name="bed" color="teal" /></q-item-section>
                   <q-item-section>
-                    <q-item-label caption>Szobák száma</q-item-label>
-                    <q-input v-model="form.szobak_szama" borderless dense />
+                    <q-item-label caption>Szobák száma {{ szobaszamTiltva ? '(Szoba esetén fix 1)' : '' }}</q-item-label>
+                    <q-input v-model="form.szobak_szama" borderless dense :disable="szobaszamTiltva" />
                   </q-item-section>
                 </q-item>
 
@@ -186,13 +196,13 @@ const saving = ref(false)
 const currentSlide = ref(0)
 const form = ref(null)
 
-const elsoBetuNagy = (s) => s ? s.split(' ').map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(' ') : s;
-
+// --- KÉP FORMÁZÁS ---
 const formatImageUrl = (kep) => {
   const path = kep.kep_url || kep
   return path.startsWith('http') ? path : `${BASE_URL}${path.startsWith('/') ? path : '/' + path}`
 }
 
+// --- MEGYE / VÁROS LOGIKA ---
 const szurtMegyek = ref([])
 const megyeSzures = (val, update) => {
   update(() => {
@@ -210,64 +220,94 @@ const szurtVarosok = computed(() => {
   return store.varosok.filter(v => v.megye_id === mObj.value).map(v => v.label);
 });
 
-const liftTiltva = computed(() => form.value?.tipus === 'ház' && form.value?.emelet <= 1);
-watch(liftTiltva, (v) => { if (v && form.value) form.value.lift = 'nincs'; });
+// Szöveg szépítése (Budapest, Sopron, stb.)
+const szepitSzoveg = (szoveg) => {
+  if (!szoveg) return szoveg;
+  return szoveg.split(' ').map(szo => szo.charAt(0).toUpperCase() + szo.slice(1).toLowerCase()).join(' ');
+};
 
+const onNewValue = (val, modelRef) => {
+  const formalt = szepitSzoveg(val);
+  form.value[modelRef] = formalt;
+};
+
+// --- TILTÁSOK ÉS VALIDÁLÁS ---
+const liftTiltva = computed(() => form.value?.tipus === 'ház' && form.value?.emelet <= 1);
+const szobaszamTiltva = computed(() => form.value?.tipus === 'szoba');
+
+watch(liftTiltva, (v) => { if (v && form.value) form.value.lift = 'nincs'; });
+watch(() => form.value?.tipus, (uj) => { if (uj === 'szoba' && form.value) form.value.szobak_szama = "1"; });
+
+// --- ADATBETÖLTÉS ---
 onMounted(async () => {
   try {
-    const [, , res] = await Promise.all([
-      store.fetchMegyek(false),
-      store.fetchVarosok(false),
-      api.get(`/alberletek/${route.params.id}`)
-    ]);
+    const res = await api.get(`/alberletek/${route.params.id}`);
+    const item = res.data.data;
 
-    const item = res.data.data || res.data;
-    if (!item.tulajdonos) item.tulajdonos = { nev: item.nev || '', telefon: item.telefon || '', email: item.email || '' };
-    
-    // Alaphelyzetbe hozzuk a gombokat a backend értékei alapján
-    item.lift = (item.lift == 1 || item.lift === '1') ? 'van' : 'nincs';
-    item.butorozott = (item.butorozott == 1 || item.butorozott === '1') ? 'igen' : 'nem';
-    
-    form.value = { ...item };
-  } catch {
-    $q.notify({ color: 'negative', message: 'Hiba a betöltéskor!' });
+    if (!item.tulajdonos) {
+      item.tulajdonos = {
+        nev: item.tulajdonos_neve || '', 
+        telefon: item.tulajdonos_tel || '',
+        email: item.email || ''
+      };
+    }
+    form.value = item;
+  } catch (err) {
+    console.error("Betöltési hiba:", err);
   } finally {
     loading.value = false;
   }
 });
 
+// --- CÍM FORMÁZÓ ---
+const formazottCim = (val) => {
+  if (!val) return val;
+  let s = val.trim().replace(/\s+/g, ' ').replace(/[.,]+$/, '');
+  let szavak = s.split(' ').map(szo => {
+    if (/^\d/.test(szo)) return szo; 
+    return szo.charAt(0).toUpperCase() + szo.slice(1).toLowerCase();
+  });
+  let kesz = szavak.join(' ');
+  kesz = kesz.replace(/^(\d{4})\s+([A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]+)\s*,?\s*/, '$1 $2, ');
+  return kesz.trim() + '.';
+};
+
+// --- MENTÉS ---
 const handleUpdate = async () => {
+  if (!form.value) return;
   saving.value = true;
   try {
-    // 1. Készítünk egy tiszta másolatot
-    const payload = JSON.parse(JSON.stringify(form.value));
+    const payload = {
+      cim: form.value.cim,
+      ar: Number(form.value.ar),
+      meret: Number(form.value.meret),
+      szobak_szama: form.value.szobak_szama,
+      emelet: Number(form.value.emelet),
+      leiras: form.value.leiras,
+      tipus: form.value.tipus,
+      aktiv: form.value.aktiv,
+      varos: form.value.varos,
+      megye: form.value.megye,
+      lift: form.value.lift,
+      butorozott: form.value.butorozott,
+      tulajdonos_neve: form.value.tulajdonos?.nev,
+      tulajdonos_tel: form.value.tulajdonos?.telefon,
+      tulajdonos_email: form.value.tulajdonos?.email
+    };
 
-    // 2. KIFEJEZETTEN átadjuk a hirdető adatait a fő szintre (Laravelnek)
-    payload.nev = form.value.tulajdonos.nev;
-    payload.telefon = form.value.tulajdonos.telefon;
-    payload.email = form.value.tulajdonos.email;
-
-    // 3. Konvertáljuk a típusokat, mert a backend számokat vár
-    payload.lift = payload.lift === 'van' ? 1 : 0;
-    payload.butorozott = payload.butorozott === 'igen' ? 1 : 0;
-    payload.ar = Number(payload.ar);
-    payload.meret = Number(payload.meret);
-    payload.emelet = Number(payload.emelet);
+    const response = await api.put(`/alberletek/${route.params.id}`, payload);
     
-    delete payload.kepek;
-    delete payload.tulajdonos; // Ezt levesszük, mert a fő szintre raktuk a mezőit
-
-    await api.put(`/alberletek/${route.params.id}`, payload);
-    
-    $q.notify({ color: 'positive', message: 'Sikeresen mentve!', icon: 'check' });
-    router.push('/admin');
+    if (response.status === 200 || response.data.status === 'success') {
+      $q.notify({ color: 'positive', message: 'Minden módosítás sikeresen elmentve!', icon: 'check' });
+      router.push('/admin');
+    }
   } catch (err) {
-    console.error("Mentési hiba:", err.response?.data || err);
-    $q.notify({ color: 'negative', message: 'Hiba a mentés során!' });
+    const errorMsg = err.response?.data?.error || 'Hiba történt a mentés során!';
+    $q.notify({ color: 'negative', message: errorMsg, icon: 'report_problem', position: 'top', timeout: 5000 });
   } finally {
     saving.value = false;
   }
-}
+};
 </script>
 
 <style scoped>
