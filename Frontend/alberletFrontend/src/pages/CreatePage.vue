@@ -405,21 +405,34 @@ const hirdetesKuldes = async () => {
 
   const kuldendoAdat = new FormData();
 
-  // Megye küldése (lehet név vagy id)
+  // Megye
   const megyeErtek = valasztottMegye.value?.label || valasztottMegye.value;
   if (megyeErtek) kuldendoAdat.append('megye_id_vagy_nev', megyeErtek);
 
-  // Alapadatok
-  Object.keys(hirdetesAdat.value).forEach(key => {
-    if (hirdetesAdat.value[key] !== null && hirdetesAdat.value[key] !== undefined) {
-      kuldendoAdat.append(key, hirdetesAdat.value[key]);
-    }
-  });
+  // Város ID biztosítása
+  let varosId = valasztottVaros.value;
+  if (typeof varosId === 'object' && varosId !== null) {
+    varosId = varosId.value;
+  }
+  if (varosId) kuldendoAdat.append('varos_id', varosId);
+
+  // Explicit mezők (hogy ne legyen típus hiba)
+  kuldendoAdat.append('cim', hirdetesAdat.value.cim);
+  kuldendoAdat.append('tipus', hirdetesAdat.value.tipus);
+  kuldendoAdat.append('ar', hirdetesAdat.value.ar);
+  kuldendoAdat.append('meret', hirdetesAdat.value.meret);
+  kuldendoAdat.append('szobak_szama', hirdetesAdat.value.szobak_szama);
+  kuldendoAdat.append('emelet', hirdetesAdat.value.emelet ?? 0);
+  kuldendoAdat.append('lift', hirdetesAdat.value.lift ? 1 : 0);
+  kuldendoAdat.append('butorozott', hirdetesAdat.value.butorozott ? 1 : 0);
+  kuldendoAdat.append('leiras', hirdetesAdat.value.leiras);
+  kuldendoAdat.append('nev', hirdetesAdat.value.nev);
+  kuldendoAdat.append('email', hirdetesAdat.value.email);
+  kuldendoAdat.append('telefon', hirdetesAdat.value.telefon);
+  kuldendoAdat.append('aktiv', 0);
 
   // Képek
-  kepek.value.forEach(f => {
-    kuldendoAdat.append('kepek[]', f);
-  });
+  kepek.value.forEach(f => kuldendoAdat.append('kepek[]', f));
 
   try {
     await api.post('/alberletek', kuldendoAdat, {
@@ -428,16 +441,16 @@ const hirdetesKuldes = async () => {
 
     $q.notify({
       type: 'positive',
-      message: 'Hirdetés sikeresen beküldve! Hamarosan aktiváljuk.',
+      message: 'Hirdetés sikeresen beküldve! 24 órán belül aktiváljuk.',
       icon: 'check'
     });
 
     router.push('/search');
   } catch (error) {
-    console.error(error);
+    console.error(error.response?.data);
     $q.notify({
       type: 'negative',
-      message: error.response?.data?.error_message || 'Hiba történt a beküldés során!'
+      message: error.response?.data?.error_message || 'Hiba a beküldés során!'
     });
   } finally {
     toltes.value = false;
