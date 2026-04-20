@@ -1,0 +1,24 @@
+DB mappába a MegaScript lefuttatása 
+
+---
+
+Laravel a backend mappaba:
+
+composer install
+php artisan migrate
+php artisan storage:link
+php artisan serve
+
+
+---
+
+
+Quasar a frontend mappaba:
+
+npm i
+npm audit fix
+npm install pinia
+npm run dev
+
+
+
