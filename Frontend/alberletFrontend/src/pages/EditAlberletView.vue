@@ -71,7 +71,7 @@
                   <q-item-section avatar><q-icon name="title" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Hirdetés címe</q-item-label>
-                    <q-input v-model="form.cim" borderless dense class="text-weight-medium" />
+                    <q-input v-model="form.cim" borderless dense class="text-weight-medium" @blur="form.cim = elsoBetuNagy(form.cim)" />
                   </q-item-section>
                 </q-item>
 
@@ -84,18 +84,39 @@
                 </q-item>
 
                 <q-item>
-                  <q-item-section avatar><q-icon name="place" color="teal" /></q-item-section>
+                  <q-item-section avatar><q-icon name="map" color="teal" /></q-item-section>
                   <q-item-section>
-                    <q-item-label caption>Település</q-item-label>
-                    <q-input v-model="form.varos" borderless dense />
+                    <q-item-label caption>Megye</q-item-label>
+                    <q-select 
+                      v-model="form.megye" 
+                      :options="szurtMegyek" 
+                      use-input 
+                      hide-selected 
+                      fill-input
+                      new-value-mode="add-unique"
+                      borderless 
+                      dense
+                      @filter="megyeSzures"
+                      @update:model-value="form.varos = ''"
+                    />
                   </q-item-section>
                 </q-item>
 
                 <q-item>
-                  <q-item-section avatar><q-icon name="map" color="teal" /></q-item-section>
+                  <q-item-section avatar><q-icon name="place" color="teal" /></q-item-section>
                   <q-item-section>
-                    <q-item-label caption>Megye</q-item-label>
-                    <q-input v-model="form.megye" borderless dense />
+                    <q-item-label caption>Település</q-item-label>
+                    <q-select 
+                      v-model="form.varos" 
+                      :options="szurtVarosok" 
+                      use-input 
+                      hide-selected
+                      fill-input
+                      new-value-mode="add-unique"
+                      :disable="!form.megye"
+                      borderless 
+                      dense 
+                    />
                   </q-item-section>
                 </q-item>
 
@@ -123,11 +144,11 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item>
+                <q-item :class="liftTiltva ? 'bg-grey-2' : ''">
                   <q-item-section avatar><q-icon name="elevator" color="teal" /></q-item-section>
                   <q-item-section>
-                    <q-item-label caption>Lift</q-item-label>
-                    <q-select v-model="form.lift" :options="['van', 'nincs']" borderless dense />
+                    <q-item-label caption>Lift {{ liftTiltva ? '(Nincs lift ház esetén)' : '' }}</q-item-label>
+                    <q-select v-model="form.lift" :options="['van', 'nincs']" borderless dense :disable="liftTiltva" />
                   </q-item-section>
                 </q-item>
 
@@ -148,11 +169,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { api } from 'src/boot/axios'
 import { useQuasar } from 'quasar'
+import { useAlberletStore } from 'src/stores/alberletStore'
 
+const store = useAlberletStore()
 const route = useRoute()
 const router = useRouter()
 const $q = useQuasar()
@@ -163,59 +186,86 @@ const saving = ref(false)
 const currentSlide = ref(0)
 const form = ref(null)
 
+const elsoBetuNagy = (s) => s ? s.split(' ').map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase()).join(' ') : s;
+
 const formatImageUrl = (kep) => {
   const path = kep.kep_url || kep
   return path.startsWith('http') ? path : `${BASE_URL}${path.startsWith('/') ? path : '/' + path}`
 }
 
+const szurtMegyek = ref([])
+const megyeSzures = (val, update) => {
+  update(() => {
+    const s = val.toLowerCase();
+    szurtMegyek.value = val === '' 
+      ? store.megyek.map(m => m.label) 
+      : store.megyek.filter(m => m.label.toLowerCase().includes(s)).map(m => m.label);
+  });
+};
+
+const szurtVarosok = computed(() => {
+  if (!form.value?.megye) return [];
+  const mObj = store.megyek.find(m => m.label === form.value.megye);
+  if (!mObj) return [];
+  return store.varosok.filter(v => v.megye_id === mObj.value).map(v => v.label);
+});
+
+const liftTiltva = computed(() => form.value?.tipus === 'ház' && form.value?.emelet <= 1);
+watch(liftTiltva, (v) => { if (v && form.value) form.value.lift = 'nincs'; });
+
 onMounted(async () => {
   try {
-    const { data } = await api.get(`/alberletek/${route.params.id}`)
-    const item = data.data || data
+    const [, , res] = await Promise.all([
+      store.fetchMegyek(false),
+      store.fetchVarosok(false),
+      api.get(`/alberletek/${route.params.id}`)
+    ]);
+
+    const item = res.data.data || res.data;
+    if (!item.tulajdonos) item.tulajdonos = { nev: item.nev || '', telefon: item.telefon || '', email: item.email || '' };
     
-    // Alapértelmezett tulajdonos objektum, ha az API-ból nem jönne meg
-    if (!item.tulajdonos) {
-      item.tulajdonos = { nev: '', telefon: '', email: '' }
-    }
+    // Alaphelyzetbe hozzuk a gombokat a backend értékei alapján
+    item.lift = (item.lift == 1 || item.lift === '1') ? 'van' : 'nincs';
+    item.butorozott = (item.butorozott == 1 || item.butorozott === '1') ? 'igen' : 'nem';
     
-    form.value = { ...item }
-  } catch (err) {
-  console.error(err) // <--- Ezzel már használva van!
-  $q.notify({ color: 'negative', message: 'Hiba az adatok betöltésekor!' })
-} finally {
-    loading.value = false
+    form.value = { ...item };
+  } catch {
+    $q.notify({ color: 'negative', message: 'Hiba a betöltéskor!' });
+  } finally {
+    loading.value = false;
   }
-})
+});
 
 const handleUpdate = async () => {
-  saving.value = true
+  saving.value = true;
   try {
-    const payload = { ...form.value }
+    // 1. Készítünk egy tiszta másolatot
+    const payload = JSON.parse(JSON.stringify(form.value));
 
-    // Konverziók (maradnak)
-    payload.szobak_szama = String(payload.szobak_szama)
-    payload.ar = Number(payload.ar)
-    payload.meret = Number(payload.meret)
-    payload.emelet = Number(payload.emelet)
-    payload.aktiv = payload.aktiv === true || payload.aktiv === 1
+    // 2. KIFEJEZETTEN átadjuk a hirdető adatait a fő szintre (Laravelnek)
+    payload.nev = form.value.tulajdonos.nev;
+    payload.telefon = form.value.tulajdonos.telefon;
+    payload.email = form.value.tulajdonos.email;
 
-    // EZEKET TARTTSUK MEG, ne töröljük! 
-    // Így elküldi a 'tipus', 'varos', 'megye' mezőket is.
+    // 3. Konvertáljuk a típusokat, mert a backend számokat vár
+    payload.lift = payload.lift === 'van' ? 1 : 0;
+    payload.butorozott = payload.butorozott === 'igen' ? 1 : 0;
+    payload.ar = Number(payload.ar);
+    payload.meret = Number(payload.meret);
+    payload.emelet = Number(payload.emelet);
     
-    // Csak a képeket és a tulajdonos objektumot töröljük, 
-    // ha a Laravel sima mezőket vár az alberletek táblába.
-    delete payload.kepek 
-    // delete payload.tulajdonos // Csak akkor vedd ki a kommentet, ha a tulajdonost nem itt mented
+    delete payload.kepek;
+    delete payload.tulajdonos; // Ezt levesszük, mert a fő szintre raktuk a mezőit
 
-    await api.put(`/alberletek/${route.params.id}`, payload)
+    await api.put(`/alberletek/${route.params.id}`, payload);
     
-    $q.notify({ color: 'positive', message: 'Minden módosítás elmentve!', icon: 'check' })
-    router.push('/admin')
+    $q.notify({ color: 'positive', message: 'Sikeresen mentve!', icon: 'check' });
+    router.push('/admin');
   } catch (err) {
-  console.error(err) // <--- Ezzel már használva van!
-  $q.notify({ color: 'negative', message: 'Hiba az adatok betöltésekor!' })
-} finally {
-    saving.value = false
+    console.error("Mentési hiba:", err.response?.data || err);
+    $q.notify({ color: 'negative', message: 'Hiba a mentés során!' });
+  } finally {
+    saving.value = false;
   }
 }
 </script>
