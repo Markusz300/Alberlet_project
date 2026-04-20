@@ -8,14 +8,14 @@ use Illuminate\Http\Request;
 class TulajdonosController extends Controller
 {
     /**
-     * Email alapján ellenőrzi, létezik-e már tulajdonos
+     * Email alapján ellenőrzi a tulajdonost + visszatér a meglévő adatokkal
      */
     public function check(Request $request)
     {
         $email = $request->query('email');
 
-        if (!$email) {
-            return response()->json(['exists' => false], 400);
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['exists' => false]);
         }
 
         $tulajdonos = Tulajdonos::where('email', $email)->first();
@@ -24,7 +24,7 @@ class TulajdonosController extends Controller
             return response()->json([
                 'exists' => true,
                 'user' => [
-                    'nev' => $tulajdonos->nev,
+                    'nev'     => $tulajdonos->nev,
                     'telefon' => $tulajdonos->telefon,
                 ]
             ]);

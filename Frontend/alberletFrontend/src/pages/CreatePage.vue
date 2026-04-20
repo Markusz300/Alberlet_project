@@ -339,25 +339,34 @@ const hirdetesAdat = ref({
 });
 
 // ====================== USER ELLENŐRZÉS ======================
+// ====================== USER ELLENŐRZÉS ======================
 const ellenorizFelhasznalot = async () => {
-  if (!hirdetesAdat.value.email || !/.+@.+\..+/.test(hirdetesAdat.value.email)) return;
+  if (!hirdetesAdat.value.email || !/.+@.+\..+/.test(hirdetesAdat.value.email)) {
+    letezoFelhasznalo.value = false;
+    return;
+  }
 
   try {
     const { data } = await api.get(`/users/check?email=${encodeURIComponent(hirdetesAdat.value.email)}`);
-    
+
     if (data.exists) {
+      // Meglévő felhasználó → betöltjük az adatokat
       hirdetesAdat.value.nev = data.user.nev || '';
       hirdetesAdat.value.telefon = data.user.telefon || '';
       letezoFelhasznalo.value = true;
+
       $q.notify({
-        color: 'info',
+        color: 'positive',
         message: 'Üdv újra! Adatait automatikusan betöltöttük.',
         icon: 'person'
       });
     } else {
+      // Új felhasználó
       letezoFelhasznalo.value = false;
+      // Nem töröljük a már begépelt nevet/telefont, ha akarja megtarthatja
     }
-  } catch {
+  } catch (err) {
+    console.error(err);
     letezoFelhasznalo.value = false;
   }
 };
