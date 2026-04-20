@@ -78,6 +78,23 @@ export const useAlberletStore = defineStore("alberlet", {
   }
 },
 
+async saveAlberletUpdate(id, payload) {
+  try {
+    // A payload tartalmazza az összes adatot az edit formról
+    const response = await api.put(`/alberletek/${id}`, payload);
+    if (response.status === 200) {
+      Notify.create({ type: "positive", message: "Sikeres mentés!" });
+      // Frissítsük a listát, hogy látszódjon a változás
+      await this.fetchAlberletek(this.currentPage, true);
+      return true;
+    }
+  } catch (error) {
+    console.error("Hiba a mentéskor:", error);
+    this.handleError("Nem sikerült a mentés!");
+    return false;
+  }
+},
+
     async fetchAlberletek(page = 1, adminView = false) {
       this.loading = true;
       try {
@@ -97,18 +114,20 @@ export const useAlberletStore = defineStore("alberlet", {
           this.totalPages = data.meta.last_page;
           this.currentPage = data.meta.current_page;
         }
-      } catch (error) {
-        console.error("Hiba:", error);
+      } catch  {
+        console("Hiba:");
       } finally {
         this.loading = false;
       }
     },
 
+    
+
   // ÚJ: Állapot módosítása (Aktiválás / Kikapcsolás)
  async updateStatus(id, status) {
   try {
+    // Csak az 'aktiv' mezőt küldjük el!
     const response = await api.put(`/alberletek/${id}`, { aktiv: status });
-    // Ha a válasz 200 (OK), akkor sikeres
     if (response.status === 200) {
       const index = this.alberletek.findIndex(a => a.id === id);
       if (index !== -1) {
@@ -116,8 +135,8 @@ export const useAlberletStore = defineStore("alberlet", {
       }
       return true;
     }
-  } catch (error) {
-    console.error("Hiba a státusz frissítésekor:", error);
+  } catch {
+    console("Hiba a státusz frissítésekor:");
     return false;
   }
 },

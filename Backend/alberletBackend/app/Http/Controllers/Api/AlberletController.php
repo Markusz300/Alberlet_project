@@ -264,57 +264,105 @@ if ($tulajdonos) {
     /**
      * Update the specified resource in storage.
      */
-  public function update(Request $request, $id)
+ public function update(Request $request, $id)
 {
     try {
         $alberlet = Alberlet::findOrFail($id);
-        
-        // Összeszedjük a mezőket, amiket a Vue-ból küldtünk
-        $adatok = $request->only([
-            'cim', 'ar', 'meret', 'szobak_szama', 
-            'emelet', 'lift', 'butorozott', 'leiras', 
-            'tipus', 'varos', 'megye', 'aktiv'
-        ]);
 
-        // 1. TÍPUS FORDÍTÁSA (Szövegből számmá)
-        if (isset($adatok['tipus'])) {
-            $tipusMap = [
-                'ház'   => 0,
-                'lakás' => 1,
-                'szoba' => 2
-            ];
-            // Ha a kapott érték benne van a táblázatunkban, átváltjuk a számra
-            if (array_key_exists($adatok['tipus'], $tipusMap)) {
-                $adatok['tipus'] = $tipusMap[$adatok['tipus']];
+        return DB::transaction(function () use ($request, $alberlet) {
+            
+            // --- 1. TULAJDONOS ADATAINAK SZIGORÚ ELLENŐRZÉSE ---
+            if ($request->has('tulajdonos_neve')) {
+                $ujNev = $request->input('tulajdonos_neve');
+                $ujTel = $request->input('tulajdonos_tel');
+                $ujEmail = $request->input('tulajdonos_email');
+                $jelenlegiTulaj = $alberlet->tulajdonos;
+
+                // Megnézzük, létezik-e MÁR a rendszerben ez az e-mail cím (más hirdetőnél)
+                $letezoTulajMasikEmaillel = \App\Models\Tulajdonos::where('email', $ujEmail)
+                    ->where('id', '!=', $jelenlegiTulaj->id)
+                    ->first();
+
+                if ($letezoTulajMasikEmaillel) {
+                    // Ha az e-mail létezik, a névnek és telefonnak is stimmelnie kell
+                    if ($letezoTulajMasikEmaillel->telefon !== $ujTel) {
+                        throw new \Exception("Ehhez a felhasználóhoz ({$ujEmail}) nem ez a telefonszám tartozik az adatbázisban!");
+                    }
+                    if ($letezoTulajMasikEmaillel->nev !== $ujNev) {
+                        throw new \Exception("Ehhez az e-mail címhez más név tartozik az adatbázisban!");
+                    }
+
+                    // Ha minden stimmel, hozzárendeljük az albérletet a már létező tulajhoz
+                    $alberlet->tulajdonos_id = $letezoTulajMasikEmaillel->id;
+                    $alberlet->save();
+                } else {
+                    // Ha az e-mail nem létezik másnál, ellenőrizzük, hogy a telefon foglalt-e
+                    $telFoglalt = \App\Models\Tulajdonos::where('telefon', $ujTel)
+                        ->where('id', '!=', $jelenlegiTulaj->id)
+                        ->exists();
+
+                    if ($telFoglalt) {
+                        throw new \Exception("Ez a telefonszám már egy másik hirdetőhöz van rendelve!");
+                    }
+
+                    // Ha teljesen új adatok vagy a sajátjai, frissítjük a jelenlegi rekordot
+                    $jelenlegiTulaj->update([
+                        'nev' => $ujNev,
+                        'telefon' => $ujTel,
+                        'email' => $ujEmail
+                    ]);
+                }
             }
-        }
 
-        // 2. LIFT FORDÍTÁSA
-        if (isset($adatok['lift'])) {
-            $adatok['lift'] = ($adatok['lift'] === 'van') ? 1 : 0;
-        }
+            // --- 2. VÁROS ÉS MEGYE KEZELÉSE ---
+            $varosId = $request->varos; 
+            if ($varosId && !is_numeric($varosId)) {
+                $megyeInfo = $request->megye;
+                
+                $megyeId = is_numeric($megyeInfo) ? $megyeInfo : 
+                    Megye::firstOrCreate(['nev' => mb_convert_case($megyeInfo, MB_CASE_TITLE, "UTF-8")])->id;
 
-        // 3. BÚTOROZOTT FORDÍTÁSA
-        if (isset($adatok['butorozott'])) {
-            $adatok['butorozott'] = ($adatok['butorozott'] === 'igen') ? 1 : 0;
-        }
+                $ujVaros = Varos::firstOrCreate([
+                    'nev' => mb_convert_case($varosId, MB_CASE_TITLE, "UTF-8"),
+                    'megye_id' => $megyeId
+                ]);
+                $alberlet->varos_id = $ujVaros->id;
+            } elseif (is_numeric($varosId)) {
+                $alberlet->varos_id = $varosId;
+            }
 
-        // 4. AKTÍV FORDÍTÁSA (Boolean kezelés)
-        if (isset($adatok['aktiv'])) {
-            $adatok['aktiv'] = filter_var($adatok['aktiv'], FILTER_VALIDATE_BOOLEAN);
-        }
+            // --- 3. ALBERLET ADATOK FRISSÍTÉSE ---
+            $adatok = $request->only(['cim', 'ar', 'meret', 'szobak_szama', 'emelet', 'leiras']);
+            
+            if ($request->has('aktiv')) {
+                $adatok['aktiv'] = filter_var($request->aktiv, FILTER_VALIDATE_BOOLEAN);
+            }
+            
+            if ($request->has('lift')) {
+                $adatok['lift'] = ($request->lift === 'van' || $request->lift === true || $request->lift == 1) ? 1 : 0;
+            }
+            
+            if ($request->has('butorozott')) {
+                $adatok['butorozott'] = ($request->butorozott === 'igen' || $request->butorozott === true || $request->butorozott == 1) ? 1 : 0;
+            }
 
-        // Mentés az adatbázisba
-        $alberlet->update($adatok);
+            if ($request->has('tipus')) {
+                $tipusMap = ['ház' => 0, 'lakás' => 1, 'szoba' => 2];
+                if (isset($tipusMap[$request->tipus])) {
+                    $adatok['tipus'] = $tipusMap[$request->tipus];
+                }
+            }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Sikeresen módosítva!'
-        ]);
+            $alberlet->update($adatok);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Sikeres módosítás!'
+            ]);
+        });
 
     } catch (\Exception $e) {
-        // Ha valami hiba van, a Quasar konzolban látni fogod
-        return response()->json(['error' => $e->getMessage()], 500);
+        return response()->json(['error' => $e->getMessage()], 422);
     }
 }
 public function destroy($id)
