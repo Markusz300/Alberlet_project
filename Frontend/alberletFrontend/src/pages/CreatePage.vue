@@ -20,27 +20,37 @@
             <q-form ref="form1" class="row q-col-gutter-md">
               <div class="col-12 col-md-6">
                 <q-select
-                  outlined v-model="valasztottMegye"
-                  use-input hide-selected fill-input
-                  label="Megye" :options="szurtMegyek"
-                  @filter="megyeSzures"
-                  @new-value="ujMegyeLetrehozas"
-                  @update:model-value="valasztottVaros = null"
-                  dense color="teal" clearable
-                  :rules="[szabalyok.kotelezoValasztas]"
-                />
+  outlined 
+  v-model="valasztottMegye"
+  use-input 
+  hide-selected 
+  fill-input
+  label="Megye" 
+  :options="szurtMegyek"
+  @filter="megyeSzures"
+  @new-value="ujMegyeLetrehozas"
+  @update:model-value="valasztottVaros = null"
+  @blur="valasztottMegye = elsoBetuNagy(valasztottMegye)"
+  dense color="teal" clearable
+  :rules="[szabalyok.kotelezoValasztas]"
+/>
               </div>
               <div class="col-12 col-md-6">
                 <q-select
-                  outlined v-model="valasztottVaros"
-                  use-input hide-selected fill-input
-                  label="Város" :options="szurtVarosok"
-                  @filter="varosSzures"
-                  @new-value="ujVarosLetrehozas"
-                  :disable="!valasztottMegye"
-                  dense color="teal" clearable
-                  :rules="[szabalyok.kotelezoValasztas]"
-                />
+  outlined 
+  v-model="valasztottVaros"
+  use-input 
+  hide-selected 
+  fill-input
+  label="Város" 
+  :options="szurtVarosok"
+  @filter="varosSzures"
+  @new-value="ujVarosLetrehozas"
+  @blur="valasztottVaros = elsoBetuNagy(valasztottVaros)"
+  :disable="!valasztottMegye"
+  dense color="teal" clearable
+  :rules="[szabalyok.kotelezoValasztas]"
+/>
               </div>
               <div class="col-12">
                 <q-input
@@ -341,33 +351,27 @@ const hirdetesAdat = ref({
 // ====================== USER ELLENŐRZÉS ======================
 // ====================== USER ELLENŐRZÉS ======================
 const ellenorizFelhasznalot = async () => {
-  if (!hirdetesAdat.value.email || !/.+@.+\..+/.test(hirdetesAdat.value.email)) {
-    letezoFelhasznalo.value = false;
-    return;
-  }
+  if (!hirdetesAdat.value.email || !/.+@.+\..+/.test(hirdetesAdat.value.email)) return;
 
   try {
     const { data } = await api.get(`/users/check?email=${encodeURIComponent(hirdetesAdat.value.email)}`);
 
     if (data.exists) {
-      // Meglévő felhasználó → betöltjük az adatokat
-      hirdetesAdat.value.nev = data.user.nev || '';
-      hirdetesAdat.value.telefon = data.user.telefon || '';
-      letezoFelhasznalo.value = true;
+      // Itt a trükk: Ha már létezik, beírjuk a rendszerben lévő adatokat
+      hirdetesAdat.value.nev = data.user.nev;
+      hirdetesAdat.value.telefon = data.user.telefon;
+      letezoFelhasznalo.value = true; // Ez a változó a HTML-ben readonly-vá teszi a mezőket
 
       $q.notify({
-        color: 'positive',
-        message: 'Üdv újra! Adatait automatikusan betöltöttük.',
-        icon: 'person'
+        type: 'info',
+        message: 'Ehhez az e-mailhez már tartoznak adatok. Biztonsági okokból ezeket rögzítettük.',
+        timeout: 4000
       });
     } else {
-      // Új felhasználó
       letezoFelhasznalo.value = false;
-      // Nem töröljük a már begépelt nevet/telefont, ha akarja megtarthatja
     }
   } catch (err) {
-    console.error(err);
-    letezoFelhasznalo.value = false;
+    console.error("Hiba az ellenőrzéskor", err);
   }
 };
 
@@ -376,18 +380,55 @@ const cimVeglegesites = () => {
   let v = hirdetesAdat.value.cim.trim();
   if (!v) return;
 
+  // 1. ELLENŐRZÉS: Ha már tökéletes a formátum, ne csináljon semmit!
+  // Ez megakadályozza az örökös "újrajavítást"
+  const marJoFormatu = /^\d{4}\s.+,\s.+\s\d+\.?$/.test(v);
+  if (marJoFormatu) return;
+
+  // 2. HA NEM JÓ, AKKOR FORMÁZZUK:
   let részek = v.split(/\s+/);
   let formazott = részek.map((szo, index) => {
+    // Az első rész (irányítószám) marad szám
     if (index === 0 && /^\d+$/.test(szo)) return szo;
+    // Minden más Szóeleji Nagybetű
     return szo.charAt(0).toUpperCase() + szo.slice(1).toLowerCase();
   }).join(' ');
 
-  // Irányítószám + város után vessző
+  // Irányítószám + város után vessző (ha nincs)
   formazott = formazott.replace(/^(\d{4}\s[^\s,]+)(?!\s*,)/, '$1,');
+  
+  // Pont a végére (ha nincs)
   if (!formazott.endsWith('.')) formazott += '.';
 
   hirdetesAdat.value.cim = formazott;
 };
+
+
+// ====================== SZÖVEG FORMÁZÓ SEGÉDFÜGGVÉNY ======================
+const elsoBetuNagy = (szoveg) => {
+  if (!szoveg || typeof szoveg !== 'string') return szoveg;
+  return szoveg
+    .split(' ')
+    .map(szo => szo.charAt(0).toUpperCase() + szo.slice(1).toLowerCase())
+    .join(' ');
+};
+
+// ====================== FIGYELŐK A MEGYÉRE ÉS VÁROSRA ======================
+watch(valasztottMegye, (ujErtek) => {
+  // Ha manuálisan írt be valamit (string), akkor nagybetűsítjük
+  if (typeof ujErtek === 'string' && ujErtek.length > 0) {
+    valasztottMegye.value = elsoBetuNagy(ujErtek);
+  }
+});
+
+watch(valasztottVaros, (ujErtek) => {
+  // Ha manuálisan írt be valamit (string), akkor nagybetűsítjük
+  if (typeof ujErtek === 'string' && ujErtek.length > 0) {
+    valasztottVaros.value = elsoBetuNagy(ujErtek);
+  }
+  // Az eredeti varos_id mentő logika marad:
+  hirdetesAdat.value.varos_id = ujErtek?.value || ujErtek;
+});
 
 // ====================== KÜLDÉS ======================
 const navigacioKovetkezo = async () => {

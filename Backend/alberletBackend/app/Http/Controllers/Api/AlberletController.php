@@ -157,25 +157,36 @@ class AlberletController extends Controller
             }
 
             // === JAVÍTOTT TULAJDONOS LOGIKA ===
-            $tulajdonos = Tulajdonos::where('email', $request->email)
-                ->orWhere('telefon', $request->telefon)
-                ->first();
+          $tulajdonos = Tulajdonos::where('email', $request->email)->first();
 
-            if ($tulajdonos) {
-                // Már létezik → frissítjük a legfrissebb adatokkal
-                $tulajdonos->update([
-                    'nev'     => $request->nev,
-                    'email'   => $request->email,
-                    'telefon' => $request->telefon,
-                ]);
-            } else {
-                // Teljesen új tulajdonos
-                $tulajdonos = Tulajdonos::create([
-                    'nev'     => $request->nev,
-                    'email'   => $request->email,
-                    'telefon' => $request->telefon,
-                ]);
-            }
+if ($tulajdonos) {
+    // Tisztítsuk meg a telefonszámokat az összehasonlításhoz (csak számok maradjanak)
+    $bekuldottTel = preg_replace('/[^0-9]/', '', $request->telefon);
+    $taroltTel = preg_replace('/[^0-9]/', '', $tulajdonos->telefon);
+
+    // Ha az e-mail létezik, de a név VAGY a telefon nem egyezik a tárolttal -> STOP
+    if ($tulajdonos->nev !== $request->nev || $taroltTel !== $bekuldottTel) {
+        return response()->json([
+            'error_message' => 'Hiba: Ez az e-mail cím már regisztrálva van, de a megadott név vagy telefonszám nem egyezik a rendszerben lévővel!'
+        ], 422);
+    }
+    // Ha idáig eljut a kód, az adatok egyeznek, mehet tovább a hirdetés mentése
+} else {
+    // Új e-mail esetén még megnézzük, hogy a telefon nem foglalt-e máshol
+    $telFoglalt = Tulajdonos::where('telefon', $request->telefon)->exists();
+    if ($telFoglalt) {
+        return response()->json([
+            'error_message' => 'Ez a telefonszám már egy másik e-mail címhez tartozik!'
+        ], 422);
+    }
+
+    // Ha minden tiszta, létrehozzuk az új tulajdonost
+    $tulajdonos = Tulajdonos::create([
+        'nev'     => $request->nev,
+        'email'   => $request->email,
+        'telefon' => $request->telefon,
+    ]);
+}
 
             // === CÍM SZÉPÍTÉSE (stabilabb verzió) ===
             $nyersCim = trim($request->input('cim'));
