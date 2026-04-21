@@ -270,7 +270,7 @@ const rendezesOpciok = [
 onMounted(async () => {
   // Mindkettőt szűrve kérjük le
   await Promise.all([
-    store.fetchMegyek(true), 
+    store.fetchMegyek(true),
     store.fetchVarosok(true)
   ]);
 
@@ -302,4 +302,3 @@ onMounted(async () => {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
 </style>
-

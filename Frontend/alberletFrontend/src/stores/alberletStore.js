@@ -55,53 +55,53 @@ export const useAlberletStore = defineStore("alberlet", {
   },
 
   actions: {
-   async fetchMegyek(isFiltered = false) {
-  try {
-    // Ha isFiltered true, akkor hozzáfüzzük a ?filtered=true részt
-    const url = isFiltered ? '/megyek?filtered=true' : '/megyek';
-    const response = await api.get(url);
-    this.megyek = response.data;
-    return response.data;
-  } catch (error) {
-    console.error("Hiba a megyék lekérésekor:", error);
-    this.megyek = [];
-  }
-},
+    async fetchMegyek(isFiltered = false) {
+      try {
+        // Ha isFiltered true, akkor hozzáfüzzük a ?filtered=true részt
+        const url = isFiltered ? "/megyek?filtered=true" : "/megyek";
+        const response = await api.get(url);
+        this.megyek = response.data;
+        return response.data;
+      } catch (error) {
+        console.error("Hiba a megyék lekérésekor:", error);
+        this.megyek = [];
+      }
+    },
 
     async fetchVarosok(isFiltered = false) {
-  try {
-    const url = isFiltered ? '/varosok?filtered=true' : '/varosok';
-    const { data } = await api.get(url);
-    this.varosok = data;
-  } catch (error) {
-    console.error("Nem sikerült betölteni a városokat", error);
-  }
-},
+      try {
+        const url = isFiltered ? "/varosok?filtered=true" : "/varosok";
+        const { data } = await api.get(url);
+        this.varosok = data;
+      } catch (error) {
+        console.error("Nem sikerült betölteni a városokat", error);
+      }
+    },
 
-async saveAlberletUpdate(id, payload) {
-  try {
-    // A payload tartalmazza az összes adatot az edit formról
-    const response = await api.put(`/alberletek/${id}`, payload);
-    if (response.status === 200) {
-      Notify.create({ type: "positive", message: "Sikeres mentés!" });
-      // Frissítsük a listát, hogy látszódjon a változás
-      await this.fetchAlberletek(this.currentPage, true);
-      return true;
-    }
-  } catch (error) {
-    console.error("Hiba a mentéskor:", error);
-    this.handleError("Nem sikerült a mentés!");
-    return false;
-  }
-},
+    async saveAlberletUpdate(id, payload) {
+      try {
+        // A payload tartalmazza az összes adatot az edit formról
+        const response = await api.put(`/alberletek/${id}`, payload);
+        if (response.status === 200) {
+          Notify.create({ type: "positive", message: "Sikeres mentés!" });
+          // Frissítsük a listát, hogy látszódjon a változás
+          await this.fetchAlberletek(this.currentPage, true);
+          return true;
+        }
+      } catch (error) {
+        console.error("Hiba a mentéskor:", error);
+        this.handleError("Nem sikerült a mentés!");
+        return false;
+      }
+    },
 
     async fetchAlberletek(page = 1, adminView = false) {
       this.loading = true;
       try {
-        const params = { 
-          page, 
-          ...this.getCleanFilters, 
-          admin_view: adminView ? 'true' : 'false' 
+        const params = {
+          page,
+          ...this.getCleanFilters,
+          admin_view: adminView ? "true" : "false",
         };
         const { data } = await api.get("/alberletek", { params });
 
@@ -114,61 +114,78 @@ async saveAlberletUpdate(id, payload) {
           this.totalPages = data.meta.last_page;
           this.currentPage = data.meta.current_page;
         }
-      } catch  {
+      } catch {
         console("Hiba:");
       } finally {
         this.loading = false;
       }
     },
 
-    
+    // ÚJ: Állapot módosítása (Aktiválás / Kikapcsolás)
+    async updateStatus(id, status) {
+      try {
+        // Megkeressük a hirdetést a listában
+        const albi = this.alberletek.find((a) => a.id === id);
 
-  // ÚJ: Állapot módosítása (Aktiválás / Kikapcsolás)
- async updateStatus(id, status) {
-  try {
-    // Csak az 'aktiv' mezőt küldjük el!
-    const response = await api.put(`/alberletek/${id}`, { aktiv: status });
-    if (response.status === 200) {
-      const index = this.alberletek.findIndex(a => a.id === id);
-      if (index !== -1) {
-        this.alberletek[index].aktiv = status;
+        if (!albi) {
+          console.error("Hirdetés nem található a listában!");
+          return false;
+        }
+
+        // A Laravel validátora elvárja a leírást és az árat is PUT kérésnél!
+        // Ezért elküldjük azokat is az 'aktiv' mellé.
+        const payload = {
+          aktiv: status,
+          leiras: albi.leiras,
+          ar: albi.ar,
+        };
+
+        const response = await api.put(`/alberletek/${id}`, payload);
+
+        if (response.status === 200) {
+          const index = this.alberletek.findIndex((a) => a.id === id);
+          if (index !== -1) {
+            this.alberletek[index].aktiv = status;
+          }
+          return true;
+        }
+      } catch (error) {
+        // JAVÍTVA: .error() használata sima console() helyett
+        console.error(
+          "Hiba a státusz frissítésekor:",
+          error.response?.data || error,
+        );
+        return false;
       }
-      return true;
-    }
-  } catch {
-    console("Hiba a státusz frissítésekor:");
-    return false;
-  }
-},
+    },
 
-  // ÚJ: Hirdetés végleges törlése
-  async deleteAlberlet(id) {
-  // EZT A SORT TÖRÖLD KI: if (!confirm(...)) return;
-  
-  try {
-    await api.delete(`/alberletek/${id}`);
-    // Kiszűrjük a helyi listából is, hogy azonnal eltűnjön
-    this.alberletek = this.alberletek.filter(a => a.id !== id);
-    return true; // Adjunk vissza true-t, hogy a komponens tudja: sikerült!
-  } catch (error) {
-    console.error("Hiba a törléskor:", error);
-    return false;
-  }
-},
+    // ÚJ: Hirdetés végleges törlése
+    async deleteAlberlet(id) {
+      // EZT A SORT TÖRÖLD KI: if (!confirm(...)) return;
 
-  async fetchAllForAdmin() {
-  try {
-    // Hozzáadjuk a paramétert az URL-hez
-    const { data } = await api.get('/alberletek?admin_view=true');
-    
-    // Mivel a Laravel Resource-t használsz, az adatok a data.data-ban lesznek
-    this.alberletek = data.data; 
-    return this.alberletek;
-  } catch (error) {
-    console.error('Hiba az admin adatok lekérésekor:', error);
-  }
-},
+      try {
+        await api.delete(`/alberletek/${id}`);
+        // Kiszűrjük a helyi listából is, hogy azonnal eltűnjön
+        this.alberletek = this.alberletek.filter((a) => a.id !== id);
+        return true; // Adjunk vissza true-t, hogy a komponens tudja: sikerült!
+      } catch (error) {
+        console.error("Hiba a törléskor:", error);
+        return false;
+      }
+    },
 
+    async fetchAllForAdmin() {
+      try {
+        // Hozzáadjuk a paramétert az URL-hez
+        const { data } = await api.get("/alberletek?admin_view=true");
+
+        // Mivel a Laravel Resource-t használsz, az adatok a data.data-ban lesznek
+        this.alberletek = data.data;
+        return this.alberletek;
+      } catch (error) {
+        console.error("Hiba az admin adatok lekérésekor:", error);
+      }
+    },
 
     async fetchAlberletById(id) {
       this.loading = true;

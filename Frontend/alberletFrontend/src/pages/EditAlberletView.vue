@@ -7,7 +7,8 @@
           <q-btn flat round color="teal" icon="arrow_back" @click="router.back()" class="shadow-1 bg-white" />
           <div class="text-h4 text-weight-bold text-grey-9">Hirdetés szerkesztése</div>
         </div>
-        <q-btn color="positive" icon="save" label="Minden módosítás mentése" size="lg" @click="handleUpdate" :loading="saving" />
+        <q-btn color="positive" icon="save" label="Minden módosítás mentése" size="lg" @click="handleUpdate"
+          :loading="saving" />
       </div>
 
       <div v-if="loading" class="text-center q-pa-xl">
@@ -19,8 +20,10 @@
 
         <div class="col-12 col-md-8">
           <q-card flat bordered class="rounded-borders overflow-hidden q-mb-lg shadow-2">
-            <q-carousel v-model="currentSlide" v-if="form.kepek?.length" animated infinite arrows navigation thumbnails height="500px" class="bg-black">
-              <q-carousel-slide v-for="(kep, index) in form.kepek" :key="index" :name="index" :img-src="formatImageUrl(kep)" />
+            <q-carousel v-model="currentSlide" v-if="form.kepek?.length" animated infinite arrows navigation thumbnails
+              height="500px" class="bg-black">
+              <q-carousel-slide v-for="(kep, index) in form.kepek" :key="index" :name="index"
+                :img-src="formatImageUrl(kep)" />
             </q-carousel>
           </q-card>
 
@@ -30,18 +33,10 @@
                 <q-icon name="edit_note" color="teal" class="q-mr-sm" />Ingatlan leírása
               </div>
               <q-separator class="q-mb-md" />
-             <q-input 
-  v-model="form.leiras" 
-  type="textarea" 
-  filled 
-  autogrow 
-  label="Leírás" 
-  class="text-body1"
-  :rules="[ 
-    val => !!val || 'A leírás nem maradhat üresen',
-    val => val.length >= 20 || 'Legalább 20 karakter hosszan fejtsd ki az ingatlan leírását'
-  ]"
-/>
+              <q-input v-model="form.leiras" type="textarea" filled autogrow label="Leírás" class="text-body1" :rules="[
+                val => !!val || 'A leírás nem maradhat üresen',
+                val => val.length >= 20 || 'Legalább 20 karakter hosszan fejtsd ki az ingatlan leírását'
+              ]" />
             </q-card-section>
           </q-card>
 
@@ -72,7 +67,8 @@
             <q-card flat class="bg-teal text-white shadow-3 rounded-borders">
               <q-card-section class="text-center">
                 <div class="text-h6 opacity-80 text-uppercase">Havi bérleti díj</div>
-                <q-input v-model.number="form.ar" type="number" dark borderless input-class="text-h3 text-weight-bolder text-center" suffix="Ft" />
+                <q-input v-model.number="form.ar" type="number" dark borderless
+                  input-class="text-h3 text-weight-bolder text-center" suffix="Ft" />
               </q-card-section>
             </q-card>
 
@@ -82,15 +78,9 @@
                   <q-item-section avatar><q-icon name="title" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Hirdetés címe</q-item-label>
-                    <q-input 
-                      v-model="form.cim" 
-                      borderless 
-                      dense 
-                      class="text-weight-medium" 
-                      placeholder="9400 Sopron, Fő utca 1."
-                      hint="Példa: 9400 Sopron, Lackner Kristóf utca 1."
-                      @blur="form.cim = formazottCim(form.cim)" 
-                    />
+                    <q-input v-model="form.cim" borderless dense class="text-weight-medium"
+                      placeholder="9400 Sopron, Fő utca 1." hint="Példa: 9400 Sopron, Lackner Kristóf utca 1."
+                      @blur="form.cim = formazottCim(form.cim)" />
                   </q-item-section>
                 </q-item>
 
@@ -106,19 +96,9 @@
                   <q-item-section avatar><q-icon name="map" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Megye</q-item-label>
-                    <q-select 
-                      v-model="form.megye" 
-                      :options="szurtMegyek" 
-                      use-input 
-                      fill-input
-                      hide-selected
-                      new-value-mode="add-unique"
-                      @new-value="(val, done) => { onNewValue(val, 'megye'); done(); }"
-                      borderless 
-                      dense
-                      @filter="megyeSzures"
-                      @update:model-value="form.varos = ''"
-                    />
+                    <q-select v-model="form.megye" :options="szurtMegyek" use-input fill-input hide-selected
+                      new-value-mode="add-unique" @new-value="(val, done) => { onNewValue(val, 'megye'); done(); }"
+                      borderless dense @filter="megyeSzures" @update:model-value="form.varos = ''" />
                   </q-item-section>
                 </q-item>
 
@@ -126,25 +106,17 @@
                   <q-item-section avatar><q-icon name="place" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Település</q-item-label>
-                    <q-select 
-                      v-model="form.varos" 
-                      :options="szurtVarosok" 
-                      use-input 
-                      fill-input
-                      hide-selected
-                      new-value-mode="add-unique"
-                      @new-value="(val, done) => { onNewValue(val, 'varos'); done(); }"
-                      :disable="!form.megye"
-                      borderless 
-                      dense 
-                    />
+                    <q-select v-model="form.varos" :options="szurtVarosok" use-input fill-input hide-selected
+                      new-value-mode="add-unique" @new-value="(val, done) => { onNewValue(val, 'varos'); done(); }"
+                      :disable="!form.megye" borderless dense />
                   </q-item-section>
                 </q-item>
 
                 <q-item :class="szobaszamTiltva ? 'bg-grey-2' : ''">
                   <q-item-section avatar><q-icon name="bed" color="teal" /></q-item-section>
                   <q-item-section>
-                    <q-item-label caption>Szobák száma {{ szobaszamTiltva ? '(Szoba esetén fix 1)' : '' }}</q-item-label>
+                    <q-item-label caption>Szobák száma {{ szobaszamTiltva ? '(Szoba esetén fix 1)' : ''
+                      }}</q-item-label>
                     <q-input v-model="form.szobak_szama" borderless dense :disable="szobaszamTiltva" />
                   </q-item-section>
                 </q-item>
@@ -218,8 +190,8 @@ const szurtMegyek = ref([])
 const megyeSzures = (val, update) => {
   update(() => {
     const s = val.toLowerCase();
-    szurtMegyek.value = val === '' 
-      ? store.megyek.map(m => m.label) 
+    szurtMegyek.value = val === ''
+      ? store.megyek.map(m => m.label)
       : store.megyek.filter(m => m.label.toLowerCase().includes(s)).map(m => m.label);
   });
 };
@@ -257,7 +229,7 @@ onMounted(async () => {
 
     if (!item.tulajdonos) {
       item.tulajdonos = {
-        nev: item.tulajdonos_neve || '', 
+        nev: item.tulajdonos_neve || '',
         telefon: item.tulajdonos_tel || '',
         email: item.email || ''
       };
@@ -275,7 +247,7 @@ const formazottCim = (val) => {
   if (!val) return val;
   let s = val.trim().replace(/\s+/g, ' ').replace(/[.,]+$/, '');
   let szavak = s.split(' ').map(szo => {
-    if (/^\d/.test(szo)) return szo; 
+    if (/^\d/.test(szo)) return szo;
     return szo.charAt(0).toUpperCase() + szo.slice(1).toLowerCase();
   });
   let kesz = szavak.join(' ');
@@ -287,7 +259,7 @@ const formazottCim = (val) => {
 const handleUpdate = async () => {
   if (!form.value) return;
 
-// Manuális validáció mentés előtt
+  // Manuális validáció mentés előtt
   if (!form.value.leiras || form.value.leiras.length < 20) {
     $q.notify({
       color: 'negative',
@@ -318,7 +290,7 @@ const handleUpdate = async () => {
     };
 
     const response = await api.put(`/alberletek/${route.params.id}`, payload);
-    
+
     if (response.status === 200 || response.data.status === 'success') {
       $q.notify({ color: 'positive', message: 'Minden módosítás sikeresen elmentve!', icon: 'check' });
       router.push('/admin');
@@ -333,9 +305,24 @@ const handleUpdate = async () => {
 </script>
 
 <style scoped>
-.max-width-container { max-width: 1200px; }
-.sticky-column { position: sticky; top: 24px; }
-.rounded-borders { border-radius: 16px; }
-.shadow-2 { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important; }
-.shadow-3 { box-shadow: 0 8px 25px rgba(0, 128, 128, 0.2) !important; }
+.max-width-container {
+  max-width: 1200px;
+}
+
+.sticky-column {
+  position: sticky;
+  top: 24px;
+}
+
+.rounded-borders {
+  border-radius: 16px;
+}
+
+.shadow-2 {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+.shadow-3 {
+  box-shadow: 0 8px 25px rgba(0, 128, 128, 0.2) !important;
+}
 </style>

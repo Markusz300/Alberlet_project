@@ -8,7 +8,7 @@ class AlberletTipus extends Model
 {
     protected $table = 'alberlet_tipus';
 
-    public $timestamps = false;   
+    public $timestamps = false;
 
     protected $fillable = ['nev'];
 

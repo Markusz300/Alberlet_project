@@ -43,7 +43,8 @@
 /* LOGÓ SZÍNE ÉS MÉRETE */
 .app-logo {
   width: 220px;
-  filter: brightness(0) opacity(0.8); /* Feketévé teszi a fehér logót */
+  filter: brightness(0) opacity(0.8);
+  /* Feketévé teszi a fehér logót */
 }
 
 /* ALAP KÁRTYA BEÁLLÍTÁSOK (Minden kártyára vonatkozik) */
@@ -62,33 +63,47 @@
 /* LEBEGÉS (HOVER) EFFEKT */
 .karty-alap:hover {
   transform: translateY(-10px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
 /* VILÁGOS KÁRTYA STÍLUSA */
 .vilagos-kartya {
-  background: linear-gradient(135deg, #e7ffe5, #e6ffe3); /* Elegáns zöld átmenet */
+  background: linear-gradient(135deg, #e7ffe5, #e6ffe3);
+  /* Elegáns zöld átmenet */
   color: black;
 }
-.ikon-zold { color: #000000; }
-.gomb-szoveg-zold { 
-  color: #000000; 
-  margin-top: 20px; 
-  font-weight: bold; 
+
+.ikon-zold {
+  color: #000000;
+}
+
+.gomb-szoveg-zold {
+  color: #000000;
+  margin-top: 20px;
+  font-weight: bold;
 }
 
 /* ZÖLD KÁRTYA STÍLUSA (A sötét helyett) */
 .zold-kartya {
-  background: linear-gradient(135deg, #96ab96, #0e3d11); /* Elegáns zöld átmenet */
+  background: linear-gradient(135deg, #96ab96, #0e3d11);
+  /* Elegáns zöld átmenet */
   color: white;
 }
-.zold-kartya p { color: #e8f5e9; } /* Világosabb szöveg a zöldön */
-.ikon-feher { color: white; }
-.gomb-szoveg-feher { 
-  color: white; 
-  margin-top: 20px; 
+
+.zold-kartya p {
+  color: #e8f5e9;
+}
+
+/* Világosabb szöveg a zöldön */
+.ikon-feher {
+  color: white;
+}
+
+.gomb-szoveg-feher {
+  color: white;
+  margin-top: 20px;
   font-weight: bold;
-  text-decoration: underline; 
+  text-decoration: underline;
 }
 
 /* SZÖVEG FORMÁZÁS */
@@ -99,11 +114,18 @@ p {
   line-height: 1.4;
 }
 
-.spacing-2 { letter-spacing: 2px; }
+.spacing-2 {
+  letter-spacing: 2px;
+}
 
 /* MOBIL NÉZET */
 @media (max-width: 600px) {
-  .karty-alap { height: 300px; }
-  .app-logo { width: 180px; }
+  .karty-alap {
+    height: 300px;
+  }
+
+  .app-logo {
+    width: 180px;
+  }
 }
 </style>
