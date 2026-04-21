@@ -124,8 +124,24 @@ export const useAlberletStore = defineStore("alberlet", {
     // ÚJ: Állapot módosítása (Aktiválás / Kikapcsolás)
     async updateStatus(id, status) {
       try {
-        // Csak az 'aktiv' mezőt küldjük el!
-        const response = await api.put(`/alberletek/${id}`, { aktiv: status });
+        // Megkeressük a hirdetést a listában
+        const albi = this.alberletek.find((a) => a.id === id);
+
+        if (!albi) {
+          console.error("Hirdetés nem található a listában!");
+          return false;
+        }
+
+        // A Laravel validátora elvárja a leírást és az árat is PUT kérésnél!
+        // Ezért elküldjük azokat is az 'aktiv' mellé.
+        const payload = {
+          aktiv: status,
+          leiras: albi.leiras,
+          ar: albi.ar,
+        };
+
+        const response = await api.put(`/alberletek/${id}`, payload);
+
         if (response.status === 200) {
           const index = this.alberletek.findIndex((a) => a.id === id);
           if (index !== -1) {
@@ -133,8 +149,12 @@ export const useAlberletStore = defineStore("alberlet", {
           }
           return true;
         }
-      } catch {
-        console("Hiba a státusz frissítésekor:");
+      } catch (error) {
+        // JAVÍTVA: .error() használata sima console() helyett
+        console.error(
+          "Hiba a státusz frissítésekor:",
+          error.response?.data || error,
+        );
         return false;
       }
     },
