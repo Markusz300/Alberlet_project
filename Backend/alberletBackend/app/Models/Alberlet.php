@@ -9,9 +9,9 @@ class Alberlet extends Model
 {
     use HasFactory;
 
-    protected $table = 'alberlet';        
+    protected $table = 'alberlet';
 
-    public $timestamps=false;
+    public $timestamps = false;
     protected $fillable = [
         'cim',
         'tipus',           // 0=haz, 1=lakás, 2=szoba
@@ -30,14 +30,13 @@ class Alberlet extends Model
 
     //kenyelem adatatalakitas
     protected $casts = [
-        'szobak_szama'     => 'decimal:1',
-        'hirdetes_datuma'  => 'date',
-        'aktiv'            => 'boolean',
-        'lift'             => 'boolean',
-        'butorozott'       => 'boolean',
+        'szobak_szama' => 'decimal:1',
+        'hirdetes_datuma' => 'date',
+        'aktiv' => 'boolean',
+        'lift' => 'boolean',
+        'butorozott' => 'boolean',
     ];
 
-    // nem kell joinolni
     public function varos()
     {
         return $this->belongsTo(Varos::class, 'varos_id');
@@ -53,7 +52,7 @@ class Alberlet extends Model
         return $this->hasMany(Kep::class, 'alberlet_id');
     }
 
-    public function tipusKapcsolat()   // mert van alberlet_tipus tabla 
+    public function tipusKapcsolat()   // mert van alberlet_tipus tabla
     {
         return $this->belongsTo(AlberletTipus::class, 'tipus', 'id');
     }

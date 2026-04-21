@@ -67,7 +67,7 @@
                     <q-item-label class="text-weight-medium">
                       {{ store.selectedAlberlet.varos }}
                       <span v-if="store.selectedAlberlet.megye" class="text-grey-7 text-weight-regular">
-                        , {{ store.selectedAlberlet.megye }} 
+                        , {{ store.selectedAlberlet.megye }}
                       </span>
                     </q-item-label>
                   </q-item-section>
@@ -92,36 +92,38 @@
                 </q-item>
 
                 <q-item>
-  <q-item-section avatar>
-    <q-icon :name="isHaz ? 'home' : 'elevator'" color="teal" />
-  </q-item-section>
+                  <q-item-section avatar>
+                    <q-icon :name="isHaz ? 'home' : 'elevator'" color="teal" />
+                  </q-item-section>
 
-  <q-item-section>
-    <q-item-label caption>
-      {{ isHaz ? 'Ingatlan szintjei' : 'Emelet / Lift' }}
-    </q-item-label>
-    
-    <q-item-label class="text-weight-medium">
-      <div class="row items-center q-gutter-x-sm">
-        
-        <div>
-          {{ isHaz 
-            ? (store.selectedAlberlet.emelet > 1 ? store.selectedAlberlet.emelet + ' szintes ház' : 'Földszintes') 
-            : (store.selectedAlberlet.emelet > 0 ? store.selectedAlberlet.emelet + '. emelet' : 'Földszint') 
-          }}
-        </div>
+                  <q-item-section>
+                    <q-item-label caption>
+                      {{ isHaz ? 'Ingatlan szintjei' : 'Emelet / Lift' }}
+                    </q-item-label>
 
-        <div class="text-grey-4" v-if="isHaz ? store.selectedAlberlet.emelet > 1 : true">•</div>
+                    <q-item-label class="text-weight-medium">
+                      <div class="row items-center q-gutter-x-sm">
 
-        <div class="row items-center" :class="isLiftes ? 'text-teal text-weight-bold' : 'text-grey-7'">
-          <q-icon :name="isLiftes ? 'elevator' : 'block'" size="18px" class="q-mr-xs" />
-          {{ isLiftes ? 'Van lift' : 'Nincs lift' }}
-        </div>
+                        <div>
+                          {{ isHaz
+                            ? (store.selectedAlberlet.emelet > 1 ? store.selectedAlberlet.emelet + ' szintes ház' :
+                              'Földszintes')
+                            : (store.selectedAlberlet.emelet > 0 ? store.selectedAlberlet.emelet + '. emelet' :
+                          'Földszint')
+                          }}
+                        </div>
 
-      </div>
-    </q-item-label>
-  </q-item-section>
-</q-item>
+                        <div class="text-grey-4" v-if="isHaz ? store.selectedAlberlet.emelet > 1 : true">•</div>
+
+                        <div class="row items-center" :class="isLiftes ? 'text-teal text-weight-bold' : 'text-grey-7'">
+                          <q-icon :name="isLiftes ? 'elevator' : 'block'" size="18px" class="q-mr-xs" />
+                          {{ isLiftes ? 'Van lift' : 'Nincs lift' }}
+                        </div>
+
+                      </div>
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
 
                 <q-item>
                   <q-item-section avatar><q-icon name="chair" color="teal" /></q-item-section>
@@ -235,7 +237,6 @@ const formatDate = (dateString) => {
 </script>
 
 <style scoped>
-
 :deep(.q-carousel__control .q-btn) {
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
 }

@@ -55,7 +55,7 @@ const auth = useAuthStore();
 const handleLogoClick = () => {
   // 1. Töröljük az admin jogot a localStorage-ból
   localStorage.removeItem('isAdmin');
-  
+
   // 2. Szólunk az authStore-nak is, hogy vége a dalnak
   if (auth.logout) {
     auth.logout();
@@ -66,9 +66,9 @@ const handleLogoClick = () => {
   // 3. Hazadobjuk a felhasználót
   router.push('/');
 
-  // 4. (Opcionális) Frissítünk egyet az oldalon, hogy minden 
+  // 4. (Opcionális) Frissítünk egyet az oldalon, hogy minden
   // változó tutira kiürüljön a memóriából
-  // window.location.reload(); 
+  // window.location.reload();
 };
 </script>
 
@@ -78,10 +78,18 @@ const handleLogoClick = () => {
   max-width: 1200px;
   width: 100%;
 }
-.opacity-70 { opacity: 0.7; }
+
+.opacity-70 {
+  opacity: 0.7;
+}
+
 .hover-opacity-100:hover {
   opacity: 1;
   transition: opacity 0.3s ease;
 }
-a { color: white; text-decoration: none; }
+
+a {
+  color: white;
+  text-decoration: none;
+}
 </style>

@@ -24,7 +24,7 @@ class TulajdonosController extends Controller
             return response()->json([
                 'exists' => true,
                 'user' => [
-                    'nev'     => $tulajdonos->nev,
+                    'nev' => $tulajdonos->nev,
                     'telefon' => $tulajdonos->telefon,
                 ]
             ]);
