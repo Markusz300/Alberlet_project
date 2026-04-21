@@ -120,46 +120,55 @@
               </div>
 
               <div class="col-12 col-sm-4">
-                <q-input
-                  outlined v-model.number="hirdetesAdat.emelet"
-                  type="number"
-                  label="Emelet"
-                  dense color="teal"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="layers" color="teal" />
-                  </template>
-                </q-input>
-              </div>
+  <q-input
+    outlined
+    v-model.number="hirdetesAdat.emelet"
+    type="number"
+    label="Emelet"
+    dense
+    color="teal"
+    min="0"
+    :rules="[val => val >= 0 || 'Az emelet nem lehet negatív!']"
+  >
+    <template v-slot:prepend>
+      <q-icon name="layers" color="teal" />
+    </template>
+  </q-input>
+</div>
 
               <div class="col-12 col-sm-4">
-                <q-input
-                  v-if="!szobaE"
-                  outlined
-                  v-model.number="hirdetesAdat.szobak_szama"
-                  type="number"
-                  label="Szobák száma"
-                  dense color="teal"
-                  step="0.5"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="bed" color="teal" />
-                  </template>
-                </q-input>
-                <q-input
-                  v-else
-                  outlined
-                  label="Szobák száma"
-                  dense color="teal"
-                  readonly
-                  placeholder="1 szoba"
-                  bg-color="grey-2"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="meeting_room" color="grey-7" />
-                  </template>
-                </q-input>
-              </div>
+  <q-input
+    v-if="!szobaE"
+    outlined
+    v-model.number="hirdetesAdat.szobak_szama"
+    type="number"
+    label="Szobák száma"
+    dense
+    color="teal"
+    step="0.5"
+    min="1"
+    :rules="[val => val >= 1 || 'Minimum 1 szoba szükséges!']"
+  >
+    <template v-slot:prepend>
+      <q-icon name="bed" color="teal" />
+    </template>
+  </q-input>
+  
+  <q-input
+    v-else
+    outlined
+    label="Szobák száma"
+    dense
+    color="teal"
+    readonly
+    placeholder="1 szoba"
+    bg-color="grey-2"
+  >
+    <template v-slot:prepend>
+      <q-icon name="meeting_room" color="grey-7" />
+    </template>
+  </q-input>
+</div>
 
               <div class="col-12">
                 <div class="row items-center justify-around bg-teal-1 q-pa-md rounded-borders border-teal shadow-1">

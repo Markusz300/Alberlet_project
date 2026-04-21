@@ -30,7 +30,18 @@
                 <q-icon name="edit_note" color="teal" class="q-mr-sm" />Ingatlan leírása
               </div>
               <q-separator class="q-mb-md" />
-              <q-input v-model="form.leiras" type="textarea" filled autogrow label="Leírás" class="text-body1" />
+             <q-input 
+  v-model="form.leiras" 
+  type="textarea" 
+  filled 
+  autogrow 
+  label="Leírás" 
+  class="text-body1"
+  :rules="[ 
+    val => !!val || 'A leírás nem maradhat üresen',
+    val => val.length >= 20 || 'Legalább 20 karakter hosszan fejtsd ki az ingatlan leírását'
+  ]"
+/>
             </q-card-section>
           </q-card>
 
@@ -275,6 +286,17 @@ const formazottCim = (val) => {
 // --- MENTÉS ---
 const handleUpdate = async () => {
   if (!form.value) return;
+
+// Manuális validáció mentés előtt
+  if (!form.value.leiras || form.value.leiras.length < 20) {
+    $q.notify({
+      color: 'negative',
+      message: 'A leírásnak legalább 20 karakternek kell lennie!',
+      icon: 'warning'
+    });
+    return;
+  }
+
   saving.value = true;
   try {
     const payload = {

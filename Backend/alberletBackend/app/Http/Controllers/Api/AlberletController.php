@@ -266,6 +266,17 @@ if ($tulajdonos) {
      */
  public function update(Request $request, $id)
 {
+
+// Validáció hozzáadása
+    $request->validate([
+        'leiras' => 'required|min:20',
+        // Itt a többit is validálhatod, pl:
+        'ar' => 'required|numeric|min:0',
+    ], [
+        'leiras.required' => 'A leírás kitöltése kötelező!',
+        'leiras.min' => 'A leírásnak legalább :min karakternek kell lennie!',
+    ]);
+
     try {
         $alberlet = Alberlet::findOrFail($id);
 

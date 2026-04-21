@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <q-card style="width: 350px">
-      <q-card-section class="bg-primary text-white text-h6">Dev Belépés</q-card-section>
+      <q-card-section class="bg-teal-10 text-white text-h6">Dev Belépés</q-card-section>
       <q-card-section>
         <q-input v-model="username" label="Felhasználó" />
         <q-input v-model="password" label="Jelszó" type="password" class="q-mt-md" />
