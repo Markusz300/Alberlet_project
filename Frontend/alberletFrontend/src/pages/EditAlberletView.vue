@@ -117,7 +117,14 @@
                   <q-item-section>
                     <q-item-label caption>Szobák száma {{ szobaszamTiltva ? '(Szoba esetén fix 1)' : ''
                       }}</q-item-label>
-                    <q-input v-model="form.szobak_szama" borderless dense :disable="szobaszamTiltva" />
+                    <q-input
+  v-model.number="form.szobak_szama"
+  type="number"
+  borderless
+  dense
+  :disable="szobaszamTiltva"
+  :rules="[val => val > 0 || 'Legalább 1 szoba kell']"
+/>
                   </q-item-section>
                 </q-item>
 
@@ -125,7 +132,13 @@
                   <q-item-section avatar><q-icon name="straighten" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Alapterület (m²)</q-item-label>
-                    <q-input v-model.number="form.meret" type="number" borderless dense />
+                    <q-input
+  v-model.number="form.meret"
+  type="number"
+  borderless
+  dense
+  :rules="[val => val > 0 || 'Az alapterület nem lehet 0 vagy negatív']"
+/>
                   </q-item-section>
                 </q-item>
 
@@ -133,7 +146,13 @@
                   <q-item-section avatar><q-icon name="layers" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Emelet</q-item-label>
-                    <q-input v-model.number="form.emelet" type="number" borderless dense />
+                   <q-input
+  v-model.number="form.emelet"
+  type="number"
+  borderless
+  dense
+  :rules="[val => val >= 0 || 'Az emelet nem lehet negatív']"
+/>
                   </q-item-section>
                 </q-item>
 
@@ -187,8 +206,13 @@ const formatImageUrl = (kep) => {
 
 // --- MEGYE / VÁROS LOGIKA ---
 const szurtMegyek = ref([])
+
 const megyeSzures = (val, update) => {
   update(() => {
+    // Ha üres a store, próbáljuk meg feltölteni (biztonsági játék)
+    if (store.megyek.length === 0) {
+        store.fetchMegyek();
+    }
     const s = val.toLowerCase();
     szurtMegyek.value = val === ''
       ? store.megyek.map(m => m.label)
@@ -197,13 +221,21 @@ const megyeSzures = (val, update) => {
 };
 
 const szurtVarosok = computed(() => {
-  if (!form.value?.megye) return [];
+  if (!form.value?.megye || store.megyek.length === 0) return [];
+
+  // Megkeressük a megye objektumot a label alapján
   const mObj = store.megyek.find(m => m.label === form.value.megye);
   if (!mObj) return [];
-  return store.varosok.filter(v => v.megye_id === mObj.value).map(v => v.label);
+
+  // A store-ban az azonosító lehet .value vagy .id, ellenőrizzük mindkettőt
+  const megyeId = mObj.value || mObj.id;
+
+  return store.varosok
+    .filter(v => v.megye_id === megyeId)
+    .map(v => v.label);
 });
 
-// Szöveg szépítése (Budapest, Sopron, stb.)
+// Szöveg szépítése
 const szepitSzoveg = (szoveg) => {
   if (!szoveg) return szoveg;
   return szoveg.split(' ').map(szo => szo.charAt(0).toUpperCase() + szo.slice(1).toLowerCase()).join(' ');
@@ -211,7 +243,9 @@ const szepitSzoveg = (szoveg) => {
 
 const onNewValue = (val, modelRef) => {
   const formalt = szepitSzoveg(val);
-  form.value[modelRef] = formalt;
+  if (form.value) {
+    form.value[modelRef] = formalt;
+  }
 };
 
 // --- TILTÁSOK ÉS VALIDÁLÁS ---
@@ -224,6 +258,12 @@ watch(() => form.value?.tipus, (uj) => { if (uj === 'szoba' && form.value) form.
 // --- ADATBETÖLTÉS ---
 onMounted(async () => {
   try {
+    // KRITIKUS: Előbb töltsük be a megyéket/városokat, különben a computed hibázik!
+    await Promise.all([
+        store.fetchMegyek(),
+        store.fetchVarosok()
+    ]);
+
     const res = await api.get(`/alberletek/${route.params.id}`);
     const item = res.data.data;
 
@@ -231,10 +271,14 @@ onMounted(async () => {
       item.tulajdonos = {
         nev: item.tulajdonos_neve || '',
         telefon: item.tulajdonos_tel || '',
-        email: item.email || ''
+        email: item.tulajdonos_email || ''
       };
     }
     form.value = item;
+
+    // Kezdeti megye lista beállítása
+    szurtMegyek.value = store.megyek.map(m => m.label);
+
   } catch (err) {
     console.error("Betöltési hiba:", err);
   } finally {
@@ -259,13 +303,20 @@ const formazottCim = (val) => {
 const handleUpdate = async () => {
   if (!form.value) return;
 
-  // Manuális validáció mentés előtt
+// ÚJ: Numerikus validációk
+  if (form.value.ar <= 0 || form.value.meret <= 0 || form.value.szobak_szama <= 0) {
+    $q.notify({ color: 'negative', message: 'Az ár, méret és szobaszám csak pozitív szám lehet!', icon: 'warning' });
+    return;
+  }
+
+  if (form.value.emelet < 0) {
+    $q.notify({ color: 'negative', message: 'Az emelet nem lehet negatív!', icon: 'warning' });
+    return;
+  }
+
+
   if (!form.value.leiras || form.value.leiras.length < 20) {
-    $q.notify({
-      color: 'negative',
-      message: 'A leírásnak legalább 20 karakternek kell lennie!',
-      icon: 'warning'
-    });
+    $q.notify({ color: 'negative', message: 'A leírásnak legalább 20 karakternek kell lennie!', icon: 'warning' });
     return;
   }
 
@@ -289,15 +340,12 @@ const handleUpdate = async () => {
       tulajdonos_email: form.value.tulajdonos?.email
     };
 
-    const response = await api.put(`/alberletek/${route.params.id}`, payload);
-
-    if (response.status === 200 || response.data.status === 'success') {
-      $q.notify({ color: 'positive', message: 'Minden módosítás sikeresen elmentve!', icon: 'check' });
-      router.push('/admin');
-    }
+    await api.put(`/alberletek/${route.params.id}`, payload);
+    $q.notify({ color: 'positive', message: 'Minden módosítás sikeresen elmentve!', icon: 'check' });
+    router.push('/admin');
   } catch (err) {
     const errorMsg = err.response?.data?.error || 'Hiba történt a mentés során!';
-    $q.notify({ color: 'negative', message: errorMsg, icon: 'report_problem', position: 'top', timeout: 5000 });
+    $q.notify({ color: 'negative', message: errorMsg, icon: 'report_problem', position: 'top' });
   } finally {
     saving.value = false;
   }
