@@ -93,7 +93,7 @@
                   <q-item-section avatar><q-icon name="title" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Hirdetés címe</q-item-label>
-                    <q-input v-model="form.cim" borderless dense class="text-weight-medium"
+                    <q-input v-model="form.cim" :rules="[val => !!val && val.trim().length > 5 || 'Kérlek adj meg egy érvényes címet (min. 5 karakter)!']" borderless dense class="text-weight-medium"
                       placeholder="9400 Sopron, Fő utca 1." hint="Példa: 9400 Sopron, Lackner Kristóf utca 1."
                       @blur="form.cim = formazottCim(form.cim)" />
                   </q-item-section>
@@ -324,6 +324,17 @@ const formazottCim = (val) => {
 // --- MENTÉS ---
 const handleUpdate = async () => {
   if (!form.value) return;
+
+
+  // ÚJ: Cím validáció
+  if (!form.value.cim || form.value.cim.trim().length < 5) {
+    $q.notify({
+      color: 'negative',
+      message: 'A hirdetés címe nem maradhat üresen!',
+      icon: 'warning'
+    });
+    return;
+  }
 
 
   if (!form.value.ar || form.value.ar < 10000) {
