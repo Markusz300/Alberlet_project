@@ -65,12 +65,27 @@
           <div class="sticky-column q-gutter-y-lg">
 
             <q-card flat class="bg-teal text-white shadow-3 rounded-borders">
-              <q-card-section class="text-center">
-                <div class="text-h6 opacity-80 text-uppercase">Havi bérleti díj</div>
-                <q-input v-model.number="form.ar" type="number" dark borderless
-                  input-class="text-h3 text-weight-bolder text-center" suffix="Ft" />
-              </q-card-section>
-            </q-card>
+  <q-card-section class="text-center">
+    <div class="text-h6 opacity-80 text-uppercase">Havi bérleti díj</div>
+    <div class="text-h3 text-weight-bolder q-my-sm">
+      {{ formatPrice(form.ar) }} <span class="text-h5">Ft</span>
+    </div>
+    <q-input
+      v-model.number="form.ar"
+      type="number"
+      dark
+      borderless
+      input-class="text-center"
+      dense
+      placeholder="Összeg beírása..."
+      :rules="[val => val >= 10000 || 'Minimum 10 000 Ft']"
+    >
+      <template v-slot:append>
+        <q-icon name="edit" size="xs" color="white" class="opacity-50" />
+      </template>
+    </q-input>
+  </q-card-section>
+</q-card>
 
             <q-card flat bordered class="shadow-2 rounded-borders bg-white">
               <q-list separator>
@@ -286,6 +301,13 @@ onMounted(async () => {
   }
 });
 
+
+// Szám formázása ezres csoportosítással (pl. 150 000)
+const formatPrice = (val) => {
+  if (!val) return '0';
+  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+};
+
 // --- CÍM FORMÁZÓ ---
 const formazottCim = (val) => {
   if (!val) return val;
@@ -302,6 +324,16 @@ const formazottCim = (val) => {
 // --- MENTÉS ---
 const handleUpdate = async () => {
   if (!form.value) return;
+
+
+  if (!form.value.ar || form.value.ar < 10000) {
+  $q.notify({
+    color: 'negative',
+    message: 'A bérleti díj nem lehet kevesebb 10 000 Ft-nál!',
+    icon: 'warning'
+  });
+  return;
+}
 
 // ÚJ: Numerikus validációk
   if (form.value.ar <= 0 || form.value.meret <= 0 || form.value.szobak_szama <= 0) {
