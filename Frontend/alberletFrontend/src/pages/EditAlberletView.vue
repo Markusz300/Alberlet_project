@@ -107,23 +107,47 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item>
-                  <q-item-section avatar><q-icon name="map" color="teal" /></q-item-section>
-                  <q-item-section>
-                    <q-item-label caption>Megye</q-item-label>
-                    <q-select v-model="form.megye" :options="szurtMegyek" use-input fill-input hide-selected
-                      new-value-mode="add-unique" @new-value="(val, done) => { onNewValue(val, 'megye'); done(); }"
-                      borderless dense @filter="megyeSzures" @update:model-value="form.varos = ''" />
-                  </q-item-section>
-                </q-item>
+               <q-item>
+  <q-item-section avatar><q-icon name="map" color="teal" /></q-item-section>
+  <q-item-section>
+    <q-item-label caption>Megye</q-item-label>
+    <q-select
+  outlined
+  v-model="valasztottMegye"
+  use-input
+  hide-selected
+  fill-input
+  label="Megye"
+  :options="szurtMegyek"
+  @filter="megyeSzures"
+  @new-value="(val, done) => { done(val, 'add-unique') }"
+  @update:model-value="valasztottVaros = null"
+  @blur="valasztottMegye = elsoBetuNagy(valasztottMegye)"
+  dense
+  color="teal"
+/>
+  </q-item-section>
+</q-item>
 
                 <q-item>
                   <q-item-section avatar><q-icon name="place" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Település</q-item-label>
-                    <q-select v-model="form.varos" :options="szurtVarosok" use-input fill-input hide-selected
-                      new-value-mode="add-unique" @new-value="(val, done) => { onNewValue(val, 'varos'); done(); }"
-                      :disable="!form.megye" borderless dense />
+                    <q-select
+  outlined
+  v-model="valasztottVaros"
+  use-input
+  hide-selected
+  fill-input
+  label="Település"
+  :options="szurtVarosok"
+  @filter="(val, update) => update()"
+  @new-value="(val, done) => { done(val, 'add-unique') }"
+  @blur="valasztottVaros = elsoBetuNagy(valasztottVaros)"
+  :disable="!valasztottMegye"
+  dense
+  color="teal"
+/>
                   </q-item-section>
                 </q-item>
 
@@ -213,6 +237,9 @@ const saving = ref(false)
 const currentSlide = ref(0)
 const form = ref(null)
 
+const valasztottMegye = ref(null);
+const valasztottVaros = ref(null);
+
 // --- KÉP FORMÁZÁS ---
 const formatImageUrl = (kep) => {
   const path = kep.kep_url || kep
@@ -224,14 +251,25 @@ const szurtMegyek = ref([])
 
 const megyeSzures = (val, update) => {
   update(() => {
-    // Ha üres a store, próbáljuk meg feltölteni (biztonsági játék)
     if (store.megyek.length === 0) {
-        store.fetchMegyek();
+      store.fetchMegyek();
     }
+
+    // Ez a varázslat: szinkronizáljuk a belső értéket a gépeléssel
+    if (form.value) {
+      form.value.megye = val;
+    }
+
     const s = val.toLowerCase();
     szurtMegyek.value = val === ''
       ? store.megyek.map(m => m.label)
       : store.megyek.filter(m => m.label.toLowerCase().includes(s)).map(m => m.label);
+  },
+  // Ez a callback fut le a lista frissítése UTÁN
+  ref => {
+    if (val !== '' && ref.options.length > 0) {
+      ref.setOptionIndex(-1); // Ne jelöljön ki automatikusan semmit a listából, ha gépelünk
+    }
   });
 };
 
@@ -256,12 +294,7 @@ const szepitSzoveg = (szoveg) => {
   return szoveg.split(' ').map(szo => szo.charAt(0).toUpperCase() + szo.slice(1).toLowerCase()).join(' ');
 };
 
-const onNewValue = (val, modelRef) => {
-  const formalt = szepitSzoveg(val);
-  if (form.value) {
-    form.value[modelRef] = formalt;
-  }
-};
+
 
 // --- TILTÁSOK ÉS VALIDÁLÁS ---
 const liftTiltva = computed(() => form.value?.tipus === 'ház' && form.value?.emelet <= 1);
@@ -291,8 +324,10 @@ onMounted(async () => {
     }
     form.value = item;
 
-    // Kezdeti megye lista beállítása
-    szurtMegyek.value = store.megyek.map(m => m.label);
+   valasztottMegye.value = store.megyek.find(m => m.label === item.megye) || item.megye;
+    valasztottVaros.value = store.varosok.find(v => v.label === item.varos) || item.varos;
+
+    szurtMegyek.value = store.megyek;
 
   } catch (err) {
     console.error("Betöltési hiba:", err);
@@ -324,6 +359,15 @@ const formazottCim = (val) => {
 // --- MENTÉS ---
 const handleUpdate = async () => {
   if (!form.value) return;
+
+
+  const megyeNev = valasztottMegye.value?.label || valasztottMegye.value;
+  const varosNev = valasztottVaros.value?.label || valasztottVaros.value;
+
+  if (!megyeNev || !varosNev) {
+    $q.notify({ color: 'negative', message: 'Megye és város megadása kötelező!', icon: 'warning' });
+    return;
+  }
 
 
   // ÚJ: Cím validáció
@@ -373,9 +417,9 @@ const handleUpdate = async () => {
       emelet: Number(form.value.emelet),
       leiras: form.value.leiras,
       tipus: form.value.tipus,
+      megye: megyeNev,
+      varos: varosNev,
       aktiv: form.value.aktiv,
-      varos: form.value.varos,
-      megye: form.value.megye,
       lift: form.value.lift,
       butorozott: form.value.butorozott,
       tulajdonos_neve: form.value.tulajdonos?.nev,
