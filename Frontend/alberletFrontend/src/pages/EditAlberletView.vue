@@ -65,27 +65,19 @@
           <div class="sticky-column q-gutter-y-lg">
 
             <q-card flat class="bg-teal text-white shadow-3 rounded-borders">
-  <q-card-section class="text-center">
-    <div class="text-h6 opacity-80 text-uppercase">Havi bérleti díj</div>
-    <div class="text-h3 text-weight-bolder q-my-sm">
-      {{ formatPrice(form.ar) }} <span class="text-h5">Ft</span>
-    </div>
-    <q-input
-      v-model.number="form.ar"
-      type="number"
-      dark
-      borderless
-      input-class="text-center"
-      dense
-      placeholder="Összeg beírása..."
-      :rules="[val => val >= 10000 || 'Minimum 10 000 Ft']"
-    >
-      <template v-slot:append>
-        <q-icon name="edit" size="xs" color="white" class="opacity-50" />
-      </template>
-    </q-input>
-  </q-card-section>
-</q-card>
+              <q-card-section class="text-center">
+                <div class="text-h6 opacity-80 text-uppercase">Havi bérleti díj</div>
+                <div class="text-h3 text-weight-bolder q-my-sm">
+                  {{ formatPrice(form.ar) }} <span class="text-h5">Ft</span>
+                </div>
+                <q-input v-model.number="form.ar" type="number" dark borderless input-class="text-center" dense
+                  placeholder="Összeg beírása..." :rules="[val => val >= 10000 || 'Minimum 10 000 Ft']">
+                  <template v-slot:append>
+                    <q-icon name="edit" size="xs" color="white" class="opacity-50" />
+                  </template>
+                </q-input>
+              </q-card-section>
+            </q-card>
 
             <q-card flat bordered class="shadow-2 rounded-borders bg-white">
               <q-list separator>
@@ -93,9 +85,10 @@
                   <q-item-section avatar><q-icon name="title" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Hirdetés címe</q-item-label>
-                    <q-input v-model="form.cim" :rules="[val => !!val && val.trim().length > 5 || 'Kérlek adj meg egy érvényes címet (min. 5 karakter)!']" borderless dense class="text-weight-medium"
-                      placeholder="9400 Sopron, Fő utca 1." hint="Példa: 9400 Sopron, Lackner Kristóf utca 1."
-                      @blur="form.cim = formazottCim(form.cim)" />
+                    <q-input v-model="form.cim"
+                      :rules="[val => !!val && val.trim().length > 5 || 'Kérlek adj meg egy érvényes címet (min. 5 karakter)!']"
+                      borderless dense class="text-weight-medium" placeholder="9400 Sopron, Fő utca 1."
+                      hint="Példa: 9400 Sopron, Lackner Kristóf utca 1." @blur="form.cim = formazottCim(form.cim)" />
                   </q-item-section>
                 </q-item>
 
@@ -107,47 +100,27 @@
                   </q-item-section>
                 </q-item>
 
-               <q-item>
-  <q-item-section avatar><q-icon name="map" color="teal" /></q-item-section>
-  <q-item-section>
-    <q-item-label caption>Megye</q-item-label>
-    <q-select
-  outlined
-  v-model="valasztottMegye"
-  use-input
-  hide-selected
-  fill-input
-  label="Megye"
-  :options="szurtMegyek"
-  @filter="megyeSzures"
-  @new-value="(val, done) => { done(val, 'add-unique') }"
-  @update:model-value="valasztottVaros = null"
-  @blur="valasztottMegye = elsoBetuNagy(valasztottMegye)"
-  dense
-  color="teal"
-/>
-  </q-item-section>
-</q-item>
+                <q-item>
+                  <q-item-section avatar><q-icon name="map" color="teal" /></q-item-section>
+                  <q-item-section>
+                    <q-item-label caption>Megye</q-item-label>
+                    <q-select outlined v-model="valasztottMegye" use-input hide-selected fill-input label="Megye"
+                      :options="szurtMegyek" @filter="megyeSzures"
+                      @new-value="(val, done) => { done(val, 'add-unique') }"
+                      @update:model-value="valasztottVaros = null"
+                      @blur="valasztottMegye = elsoBetuNagy(valasztottMegye)" dense color="teal" />
+                  </q-item-section>
+                </q-item>
 
                 <q-item>
                   <q-item-section avatar><q-icon name="place" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Település</q-item-label>
-                    <q-select
-  outlined
-  v-model="valasztottVaros"
-  use-input
-  hide-selected
-  fill-input
-  label="Település"
-  :options="szurtVarosok"
-  @filter="(val, update) => update()"
-  @new-value="(val, done) => { done(val, 'add-unique') }"
-  @blur="valasztottVaros = elsoBetuNagy(valasztottVaros)"
-  :disable="!valasztottMegye"
-  dense
-  color="teal"
-/>
+                    <q-select outlined v-model="valasztottVaros" use-input hide-selected fill-input label="Település"
+                      :options="szurtVarosok" @filter="varosSzures"
+                      @new-value="(val, done) => { done(val, 'add-unique') }"
+                      @blur="valasztottVaros = elsoBetuNagy(valasztottVaros)" :disable="!valasztottMegye" dense
+                      color="teal" />
                   </q-item-section>
                 </q-item>
 
@@ -155,15 +128,9 @@
                   <q-item-section avatar><q-icon name="bed" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Szobák száma {{ szobaszamTiltva ? '(Szoba esetén fix 1)' : ''
-                      }}</q-item-label>
-                    <q-input
-  v-model.number="form.szobak_szama"
-  type="number"
-  borderless
-  dense
-  :disable="szobaszamTiltva"
-  :rules="[val => val > 0 || 'Legalább 1 szoba kell']"
-/>
+                    }}</q-item-label>
+                    <q-input v-model.number="form.szobak_szama" type="number" borderless dense
+                      :disable="szobaszamTiltva" :rules="[val => val > 0 || 'Legalább 1 szoba kell']" />
                   </q-item-section>
                 </q-item>
 
@@ -171,13 +138,8 @@
                   <q-item-section avatar><q-icon name="straighten" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Alapterület (m²)</q-item-label>
-                    <q-input
-  v-model.number="form.meret"
-  type="number"
-  borderless
-  dense
-  :rules="[val => val > 0 || 'Az alapterület nem lehet 0 vagy negatív']"
-/>
+                    <q-input v-model.number="form.meret" type="number" borderless dense
+                      :rules="[val => val > 0 || 'Az alapterület nem lehet 0 vagy negatív']" />
                   </q-item-section>
                 </q-item>
 
@@ -185,13 +147,8 @@
                   <q-item-section avatar><q-icon name="layers" color="teal" /></q-item-section>
                   <q-item-section>
                     <q-item-label caption>Emelet</q-item-label>
-                   <q-input
-  v-model.number="form.emelet"
-  type="number"
-  borderless
-  dense
-  :rules="[val => val >= 0 || 'Az emelet nem lehet negatív']"
-/>
+                    <q-input v-model.number="form.emelet" type="number" borderless dense
+                      :rules="[val => val >= 0 || 'Az emelet nem lehet negatív']" />
                   </q-item-section>
                 </q-item>
 
@@ -265,35 +222,56 @@ const megyeSzures = (val, update) => {
       ? store.megyek.map(m => m.label)
       : store.megyek.filter(m => m.label.toLowerCase().includes(s)).map(m => m.label);
   },
-  // Ez a callback fut le a lista frissítése UTÁN
-  ref => {
-    if (val !== '' && ref.options.length > 0) {
-      ref.setOptionIndex(-1); // Ne jelöljön ki automatikusan semmit a listából, ha gépelünk
-    }
+    // Ez a callback fut le a lista frissítése UTÁN
+    ref => {
+      if (val !== '' && ref.options.length > 0) {
+        ref.setOptionIndex(-1); // Ne jelöljön ki automatikusan semmit a listából, ha gépelünk
+      }
+    });
+};
+
+const varosKeresoSzoveg = ref('');
+
+const szurtVarosok = computed(() => {
+  if (!valasztottMegye.value) return [];
+
+  // Megkeressük a megyét
+  const megyeNev = valasztottMegye.value?.label || valasztottMegye.value;
+  const mObj = store.megyek.find(m => m.label === megyeNev);
+
+  if (!mObj) return [];
+
+  const megyeId = mObj.value || mObj.id;
+
+  // Elsődleges szűrés megye ID alapján
+  let lista = store.varosok
+    .filter(v => v.megye_id === megyeId)
+    .map(v => v.label);
+
+  // MÁSODLAGOS SZŰRÉS: Gépelés alapján (ez hiányzott!)
+  if (varosKeresoSzoveg.value) {
+    const s = varosKeresoSzoveg.value.toLowerCase();
+    lista = lista.filter(v => v.toLowerCase().includes(s));
+  }
+
+  return lista;
+});
+
+// Ez a függvény fog lefutni, amikor gépelsz a város mezőbe
+const varosSzures = (val, update) => {
+  update(() => {
+    varosKeresoSzoveg.value = val;
   });
 };
 
-const szurtVarosok = computed(() => {
-  if (!form.value?.megye || store.megyek.length === 0) return [];
-
-  // Megkeressük a megye objektumot a label alapján
-  const mObj = store.megyek.find(m => m.label === form.value.megye);
-  if (!mObj) return [];
-
-  // A store-ban az azonosító lehet .value vagy .id, ellenőrizzük mindkettőt
-  const megyeId = mObj.value || mObj.id;
-
-  return store.varosok
-    .filter(v => v.megye_id === megyeId)
-    .map(v => v.label);
-});
-
-// Szöveg szépítése
-const szepitSzoveg = (szoveg) => {
+const elsoBetuNagy = (szoveg) => {
   if (!szoveg) return szoveg;
-  return szoveg.split(' ').map(szo => szo.charAt(0).toUpperCase() + szo.slice(1).toLowerCase()).join(' ');
-};
-
+  // Ez a logika kezeli a több szóból álló neveket is
+  return szoveg
+    .split(' ')
+    .map(szo => szo.charAt(0).toUpperCase() + szo.slice(1).toLowerCase())
+    .join(' ');
+}
 
 
 // --- TILTÁSOK ÉS VALIDÁLÁS ---
@@ -308,8 +286,8 @@ onMounted(async () => {
   try {
     // KRITIKUS: Előbb töltsük be a megyéket/városokat, különben a computed hibázik!
     await Promise.all([
-        store.fetchMegyek(),
-        store.fetchVarosok()
+      store.fetchMegyek(),
+      store.fetchVarosok()
     ]);
 
     const res = await api.get(`/alberletek/${route.params.id}`);
@@ -324,7 +302,7 @@ onMounted(async () => {
     }
     form.value = item;
 
-   valasztottMegye.value = store.megyek.find(m => m.label === item.megye) || item.megye;
+    valasztottMegye.value = store.megyek.find(m => m.label === item.megye) || item.megye;
     valasztottVaros.value = store.varosok.find(v => v.label === item.varos) || item.varos;
 
     szurtMegyek.value = store.megyek;
@@ -382,15 +360,15 @@ const handleUpdate = async () => {
 
 
   if (!form.value.ar || form.value.ar < 10000) {
-  $q.notify({
-    color: 'negative',
-    message: 'A bérleti díj nem lehet kevesebb 10 000 Ft-nál!',
-    icon: 'warning'
-  });
-  return;
-}
+    $q.notify({
+      color: 'negative',
+      message: 'A bérleti díj nem lehet kevesebb 10 000 Ft-nál!',
+      icon: 'warning'
+    });
+    return;
+  }
 
-// ÚJ: Numerikus validációk
+  // ÚJ: Numerikus validációk
   if (form.value.ar <= 0 || form.value.meret <= 0 || form.value.szobak_szama <= 0) {
     $q.notify({ color: 'negative', message: 'Az ár, méret és szobaszám csak pozitív szám lehet!', icon: 'warning' });
     return;
