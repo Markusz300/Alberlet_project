@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\AlberletController;
+use App\Http\Controllers\AlberletController;
+use App\Http\Controllers\VarosController;
 use App\Http\Controllers\MegyeController;
-use App\Http\Controllers\Api\VarosController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/alberletek', [AlberletController::class, 'index']);
