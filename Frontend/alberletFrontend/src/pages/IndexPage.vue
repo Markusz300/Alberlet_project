@@ -1,16 +1,19 @@
 <template>
   <q-page class="bg-grey-1 flex flex-center q-pa-lg">
-    <div class="full-width text-center" style="max-width: 1100px;">
-
+    <div class="full-width text-center" style="max-width: 1100px">
       <header class="q-mb-xl">
-        <img src="icons/M&B logo.png" class="app-logo" alt="M&B Logo">
-        <div class="text-subtitle1 text-grey-7 q-mt-sm font-premium">Prémium Ingatlankezelés</div>
+        <img src="icons/M&B logo.png" class="app-logo" alt="M&B Logo" />
+        <div class="text-subtitle1 text-grey-7 q-mt-sm font-premium">
+          Prémium Ingatlankezelés
+        </div>
       </header>
 
       <div class="row q-col-gutter-xl justify-center">
-
         <div class="col-12 col-sm-6">
-          <div class="karty-alap vilagos-kartya" @click="$router.push('/search')">
+          <div
+            class="karty-alap vilagos-kartya"
+            @click="$router.push('/search')"
+          >
             <q-icon name="search" size="56px" class="q-mb-md ikon-zold" />
             <div class="text-h5 text-weight-bold">Bérlés</div>
             <p>Böngésszen prémium lakáskínálatunkban egyszerűen.</p>
@@ -20,13 +23,16 @@
 
         <div class="col-12 col-sm-6">
           <div class="karty-alap zold-kartya" @click="$router.push('/create')">
-            <q-icon name="add_business" size="56px" class="q-mb-md ikon-feher" />
+            <q-icon
+              name="add_business"
+              size="56px"
+              class="q-mb-md ikon-feher"
+            />
             <div class="text-h5 text-weight-bold">Hirdetés</div>
             <p>Adja bérbe ingatlanát gyorsan és megbízhatóan.</p>
             <div class="gomb-szoveg-feher">Új hirdetés feladása →</div>
           </div>
         </div>
-
       </div>
 
       <footer class="q-mt-xl">
@@ -34,7 +40,6 @@
           Established 2026 • M&B Management
         </div>
       </footer>
-
     </div>
   </q-page>
 </template>

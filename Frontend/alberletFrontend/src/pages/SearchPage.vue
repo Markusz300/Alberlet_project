@@ -7,28 +7,57 @@
         </h4>
         <div class="text-subtitle2 text-grey-7">Találd meg álmaid otthonát</div>
       </div>
-      <q-btn :color="showFilters ? 'negative' : 'teal'" :icon="showFilters ? 'close' : 'tune'"
-        :label="showFilters ? 'Bezárás' : 'Összes szűrő'" @click="showFilters = !showFilters" unelevated rounded />
+      <q-btn
+        :color="showFilters ? 'negative' : 'teal'"
+        :icon="showFilters ? 'close' : 'tune'"
+        :label="showFilters ? 'Bezárás' : 'Összes szűrő'"
+        @click="showFilters = !showFilters"
+        unelevated
+        rounded
+      />
     </div>
 
     <q-slide-transition>
       <div v-show="showFilters" class="q-mb-xl">
         <q-card flat bordered class="rounded-borders shadow-sm bg-white">
           <q-card-section>
-            <q-form @submit="store.fetchAlberletek(1)" class="row q-col-gutter-md">
+            <q-form
+              @submit="store.fetchAlberletek(1)"
+              class="row q-col-gutter-md"
+            >
               <div class="col-12 col-sm-6 col-md-3">
                 <div class="text-weight-bold q-mb-xs">
                   <q-icon name="payments" /> Ár (Ft/hó)
                 </div>
                 <div class="row q-col-gutter-sm">
-                  <q-input dense outlined v-model.number="store.filters.min_ar" label="Min" class="col-6" type="number"
-                    min="0" :rules="[
+                  <q-input
+                    dense
+                    outlined
+                    v-model.number="store.filters.min_ar"
+                    label="Min"
+                    class="col-6"
+                    type="number"
+                    min="0"
+                    :rules="[
                       (val) => !val || val >= 0 || 'Nem lehet negatív érték!',
-                    ]" hide-bottom-space color="teal" />
-                  <q-input dense outlined v-model.number="store.filters.max_ar" label="Max" class="col-6" type="number"
-                    min="0" :rules="[
+                    ]"
+                    hide-bottom-space
+                    color="teal"
+                  />
+                  <q-input
+                    dense
+                    outlined
+                    v-model.number="store.filters.max_ar"
+                    label="Max"
+                    class="col-6"
+                    type="number"
+                    min="0"
+                    :rules="[
                       (val) => !val || val >= 0 || 'Nem lehet negatív érték!',
-                    ]" hide-bottom-space color="teal" />
+                    ]"
+                    hide-bottom-space
+                    color="teal"
+                  />
                 </div>
               </div>
 
@@ -37,14 +66,36 @@
                   <q-icon name="bed" /> Szobák
                 </div>
                 <div class="row q-col-gutter-sm">
-                  <q-input dense outlined v-model.number="store.filters.min_szoba" label="Min" class="col-6"
-                    type="number" step="0.5" min="0" :rules="[
+                  <q-input
+                    dense
+                    outlined
+                    v-model.number="store.filters.min_szoba"
+                    label="Min"
+                    class="col-6"
+                    type="number"
+                    step="0.5"
+                    min="0"
+                    :rules="[
                       (val) => !val || val >= 0 || 'Nincs negatív szoba?!',
-                    ]" hide-bottom-space color="teal" />
-                  <q-input dense outlined v-model.number="store.filters.max_szoba" label="Max" class="col-6"
-                    type="number" step="0.5" min="0" :rules="[
+                    ]"
+                    hide-bottom-space
+                    color="teal"
+                  />
+                  <q-input
+                    dense
+                    outlined
+                    v-model.number="store.filters.max_szoba"
+                    label="Max"
+                    class="col-6"
+                    type="number"
+                    step="0.5"
+                    min="0"
+                    :rules="[
                       (val) => !val || val >= 0 || 'Nincs negatív szoba?!',
-                    ]" hide-bottom-space color="teal" />
+                    ]"
+                    hide-bottom-space
+                    color="teal"
+                  />
                 </div>
               </div>
 
@@ -53,14 +104,34 @@
                   <q-icon name="straighten" /> Méret (m²)
                 </div>
                 <div class="row q-col-gutter-sm">
-                  <q-input dense outlined v-model.number="store.filters.min_meret" label="Min" class="col-6"
-                    type="number" min="0" :rules="[
+                  <q-input
+                    dense
+                    outlined
+                    v-model.number="store.filters.min_meret"
+                    label="Min"
+                    class="col-6"
+                    type="number"
+                    min="0"
+                    :rules="[
                       (val) => !val || val >= 0 || 'Nem lehet negatív érték!',
-                    ]" hide-bottom-space color="teal" />
-                  <q-input dense outlined v-model.number="store.filters.max_meret" label="Max" class="col-6"
-                    type="number" min="0" :rules="[
+                    ]"
+                    hide-bottom-space
+                    color="teal"
+                  />
+                  <q-input
+                    dense
+                    outlined
+                    v-model.number="store.filters.max_meret"
+                    label="Max"
+                    class="col-6"
+                    type="number"
+                    min="0"
+                    :rules="[
                       (val) => !val || val >= 0 || 'Nem lehet negatív érték!',
-                    ]" hide-bottom-space color="teal" />
+                    ]"
+                    hide-bottom-space
+                    color="teal"
+                  />
                 </div>
               </div>
 
@@ -68,20 +139,44 @@
                 <div class="text-weight-bold q-mb-xs">
                   <q-icon name="category" /> Ingatlan típusa
                 </div>
-                <q-select dense outlined v-model="store.filters.tipus" :options="tipusOpciok" emit-value map-options
-                  color="teal" />
+                <q-select
+                  dense
+                  outlined
+                  v-model="store.filters.tipus"
+                  :options="tipusOpciok"
+                  emit-value
+                  map-options
+                  color="teal"
+                />
               </div>
 
               <div class="col-12 col-sm-6 col-md-3">
                 <div class="text-weight-bold q-mb-xs">
                   <q-icon name="location_on" /> Város
                 </div>
-                <q-select dense outlined v-model="store.filters.varos_id" :options="filteredVarosok" use-input
-                  fill-input hide-selected input-debounce="0" label="Város választása" color="teal" emit-value
-                  map-options clearable @filter="filterFn" @clear="store.filters.varos_id = null">
+                <q-select
+                  dense
+                  outlined
+                  v-model="store.filters.varos_id"
+                  :options="filteredVarosok"
+                  use-input
+                  fill-input
+                  hide-selected
+                  input-debounce="0"
+                  label="Város választása"
+                  color="teal"
+                  emit-value
+                  map-options
+                  clearable
+                  @filter="filterFn"
+                  @clear="store.filters.varos_id = null"
+                >
                   <template v-slot:no-option>
-                    <q-item><q-item-section class="text-grey italic text-caption">Sajnos még nincs itt albérletünk
-                        :(...</q-item-section></q-item>
+                    <q-item
+                      ><q-item-section class="text-grey italic text-caption"
+                        >Sajnos még nincs itt albérletünk :(...</q-item-section
+                      ></q-item
+                    >
                   </template>
                 </q-select>
               </div>
@@ -90,9 +185,23 @@
                 <div class="text-weight-bold q-mb-xs">
                   <q-icon name="map" /> Megye
                 </div>
-                <q-select dense outlined v-model="store.filters.megye_id" :options="filteredMegyek" use-input fill-input
-                  hide-selected input-debounce="0" label="Megye keresése..." color="teal" emit-value map-options
-                  clearable @filter="filterMegyeFn" @update:model-value="onMegyeChange">
+                <q-select
+                  dense
+                  outlined
+                  v-model="store.filters.megye_id"
+                  :options="filteredMegyek"
+                  use-input
+                  fill-input
+                  hide-selected
+                  input-debounce="0"
+                  label="Megye keresése..."
+                  color="teal"
+                  emit-value
+                  map-options
+                  clearable
+                  @filter="filterMegyeFn"
+                  @update:model-value="onMegyeChange"
+                >
                   <template v-slot:no-option>
                     <q-item>
                       <q-item-section class="text-grey italic text-caption">
@@ -106,22 +215,60 @@
               <div class="col-12 col-sm-6 col-md-3">
                 <div class="text-weight-bold q-mb-xs">Kényelem</div>
                 <div class="row q-col-gutter-sm">
-                  <q-select dense outlined v-model="store.filters.butorozott" :options="igenNemOpciok" label="Bútor?"
-                    class="col-6" emit-value map-options color="teal" />
-                  <q-select dense outlined v-model="store.filters.lift" :options="igenNemOpciok" label="Lift?"
-                    class="col-6" emit-value map-options color="teal" />
+                  <q-select
+                    dense
+                    outlined
+                    v-model="store.filters.butorozott"
+                    :options="igenNemOpciok"
+                    label="Bútor?"
+                    class="col-6"
+                    emit-value
+                    map-options
+                    color="teal"
+                  />
+                  <q-select
+                    dense
+                    outlined
+                    v-model="store.filters.lift"
+                    :options="igenNemOpciok"
+                    label="Lift?"
+                    class="col-6"
+                    emit-value
+                    map-options
+                    color="teal"
+                  />
                 </div>
               </div>
 
               <div class="col-12 col-sm-6 col-md-3">
                 <div class="text-weight-bold q-mb-xs">Rendezés</div>
-                <q-select dense outlined v-model="store.filters.sort" :options="rendezesOpciok" emit-value map-options
-                  color="teal" />
+                <q-select
+                  dense
+                  outlined
+                  v-model="store.filters.sort"
+                  :options="rendezesOpciok"
+                  emit-value
+                  map-options
+                  color="teal"
+                />
               </div>
 
               <div class="col-12 flex justify-end q-gutter-sm q-pt-md">
-                <q-btn unelevated color="teal" label="Keresés indítása" icon="search" class="q-px-xl" type="submit" />
-                <q-btn flat color="grey-7" label="Szűrők törlése" icon="restart_alt" @click="store.resetFilters" />
+                <q-btn
+                  unelevated
+                  color="teal"
+                  label="Keresés indítása"
+                  icon="search"
+                  class="q-px-xl"
+                  type="submit"
+                />
+                <q-btn
+                  flat
+                  color="grey-7"
+                  label="Szűrők törlése"
+                  icon="restart_alt"
+                  @click="store.resetFilters"
+                />
               </div>
             </q-form>
           </q-card-section>
@@ -129,21 +276,39 @@
       </div>
     </q-slide-transition>
 
-    <div v-if="store.alberletek && store.alberletek.length > 0" class="row q-col-gutter-xl">
-      <div v-for="alb in store.alberletek" :key="alb.id" class="col-12 col-sm-6 col-md-4 col-lg-3">
-        <q-card flat class="property-card overflow-hidden shadow-1 cursor-pointer"
-          @click="router.push(`/alberlet/${alb.id}`)">
+    <div
+      v-if="store.alberletek && store.alberletek.length > 0"
+      class="row q-col-gutter-xl"
+    >
+      <div
+        v-for="alb in store.alberletek"
+        :key="alb.id"
+        class="col-12 col-sm-6 col-md-4 col-lg-3"
+      >
+        <q-card
+          flat
+          class="property-card overflow-hidden shadow-1 cursor-pointer"
+          @click="router.push(`/alberlet/${alb.id}`)"
+        >
           <q-img :src="store.formatImageUrl(alb.kepek)" :ratio="4 / 3">
             <div class="absolute-top-left q-ma-sm bg-transparent">
-              <q-badge color="teal-10" class="q-pa-sm text-weight-bold shadow-2">{{ alb.tipus }}</q-badge>
+              <q-badge
+                color="teal-10"
+                class="q-pa-sm text-weight-bold shadow-2"
+                >{{ alb.tipus }}</q-badge
+              >
             </div>
-            <div class="absolute-bottom-right bg-black text-white q-pa-sm q-px-md text-weight-bolder"
-              style="border-top-left-radius: 12px">
+            <div
+              class="absolute-bottom-right bg-black text-white q-pa-sm q-px-md text-weight-bolder"
+              style="border-top-left-radius: 12px"
+            >
               {{ alb.ar?.toLocaleString() }} Ft
             </div>
           </q-img>
           <q-card-section>
-            <div class="text-subtitle1 text-weight-bolder text-teal-10 ellipsis">
+            <div
+              class="text-subtitle1 text-weight-bolder text-teal-10 ellipsis"
+            >
               {{ alb.cim }}
             </div>
             <div class="text-caption text-grey-8 flex items-center">
@@ -185,20 +350,35 @@
           </q-card-section>
 
           <q-card-actions align="right" class="q-pb-md q-px-md">
-            <q-btn flat color="teal" label="Részletek" icon-right="chevron_right" :to="`/alberlet/${alb.id}`" />
+            <q-btn
+              flat
+              color="teal"
+              label="Részletek"
+              icon-right="chevron_right"
+              :to="`/alberlet/${alb.id}`"
+            />
           </q-card-actions>
         </q-card>
       </div>
     </div>
 
-    <div v-else-if="!store.loading" class="text-center q-pa-xl bg-white rounded-borders shadow-1 q-mt-xl">
+    <div
+      v-else-if="!store.loading"
+      class="text-center q-pa-xl bg-white rounded-borders shadow-1 q-mt-xl"
+    >
       <q-icon name="search_off" size="100px" color="grey-4" />
       <div class="text-h5 text-grey-6 q-mt-md">Nincs találat</div>
     </div>
 
     <div class="flex flex-center q-py-xl">
-      <q-pagination v-model="store.currentPage" :max="store.totalPages" color="teal" active-color="teal-10" size="md"
-        @update:model-value="(val) => store.fetchAlberletek(val)" />
+      <q-pagination
+        v-model="store.currentPage"
+        :max="store.totalPages"
+        color="teal"
+        active-color="teal-10"
+        size="md"
+        @update:model-value="(val) => store.fetchAlberletek(val)"
+      />
     </div>
 
     <q-inner-loading :showing="store.loading">
@@ -231,8 +411,8 @@ const filterMegyeFn = (val, update) => {
       val === ""
         ? store.megyek
         : store.megyek.filter(
-          (m) => m.label.toLowerCase().indexOf(needle) > -1,
-        );
+            (m) => m.label.toLowerCase().indexOf(needle) > -1,
+          );
   });
 };
 
@@ -269,10 +449,7 @@ const rendezesOpciok = [
 
 onMounted(async () => {
   // Mindkettőt szűrve kérjük le
-  await Promise.all([
-    store.fetchMegyek(true),
-    store.fetchVarosok(true)
-  ]);
+  await Promise.all([store.fetchMegyek(true), store.fetchVarosok(true)]);
 
   filteredMegyek.value = [...store.megyek];
   filteredVarosok.value = [...store.varosok];
