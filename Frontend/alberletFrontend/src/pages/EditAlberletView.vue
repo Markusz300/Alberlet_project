@@ -46,16 +46,25 @@
                 <q-icon name="person" color="teal" class="q-mr-sm" />Hirdető adatai
               </div>
               <q-separator class="q-mb-md" />
+
               <div class="row q-col-gutter-md">
-                <div class="col-12 col-sm-4">
-                  <q-input v-model="form.tulajdonos.nev" label="Név" filled />
+                <div class="col-12">
+                  <q-input v-model="form.tulajdonos.email" label="E-mail" filled @blur="ellenorizFelhasznalot" />
                 </div>
-                <div class="col-12 col-sm-4">
-                  <q-input v-model="form.tulajdonos.telefon" label="Telefon" filled />
+
+                <div class="col-12 col-sm-6">
+                  <q-input v-model="form.tulajdonos.nev" label="Név" filled :readonly="letezoFelhasznalo"
+                    :bg-color="letezoFelhasznalo ? 'grey-2' : ''" />
                 </div>
-                <div class="col-12 col-sm-4">
-                  <q-input v-model="form.tulajdonos.email" label="E-mail" filled />
+
+                <div class="col-12 col-sm-6">
+                  <q-input v-model="form.tulajdonos.telefon" label="Telefon" filled mask="+36 ## ### ####" fill-mask
+                    :readonly="letezoFelhasznalo" :bg-color="letezoFelhasznalo ? 'grey-2' : ''" />
                 </div>
+              </div>
+
+              <div v-if="letezoFelhasznalo" class="q-mt-sm text-caption text-teal">
+                <q-icon name="info" /> Regisztrált felhasználó: a név és telefonszám nem módosítható.
               </div>
             </q-card-section>
           </q-card>
@@ -197,11 +206,38 @@ const form = ref(null)
 const valasztottMegye = ref(null);
 const valasztottVaros = ref(null);
 
+const letezoFelhasznalo = ref(false);
+
 // --- KÉP FORMÁZÁS ---
 const formatImageUrl = (kep) => {
   const path = kep.kep_url || kep
   return path.startsWith('http') ? path : `${BASE_URL}${path.startsWith('/') ? path : '/' + path}`
 }
+
+const ellenorizFelhasznalot = async () => {
+  const email = form.value?.tulajdonos?.email;
+  if (!email || !/.+@.+\..+/.test(email)) return;
+
+  try {
+    const { data } = await api.get(`/users/check?email=${encodeURIComponent(email)}`);
+    if (data.exists) {
+      // Adatok szinkronizálása a rendszerben lévőkkel
+      form.value.tulajdonos.nev = data.user.nev;
+      form.value.tulajdonos.telefon = data.user.telefon;
+      letezoFelhasznalo.value = true;
+
+      $q.notify({
+        type: 'info',
+        message: 'Regisztrált felhasználó e-mail címe, adatai rögzítve lettek.',
+        timeout: 3000
+      });
+    } else {
+      letezoFelhasznalo.value = false;
+    }
+  } catch (err) {
+    console.error("Hiba a felhasználó ellenőrzésekor:", err);
+  }
+};
 
 // --- MEGYE / VÁROS LOGIKA ---
 const szurtMegyek = ref([])
@@ -300,6 +336,8 @@ onMounted(async () => {
         email: item.tulajdonos_email || ''
       };
     }
+
+    if (form.value) await ellenorizFelhasznalot();
     form.value = item;
 
     valasztottMegye.value = store.megyek.find(m => m.label === item.megye) || item.megye;
