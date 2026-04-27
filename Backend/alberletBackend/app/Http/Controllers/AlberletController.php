@@ -379,13 +379,11 @@ class AlberletController extends Controller
             return response()->json(['message' => 'Hirdetés nem található'], 404);
         }
 
-        // 1. Opcionális: Képek törlése a Storage-ból (hogy ne szemeteljünk)
         foreach ($alberlet->kepek as $kep) {
             Storage::disk('public')->delete($kep->kep_url);
-            $kep->delete();  // A kép rekordot törölheted, az csak ehhez az albérlethez tartozott
+            $kep->delete();
         }
 
-        // 2. Csak a hirdetést töröljük
         $alberlet->delete();
 
         return response()->json(['message' => 'Sikeres törlés']);
